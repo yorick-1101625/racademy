@@ -1,0 +1,27 @@
+# Environment variables
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE-specific files (VSCode and PyCharm)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# macOS-specific files
+.DS_Store
+
+# Misc
+*.bak
+*.tmp
+*.idea
+*.project
+*.vscode
