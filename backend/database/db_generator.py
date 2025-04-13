@@ -21,6 +21,9 @@ class WP4DatabaseGenerator:
         self.create_table_ratings()
         print("✅ Alle tabellen succesvol aangemaakt.")
 
+        self.insert_data()
+        print("✅ Alle tabellen succesvol data toegevoegd.")
+
     def create_table_user(self):
         statement = """
         CREATE TABLE IF NOT EXISTS User (
@@ -151,6 +154,108 @@ class WP4DatabaseGenerator:
             FOREIGN KEY (source_id) REFERENCES Source(source_id),
             FOREIGN KEY (user_id) REFERENCES User(user_id)
         );
+        """
+        self.__execute(statement)
+
+    def insert_data(self):
+        self.insert_users()
+        self.insert_posts()
+        self.insert_comments()
+        self.insert_tags()
+        self.insert_post_tags()
+        self.insert_liked_posts()
+        self.insert_favorited_posts()
+        self.insert_sources()
+        self.insert_favorited_sources()
+        self.insert_ratings()
+        print("✅ Mockdata succesvol toegevoegd.")
+
+    def insert_users(self):
+        statement = """
+        INSERT INTO User (user_id, email, username, password, study, is_blocked, is_admin)
+        VALUES
+            (1, 'admin@example.com', 'admin', 'admin123', 'Computer Science', 0, 1),
+            (2, 'user@example.com', 'john_doe', 'password', 'Psychology', 0, 0);
+        """
+        self.__execute(statement)
+
+    def insert_posts(self):
+        statement = """
+        INSERT INTO Post (post_id, title, content, created_at, updated_at, user_id)
+        VALUES
+            (1, 'First Post', 'This is a test post', '2024-01-01', '2024-01-01 12:00:00', 1),
+            (2, 'Second Post', 'Another test post', '2024-01-02', '2024-01-02 13:00:00', 2);
+        """
+        self.__execute(statement)
+
+    def insert_comments(self):
+        statement = """
+        INSERT INTO Comment (comment_id, title, content, created_at, updated_at, user_id, post_id)
+        VALUES
+            (1, 'Nice post', 'Thanks for sharing!', '2024-01-03', '2024-01-03 14:00:00', 2, 1),
+            (2, 'Follow-up', 'Can you elaborate?', '2024-01-04', '2024-01-04 15:00:00', 1, 2);
+        """
+        self.__execute(statement)
+
+    def insert_tags(self):
+        statement = """
+        INSERT INTO Tag (tag_id, name)
+        VALUES
+            (1, 'learning'),
+            (2, 'psychology'),
+            (3, 'coding');
+        """
+        self.__execute(statement)
+
+    def insert_post_tags(self):
+        statement = """
+        INSERT INTO PostTag (post_id, tag_id)
+        VALUES
+            (1, 1),
+            (1, 3),
+            (2, 2);
+        """
+        self.__execute(statement)
+
+    def insert_liked_posts(self):
+        statement = """
+        INSERT INTO LikedPost (post_id, user_id)
+        VALUES
+            (1, 2),
+            (2, 1);
+        """
+        self.__execute(statement)
+
+    def insert_favorited_posts(self):
+        statement = """
+        INSERT INTO FavoritedPost (post_id, user_id)
+        VALUES
+            (1, 1);
+        """
+        self.__execute(statement)
+
+    def insert_sources(self):
+        statement = """
+        INSERT INTO Source (source_id, type, url, name, description, created_at, isbn, school_subject, subject, difficulty)
+        VALUES
+            (1, 'book', 'https://example.com/book1', 'Learning How to Learn', 'A classic on metacognition', '2023-12-01', '978-1234567890', 'General Studies', 'Metacognition', 'medium'),
+            (2, 'video', 'https://example.com/video1', 'Brain Science Explained', 'Intro to neuroscience for learners', '2023-12-15', NULL, 'Biology', 'Neuroscience', 'easy');
+        """
+        self.__execute(statement)
+
+    def insert_favorited_sources(self):
+        statement = """
+        INSERT INTO FavoritedSource (source_id, user_id)
+        VALUES
+            (1, 2);
+        """
+        self.__execute(statement)
+
+    def insert_ratings(self):
+        statement = """
+        INSERT INTO Ratings (rating_id, source_id, rating, description, user_id, created_at)
+        VALUES
+            (1, 1, 5, 'Very insightful and practical.', 2, '2024-01-05');
         """
         self.__execute(statement)
 
