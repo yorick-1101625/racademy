@@ -33,7 +33,7 @@ const PostList = () => {
       <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Posts</Text>
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => <Text>{item.title}</Text>}
       />
     </View>
