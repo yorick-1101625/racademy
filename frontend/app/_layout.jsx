@@ -1,10 +1,14 @@
 import {Slot} from "expo-router";
 
 import '../global.css'
+import {StatusBar} from "expo-status-bar";
 
 function RootLayout() {
     return (
-        <Slot />
+        <>
+            <StatusBar hidden={true}/>
+            <Slot />
+        </>
     );
 }
 
