@@ -13,7 +13,6 @@ function Login() {
                 <LoginForm />
 
             </View>
-
         </SafeAreaView>
     );
 }
