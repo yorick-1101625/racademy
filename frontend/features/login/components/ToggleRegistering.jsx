@@ -13,7 +13,7 @@ function ToggleRegistering({ text, onPress }) {
             </View>
 
             <Pressable onPress={onPress}>
-                <Text className="font-bold text-blue-800">{ text }</Text>
+                <Text className="font-bold text-md text-blue-800 hover:underline hover:text-blue-900">{ text }</Text>
             </Pressable>
         </View>
     );

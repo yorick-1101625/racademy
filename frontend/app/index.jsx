@@ -6,7 +6,7 @@ import LoginForm from "../features/login/components/LoginForm";
 function Login() {
     return (
         <SafeAreaView className="flex-1 justify-center items-center bg-neutral-100">
-            <View className="w-11/12 md:max-w-xl">
+            <View className="w-11/12 sm:max-w-xl shadow-lg shadow-neutral-300 rounded-lg overflow-hidden">
 
                 <LogoHeader />
 

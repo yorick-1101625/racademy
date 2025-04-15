@@ -1,6 +1,6 @@
 import {View} from 'react-native';
 import EmailPasswordFields from "./EmailPasswordFields";
-import FormButton from "./FormButton";
+import FormSubmitButton from "./FormSubmitButton";
 import ToggleRegistering from "./ToggleRegistering";
 import {useState} from "react";
 
@@ -8,21 +8,35 @@ function LoginForm() {
 
     const [isRegistering, setIsRegistering] = useState(false);
 
-    function onToggleRegistering () {
+    const [email, setEmail] = useState(null);
+    const [password, setPassword] = useState(null);
+
+    function handleToggleRegistering () {
         setIsRegistering(i => !i);
     }
 
+    function handleFormSubmit() {
+        console.log(email, password);
+
+        if (isRegistering) {
+            // make new account
+        }
+        else {
+            // log in
+        }
+    }
+
     return (
-        <View className="bg-white w-full rounded-b-lg shadow-lg overflow-hidden">
+        <View className="bg-white w-full rounded-b-lg overflow-hidden">
             <View className="items-center w-full py-12 px-10">
 
-                <EmailPasswordFields />
+                <EmailPasswordFields setEmail={setEmail} setPassword={setPassword} />
 
-                <FormButton text={ isRegistering ? "Maak Aan" : "Log In"} />
+                <FormSubmitButton onPress={handleFormSubmit} text={ isRegistering ? "Registreer" : "Log In"} />
 
                 <ToggleRegistering
                     text={ isRegistering ? "Ga terug naar inloggen" : "Maak een nieuw account"}
-                    onPress={onToggleRegistering}
+                    onPress={handleToggleRegistering}
                 />
             </View>
         </View>
