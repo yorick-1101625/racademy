@@ -5,11 +5,11 @@ function ToggleRegistering({ text, onPress }) {
         <View className="w-2/3 items-center">
             {/* Seperator */}
             <View className="flex-row items-center my-3">
-                <View className="flex-1 h-[1px] bg-hr" />
+                <View className="flex-1 h-[1px] bg-rac" />
                 <View>
                     <Text className="w-8 text-center">of</Text>
                 </View>
-                <View className="flex-1 h-[1px] bg-hr" />
+                <View className="flex-1 h-[1px] bg-rac" />
             </View>
 
             <Pressable onPress={onPress}>

@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "hr": "#d3104d"
+        "rac": "#3daad3"
       }
     },
   },
