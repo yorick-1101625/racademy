@@ -2,23 +2,29 @@ import {View} from 'react-native';
 import EmailPasswordFields from "./EmailPasswordFields";
 import FormSubmitButton from "./FormSubmitButton";
 import ToggleRegistering from "./ToggleRegistering";
-import {useState} from "react";
+import {useRef, useState} from "react";
 
 function LoginForm() {
 
     const [isRegistering, setIsRegistering] = useState(false);
 
-    const [email, setEmail] = useState(null);
-    const [password, setPassword] = useState(null);
+    const emailRef = useRef(null);
+    const passwordRef = useRef(null);
+    const confirmPasswordRef = useRef(null);
 
     function handleToggleRegistering () {
         setIsRegistering(i => !i);
     }
 
     function handleFormSubmit() {
+        const email = emailRef.current.value;
+        const password = passwordRef.current.value;
+
         console.log(email, password);
 
         if (isRegistering) {
+            const confirmPassword = confirmPasswordRef.current.value;
+            console.log(confirmPassword);
             // make new account
         }
         else {
@@ -30,7 +36,12 @@ function LoginForm() {
         <View className="bg-white w-full rounded-b-lg overflow-hidden">
             <View className="items-center w-full py-12 px-10">
 
-                <EmailPasswordFields setEmail={setEmail} setPassword={setPassword} />
+                <EmailPasswordFields
+                    emailRef={emailRef}
+                    passwordRef={passwordRef}
+                    confirmPassword={isRegistering}
+                    confirmPasswordRef={confirmPasswordRef}
+                />
 
                 <FormSubmitButton onPress={handleFormSubmit} text={ isRegistering ? "Registreer" : "Log In"} />
 
