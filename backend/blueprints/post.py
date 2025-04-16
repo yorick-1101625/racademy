@@ -1,15 +1,13 @@
 from flask import Blueprint
 from werkzeug.exceptions import HTTPException
-from backend.models.model_post import PostModel
+from backend.services.service_post import *
 
 api_post = Blueprint("api_post", __name__)
 
 @api_post.route("/", methods=["GET"])
 def get_posts():
     try:
-        pm = PostModel()
-        result = pm.get_posts()
-
+        result = PostService.get_all_posts()
         if result:
             return {
                 "success": True,
