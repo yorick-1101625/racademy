@@ -1,9 +1,74 @@
+from sqlalchemy import asc, desc, or_
+from sqlalchemy.exc import SQLAlchemyError
 from backend.models.models import Post
+from backend.database.db import db
+
 
 class PostService:
 
     @staticmethod
-    def get_all_posts():
-        posts = Post.query.all()
-        result = [post.to_dict() for post in posts]
-        return result
+    def get_all_posts(search_term=None, offset=0, limit=10):
+        query = db.session.query(Post)
+
+        if search_term:
+            search_term = f"%{search_term.lower()}%"
+            query = query.filter(
+                or_(
+                    db.func.lower(Post.title).like(search_term),
+                    db.func.lower(Post.content).like(search_term)
+                )
+            )
+
+        query = query.offset(offset).limit(limit)
+
+        posts = query.all()
+        return [post.to_dict() for post in posts]
+
+    @staticmethod
+    def get_post_by_id(post_id):
+        post = Post.query.get(post_id)
+        return post.to_dict() if post else None
+
+    @staticmethod
+    def create_post(data):
+        try:
+            new_post = Post(
+                title=data.get('title'),
+                content=data.get('content')
+            )
+            db.session.add(new_post)
+            db.session.commit()
+            return new_post.to_dict()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            print(f"Error creating post: {e}")
+            return None
+
+    @staticmethod
+    def update_post(post_id, data):
+        post = Post.query.get(post_id)
+        if not post:
+            return None
+        try:
+            post.title = data.get('title', post.title)
+            post.content = data.get('content', post.content)
+            db.session.commit()
+            return post.to_dict()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            print(f"Error updating post: {e}")
+            return None
+
+    @staticmethod
+    def delete_post(post_id):
+        post = Post.query.get(post_id)
+        if not post:
+            return False
+        try:
+            db.session.delete(post)
+            db.session.commit()
+            return True
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            print(f"Error deleting post: {e}")
+            return False
