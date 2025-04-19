@@ -62,7 +62,7 @@ class User(BaseModel):
 class Post(BaseModel):
     title           = db.Column(db.String(255), nullable=False)
     content         = db.Column(db.Text, nullable=False)
-    created_at      = db.Column(db.Date, default=datetime.now)
+    created_at      = db.Column(db.DateTime, default=datetime.now)
     updated_at      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
     # post >- user
@@ -81,7 +81,7 @@ class Post(BaseModel):
 class Comment(BaseModel):
     title           = db.Column(db.String(255), nullable=False)
     content         = db.Column(db.Text, nullable=False)
-    created_at      = db.Column(db.Date, default=datetime.now)
+    created_at      = db.Column(db.DateTime, default=datetime.now)
     updated_at      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
     # comment >- user
@@ -99,7 +99,7 @@ class Source(BaseModel):
     type                = db.Column(db.String(255), nullable=False)
     title               = db.Column(db.String(255), nullable=False)
     description         = db.Column(db.Text, nullable=False)
-    created_at          = db.Column(db.Date, default=datetime.now)
+    created_at          = db.Column(db.DateTime, default=datetime.now)
     school_subject      = db.Column(db.String(255), nullable=False)
     subject             = db.Column(db.String(255), nullable=False)
     difficulty          = db.Column(db.String(255), nullable=False)
@@ -120,7 +120,7 @@ class Source(BaseModel):
 class Rating(BaseModel):
     rating          = db.Column(db.Integer, nullable=False)
     content         = db.Column(db.Text, nullable=False)
-    created_at      = db.Column(db.Date, default=datetime.now)
+    created_at      = db.Column(db.DateTime, default=datetime.now)
 
     # rating >- user
     user_id         = db.Column(db.ForeignKey('user.id'), nullable=False)
