@@ -6,7 +6,7 @@ from backend.blueprints import register_blueprints
 from backend.database.db import init_db, db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 init_db(app)
 migrate = Migrate(app, db)

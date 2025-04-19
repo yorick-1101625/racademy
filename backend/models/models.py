@@ -1,8 +1,12 @@
 from backend.database.db import db
 from datetime import datetime
 
+
+
 class BaseModel(db.Model):
     __abstract__ = True
+
+    id = db.Column(db.Integer, primary_key=True)
 
     def to_dict(self):
         return {
@@ -10,26 +14,131 @@ class BaseModel(db.Model):
             for column in self.__table__.columns
         }
 
-class User(BaseModel):
-    user_id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(255))
-    username = db.Column(db.String(255))
-    password = db.Column(db.String(255))
-    study = db.Column(db.String(255))
-    is_blocked = db.Column(db.Boolean)
-    is_admin = db.Column(db.Boolean)
 
-    posts = db.relationship('Post', back_populates='user')
+class UserFavoritePost(BaseModel):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+
+
+class UserLikedPost(BaseModel):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+
+
+class UserFavoriteSource(BaseModel):
+    user_id     = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    source_id   = db.Column(db.Integer, db.ForeignKey('source.id'), nullable=False)
+
+
+class SourceTag(BaseModel):
+    source_id   = db.Column(db.Integer, db.ForeignKey('source.id'), nullable=False)
+    tag_id      = db.Column(db.Integer, db.ForeignKey('tag.id'), nullable=False)
+
+
+class User(BaseModel):
+    email           = db.Column(db.String(255), unique=True, nullable=False)
+    username        = db.Column(db.String(255), nullable=False)
+    password        = db.Column(db.String(255), nullable=False)
+    study           = db.Column(db.String(255), nullable=False)
+    is_blocked      = db.Column(db.Boolean, default=False)
+    is_admin        = db.Column(db.Boolean, default=False)
+
+    # user -< posts
+    created_posts   = db.relationship('Post', back_populates='user')
+    # user -< comments
+    comments        = db.relationship('Comment', back_populates='user')
+    # user -< ratings
+    created_ratings = db.relationship('Rating', back_populates='user')
+    # users >-< posts
+    favorite_posts  = db.relationship('Post', secondary='user_favorite_post', back_populates='users_favorite')
+    liked_posts     = db.relationship('Post', secondary='user_liked_post', back_populates='users_liked')
+    # users >-< sources
+    favorite_sources = db.relationship('Source', secondary='user_favorite_source', back_populates='users_favorite')
 
     def __repr__(self):
-        return f"Test(id={self.user_id}, name={self.username})"
+        return f"<User(id={self.id}, name='{self.username}')>"
+
 
 class Post(BaseModel):
-    post_id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.Text, nullable=True)
-    content = db.Column(db.Text, nullable=True)
-    created_at = db.Column(db.Date, default=datetime)
-    updated_at = db.Column(db.DateTime, default=datetime, onupdate=datetime)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), nullable=False)
+    title           = db.Column(db.String(255), nullable=False)
+    content         = db.Column(db.Text, nullable=False)
+    created_at      = db.Column(db.Date, default=datetime.now)
+    updated_at      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
-    user = db.relationship('User', back_populates='posts')
+    # post >- user
+    user_id         = db.Column(db.ForeignKey('user.id'), nullable=False)
+    user            = db.relationship('User', back_populates='created_posts')
+    # post -< comments
+    comments        = db.relationship('Comment', back_populates='post')
+    # posts >-< users
+    users_favorite  = db.relationship('User', secondary='user_favorite_post', back_populates='favorite_posts')
+    users_liked     = db.relationship('User', secondary='user_liked_post', back_populates='liked_posts')
+
+    def __repr__(self):
+        return f"<Post(id={self.id}, name='{self.title}')>"
+
+
+class Comment(BaseModel):
+    title           = db.Column(db.String(255), nullable=False)
+    content         = db.Column(db.Text, nullable=False)
+    created_at      = db.Column(db.Date, default=datetime.now)
+    updated_at      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+
+    # comment >- user
+    user_id         = db.Column(db.ForeignKey('user.id'), nullable=False)
+    user            = db.relationship('User', back_populates='comments')
+    # comment >- post
+    post_id         = db.Column(db.ForeignKey('post.id'), nullable=False)
+    post            = db.relationship('Post', back_populates='comments')
+
+    def __repr__(self):
+        return f"<Comment(id={self.id}, name='{self.title}')>"
+
+
+class Source(BaseModel):
+    type                = db.Column(db.String(255), nullable=False)
+    title               = db.Column(db.String(255), nullable=False)
+    description         = db.Column(db.Text, nullable=False)
+    created_at          = db.Column(db.Date, default=datetime.now)
+    school_subject      = db.Column(db.String(255), nullable=False)
+    subject             = db.Column(db.String(255), nullable=False)
+    difficulty          = db.Column(db.String(255), nullable=False)
+    url                 = db.Column(db.String(255))
+    isbn                = db.Column(db.String(255))
+
+    # source -< ratings
+    ratings = db.relationship('Rating', back_populates='source')
+    # sources >-< users
+    users_favorite = db.relationship('User', secondary='user_favorite_source', back_populates='favorite_sources')
+    # sources >-< tags
+    tags = db.relationship('Tag', secondary='source_tag', back_populates='sources')
+
+    def __repr__(self):
+        return f"<Source(id={self.id}, type='{self.type}', title='{self.title}')>"
+
+
+class Rating(BaseModel):
+    rating          = db.Column(db.Integer, nullable=False)
+    content         = db.Column(db.Text, nullable=False)
+    created_at      = db.Column(db.Date, default=datetime.now)
+
+    # rating >- user
+    user_id         = db.Column(db.ForeignKey('user.id'), nullable=False)
+    user            = db.relationship('User', back_populates='created_ratings')
+    # rating >- source
+    source_id       = db.Column(db.ForeignKey('source.id'), nullable=False)
+    source          = db.relationship('Source', back_populates='ratings')
+
+    def __repr__(self):
+        return f"<Rating(id={self.id}, rating={self.rating})>"
+
+
+class Tag(BaseModel):
+    name = db.Column(db.String(255), nullable=False)
+
+    # tags >-< sources
+    sources = db.relationship('Source', secondary='source_tag', back_populates='tags')
+
+    def __repr__(self):
+        return f"<Tag(id={self.id}, name='{self.name}')>"
+
