@@ -1,25 +1,39 @@
-import {Image, Text, View} from 'react-native';
-import Kebab from "../../../assets/menu/kebab.png";
-import NotLiked from "../../../assets/like/heart-white.png";
-import Liked from "../../../assets/like/heart-red.png";
+import {Image, Pressable, Text, View} from 'react-native';
+
+// Icons
+import HeartIconBlack from "../../../assets/like/heart-black.png";
+import HeartIconRed from "../../../assets/like/heart-red.png";
+import ChatBubble from "../../../assets/comment/chat-bubble.png";
 
 import calculateTimeFromToday from "../utils/calculateTimeFromToday";
+import {useRef, useState} from "react";
+import PostMenu from "./PostMenu";
 
 function Post({ post }) {
+
+    const [isLiked, setIsLiked] = useState(post.likedByCurrentUser);
+    const numberOfLikesRef = useRef(post.numberOfLikes);
+
+    function handleLike() {
+        isLiked
+        ? numberOfLikesRef.current--
+        : numberOfLikesRef.current++
+
+        setIsLiked(i => !i);
+    }
+
     return (
-        <View className="w-11/12">
+        <View className="my-5">
             {/* Author */}
             <View className="flex-row items-center">
-                <Image source={ post.profilePicture } className="w-12 h-12 bg-neutral-300 rounded-full hover:cursor-pointer"/>
-                <Text className="ml-3 text-lg hover:cursor-pointer hover:underline">{ post.username }</Text>
+                <Image source={ post.profilePicture } className="w-12 h-12 bg-neutral-300 rounded-full cursor-pointer peer"/>
+                <Text className="ml-3 text-lg cursor-pointer hover:underline peer-hover:underline">{ post.username }</Text>
             </View>
 
-            <View className="bg-neutral-200 mt-3 p-5 shadow-md shadow-neutral-200 rounded-lg relative hover:cursor-pointer">
-                <View className="absolute top-4 right-4 h-6 w-6 hover:rotate-90 z-10 duration-150 hover:duration-75">
-                    <Image source={Kebab} />
-                </View>
+            <View className="bg-neutral-200 mt-3 p-5 hover:shadow-md hover:shadow-neutral-200 transition-shadow rounded-lg relative cursor-pointer">
+                <PostMenu isBookmarked={post.bookmarkedByCurrentUser} />
 
-                {/* Post */}
+                {/* Content */}
                 <Text className="font-bold text-2xl">{ post.title }</Text>
                 <Text className="mt-2 p-1 text-neutral-800">
                     { post.content }
@@ -33,12 +47,30 @@ function Post({ post }) {
                     </View>
 
                     <View className="flex-row">
-                        <Text className="mr-1 text-neutral-700">{ post.numberOfLikes }</Text>
-                        <Image source={
-                            post.likedByCurrentUser
-                            ? Liked
-                            : NotLiked
-                        } />
+                        <Pressable
+                            className="flex-row items-center"
+                        >
+                            <Text className="mr-1 text-neutral-700">{ post.numberOfComments }</Text>
+                            <Image
+                                className="w-7 h-7 hover:scale-110 active:scale-90 duration-75"
+                                source={ ChatBubble }
+                            />
+                        </Pressable>
+
+                        <Pressable
+                            onPress={handleLike}
+                            className="flex-row items-center ml-3"
+                        >
+                            <Text className="mr-1 text-neutral-700">{ numberOfLikesRef.current }</Text>
+                            <Image
+                                className="w-7 h-7 hover:scale-110 active:scale-90 duration-75"
+                                source={
+                                    isLiked
+                                    ? HeartIconRed
+                                    : HeartIconBlack
+                                }
+                            />
+                        </Pressable>
                     </View>
                 </View>
             </View>
