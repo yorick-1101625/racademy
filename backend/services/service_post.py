@@ -1,14 +1,28 @@
+from sqlalchemy import asc, desc, or_
+from sqlalchemy.exc import SQLAlchemyError
 from backend.models.models import Post
 from backend.database.db import db
-from sqlalchemy.exc import SQLAlchemyError
+
 
 class PostService:
 
     @staticmethod
-    def get_all_posts():
-        posts = Post.query.all()
-        result = [post.to_dict() for post in posts]
-        return result
+    def get_all_posts(search_term=None, offset=0, limit=10):
+        query = db.session.query(Post)
+
+        if search_term:
+            search_term = f"%{search_term.lower()}%"
+            query = query.filter(
+                or_(
+                    db.func.lower(Post.title).like(search_term),
+                    db.func.lower(Post.content).like(search_term)
+                )
+            )
+
+        query = query.offset(offset).limit(limit)
+
+        posts = query.all()
+        return [post.to_dict() for post in posts]
 
     @staticmethod
     def get_post_by_id(post_id):
