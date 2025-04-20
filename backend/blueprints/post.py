@@ -1,106 +1,114 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from werkzeug.exceptions import HTTPException
-from backend.services.service_post import *
+from backend.services.service_post import PostService
 
 api_post = Blueprint("api_post", __name__)
-# TODO Rework error handling
+# TODO: More Error handling https://medium.com/@dmostoller/mastering-error-handling-in-flask-with-werkzeug-exceptions-ensuring-robust-server-side-validations-a00a9862566a
 @api_post.route("/", methods=["GET"])
 def get_posts():
     try:
-        result = PostService.get_all_posts()
-        if result:
-            return {
-                "success": True,
-                "data": result,
-            }, 200
-        else:
-            return {
-                "success": False,
-                "data": result,
-            }
+        posts = PostService.get_all_posts()
+        return jsonify({
+            "success": True,
+            "data": posts
+        }), 200
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(e)
+        print(f"[get_posts] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
 
 
 @api_post.route("/<post_id>", methods=["GET"])
 def get_post(post_id):
     try:
-        result = PostService.get_post_by_id(post_id)
-        if result:
-            return {
+        post = PostService.get_post_by_id(post_id)
+        if post:
+            return jsonify({
                 "success": True,
-                "data": result,
-            }, 200
+                "data": post
+            }), 200
         else:
-            return {
+            return jsonify({
                 "success": False,
-                "data": result,
-            }
+                "message": f"Post with ID {post_id} not found."
+            }), 404
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(e)
+        print(f"[get_post] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
 
 
 @api_post.route("/", methods=["POST"])
 def create_post():
     data = request.get_json()
     try:
-        result = PostService.create_post(data)
-        if result:
-            return {
-                "success": True,
-                "data": result,
-            }, 200
-        else:
-            return {
-                "success": False,
-                "data": result,
-            }
+        post = PostService.create_post(data)
+        return jsonify({
+            "success": True,
+            "data": post
+        }), 201
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(e)
+        print(f"[create_post] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
 
 
 @api_post.route("/<post_id>", methods=["PATCH"])
 def update_post(post_id):
     data = request.get_json()
     try:
-        result = PostService.update_post(post_id, data)
-        if result:
-            return {
+        updated_post = PostService.update_post(post_id, data)
+        if updated_post:
+            return jsonify({
                 "success": True,
-                "data": result,
-            }, 200
+                "data": updated_post
+            }), 200
         else:
-            return {
+            return jsonify({
                 "success": False,
-                "data": result,
-            }
+                "message": f"Post with ID {post_id} not found or not updated."
+            }), 404
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(e)
+        print(f"[update_post] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
 
 
 @api_post.route("/<post_id>", methods=["DELETE"])
-def update_post(post_id):
+def delete_post(post_id):
     try:
-        result = PostService.delete_post(post_id)
-        if result:
-            return {
+        deleted_post = PostService.delete_post(post_id)
+        if deleted_post:
+            return jsonify({
                 "success": True,
-                "data": result,
-            }, 200
+                "data": deleted_post
+            }), 200
         else:
-            return {
+            return jsonify({
                 "success": False,
-                "data": result,
-            }
+                "message": f"Post with ID {post_id} not found or already deleted."
+            }), 404
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(e)
+        print(f"[delete_post] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
