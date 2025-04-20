@@ -1,5 +1,5 @@
 import {FlatList} from 'react-native';
-import Post from "./Post";
+import Post from "./post/Post";
 
 const TestPFP = {uri: 'https://placehold.co/64'};
 
@@ -81,7 +81,7 @@ const posts = [{
 function PostList() {
     return (
         <FlatList
-            className="w-11/12 pt-5 sm:max-w-xl"
+            className="p-5 sm:max-w-xl"
             data={posts}
             renderItem={({ item }) => <Post post={item} />}
             keyExtractor={post => post.id}

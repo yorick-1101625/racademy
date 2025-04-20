@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.pop-button {
+    @apply hover:scale-110 active:scale-90 duration-75;
+}

@@ -1,9 +1,9 @@
 import {Image, Pressable, Text, View} from 'react-native';
 import {useState} from "react";
 
-import KebabIcon from "../../../assets/menu/kebab.png";
-import BookmarkAdd from "../../../assets/bookmark/bookmark-add.png";
-import BookmarkAdded from "../../../assets/bookmark/bookmark-added.png";
+import KebabIcon from "../../../../assets/menu/kebab.png";
+import BookmarkAdd from "../../../../assets/bookmark/bookmark-add.png";
+import BookmarkAdded from "../../../../assets/bookmark/bookmark-added.png";
 
 function PostMenu(props) {
     const [isVisible, setIsVisible] = useState(false);
@@ -17,7 +17,7 @@ function PostMenu(props) {
     return (
         <View className="absolute top-4 right-4 z-10 items-end">
             <Pressable
-                className={`h-7 w-7 items-center justify-center z-20 duration-150 ${ isVisible && '-rotate-90' }`}
+                className={`h-7 w-7 items-center justify-center z-20 duration-150 pop-button ${ isVisible && '-rotate-90' }`}
                 onPress={() => setIsVisible(i => !i)}
             >
                 <Image source={KebabIcon} />
