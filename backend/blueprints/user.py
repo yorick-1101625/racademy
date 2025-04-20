@@ -1,40 +1,40 @@
 from flask import Blueprint, request, jsonify
 from werkzeug.exceptions import HTTPException
-from backend.services.service_post import PostService
+from backend.services.service_user import UserService
 
-api_post = Blueprint("api_post", __name__)
-# TODO: More Error handling https://medium.com/@dmostoller/mastering-error-handling-in-flask-with-werkzeug-exceptions-ensuring-robust-server-side-validations-a00a9862566a
-@api_post.route("/", methods=["GET"])
-def get_posts():
+api_user = Blueprint("api_user", __name__)
+
+@api_user.route("/", methods=["GET"])
+def get_users():
     try:
-        posts = PostService.get_all_posts()
+        users = UserService.get_all_users()
         return jsonify({
             "success": True,
-            "data": posts
+            "data": users
         }), 200
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(f"[get_posts] Unexpected error: {e}")
+        print(f"[get_users] Unexpected error: {e}")
         return jsonify({
             "success": False,
             "message": "An unexpected error occurred."
         }), 500
 
 
-@api_post.route("/<post_id>", methods=["GET"])
-def get_post(post_id):
+@api_user.route("/<user_id>", methods=["GET"])
+def get_user(user_id):
     try:
-        post = PostService.get_post_by_id(post_id)
-        if post:
+        user = UserService.get_user_by_id(user_id)
+        if user:
             return jsonify({
                 "success": True,
-                "data": post
+                "data": user
             }), 200
         else:
             return jsonify({
                 "success": False,
-                "message": f"Post with ID {post_id} not found."
+                "message": f"User with ID {user_id} not found."
             }), 404
     except HTTPException as e:
         raise e
@@ -46,68 +46,68 @@ def get_post(post_id):
         }), 500
 
 
-@api_post.route("/", methods=["POST"])
-def create_post():
+@api_user.route("/", methods=["POST"])
+def register_user():
     data = request.get_json()
     try:
-        post = PostService.create_post(data)
+        user = UserService.create_user(data)
         return jsonify({
             "success": True,
-            "data": post
+            "data": user
         }), 201
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(f"[create_post] Unexpected error: {e}")
+        print(f"[register_user] Unexpected error: {e}")
         return jsonify({
             "success": False,
             "message": "An unexpected error occurred."
         }), 500
 
 
-@api_post.route("/<post_id>", methods=["PATCH"])
-def update_post(post_id):
+@api_user.route("/<user_id>", methods=["PATCH"])
+def update_post(user_id):
     data = request.get_json()
     try:
-        updated_post = PostService.update_post(post_id, data)
-        if updated_post:
+        updated_user = UserService.update_user(user_id, data)
+        if updated_user:
             return jsonify({
                 "success": True,
-                "data": updated_post
+                "data": updated_user
             }), 200
         else:
             return jsonify({
                 "success": False,
-                "message": f"Post with ID {post_id} not found or not updated."
+                "message": f"User with ID {user_id} not found or not updated."
             }), 404
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(f"[update_post] Unexpected error: {e}")
+        print(f"[update_user] Unexpected error: {e}")
         return jsonify({
             "success": False,
             "message": "An unexpected error occurred."
         }), 500
 
 
-@api_post.route("/<post_id>", methods=["DELETE"])
-def delete_post(post_id):
+@api_user.route("/<user_id>", methods=["DELETE"])
+def delete_user(user_id):
     try:
-        deleted_post = PostService.delete_post(post_id)
-        if deleted_post:
+        deleted_user = UserService.delete_user(user_id)
+        if deleted_user:
             return jsonify({
                 "success": True,
-                "data": deleted_post
+                "data": deleted_user
             }), 200
         else:
             return jsonify({
                 "success": False,
-                "message": f"Post with ID {post_id} not found or already deleted."
+                "message": f"User with ID {user_id} not found or already deleted."
             }), 404
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(f"[delete_post] Unexpected error: {e}")
+        print(f"[delete_user] Unexpected error: {e}")
         return jsonify({
             "success": False,
             "message": "An unexpected error occurred."
