@@ -30,7 +30,7 @@ function Post({ post }) {
                 <PostContent title={post.title} content={post.content} />
 
                 <View className="mt-4 flex-row justify-between items-end">
-                    <PostDetails createdAt={post.createdAt} tags={post.tags} />
+                    <PostDetails createdAt={post.created_at} tags={post.tags} />
 
                     <PostActions numberOfComments={post.numberOfComments} numberOfLikes={post.numberOfLikes} likedByCurrentUser={post.likedByCurrentUser} />
                 </View>

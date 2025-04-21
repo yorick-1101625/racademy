@@ -5,7 +5,7 @@ function PostDetails({ createdAt, tags }) {
     return (
         <View>
             <Text className="italic text-neutral-600">{ calculateTimeFromToday(createdAt) }</Text>
-            <Text className="italic text-neutral-600">{ tags.join(' ') }</Text>
+            { tags && <Text className="italic text-neutral-600">{ tags.join(' ') }</Text> }
         </View>
     );
 }
