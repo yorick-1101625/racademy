@@ -1,5 +1,5 @@
 import {Image, Text, View} from 'react-native';
-import Logo from "../../../assets/Logo.webp";
+// import Logo from "../../../assets/splash-icon.webp";
 
 function LogoHeader() {
     return (
