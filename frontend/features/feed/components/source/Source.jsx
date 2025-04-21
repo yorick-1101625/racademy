@@ -1,8 +1,9 @@
 import {View} from 'react-native';
-import ContentAuthor from "../ContentAuthor";
-import {Link} from "expo-router";
-import ContentMenu from "../ContentMenu";
 import {useState} from "react";
+import {Link} from "expo-router";
+
+import ContentAuthor from "../ContentAuthor";
+import ContentMenu from "../ContentMenu";
 import SourceContent from "./SourceContent";
 import SourceDetails from "./SourceDetails";
 

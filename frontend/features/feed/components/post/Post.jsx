@@ -1,12 +1,12 @@
+import {useState} from "react";
 import {View} from 'react-native';
+import {Link} from "expo-router";
 
 import ContentMenu from "../ContentMenu";
 import PostContent from "./PostContent";
 import PostDetails from "./PostDetails";
 import PostActions from "./PostActions";
 import ContentAuthor from "../ContentAuthor";
-import {Link} from "expo-router";
-import {useState} from "react";
 
 function Post({ post }) {
 

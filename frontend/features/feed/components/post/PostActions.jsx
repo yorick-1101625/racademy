@@ -1,5 +1,5 @@
-import {Image, Pressable, Text, View} from 'react-native';
 import {useRef, useState} from "react";
+import {Image, Pressable, Text, View} from 'react-native';
 
 // Icons
 import ChatBubbleIcon from "@/assets/icons/comment/chat-bubble.png";

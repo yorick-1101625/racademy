@@ -1,7 +1,3 @@
-import {Image, Text, View} from 'react-native';
-import calculateTimeFromToday from "@/features/feed/utils/calculateTimeFromToday";
-
-// Icons
 import Rating00Icon from "@/assets/icons/rating/rating-00.png";
 import Rating05Icon from "@/assets/icons/rating/rating-05.png";
 import Rating10Icon from "@/assets/icons/rating/rating-10.png";
@@ -14,7 +10,7 @@ import Rating40Icon from "@/assets/icons/rating/rating-40.png";
 import Rating45Icon from "@/assets/icons/rating/rating-45.png";
 import Rating50Icon from "@/assets/icons/rating/rating-50.png";
 
-function getRatingIcon(rating) {
+export default function getRatingIcon(rating) {
     if (rating === 0) {
         return Rating00Icon;
     }
@@ -49,26 +45,3 @@ function getRatingIcon(rating) {
         return Rating50Icon;
     }
 }
-
-function SourceDetails({ createdAt, schoolSubject, subject, rating }) {
-
-
-
-    return (
-        <>
-            <View>
-                <Text className="italic text-neutral-600">{ calculateTimeFromToday(createdAt) }</Text>
-                <Text className="italic text-neutral-600">{ schoolSubject }: { subject }</Text>
-            </View>
-
-            <View className="flex-row items-center">
-                <Text className="mr-1">{ (rating / 10).toFixed(1) }</Text>
-                <Image source={
-                    getRatingIcon(rating)
-                } />
-            </View>
-        </>
-    );
-}
-
-export default SourceDetails;

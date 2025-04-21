@@ -1,7 +1,8 @@
-import {Pressable, Text, View} from 'react-native';
-import PostList from "./content/post/PostList";
 import {useState} from "react";
-import SourceList from "./content/source/SourceList";
+import {Pressable, Text, View} from 'react-native';
+
+import PostList from "@/features/feed/components/post/PostList";
+import SourceList from "@/features/feed/components/source/SourceList";
 
 function Feed() {
 
