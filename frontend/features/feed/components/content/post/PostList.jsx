@@ -1,5 +1,5 @@
 import {FlatList} from 'react-native';
-import Post from "./post/Post";
+import Post from "./Post";
 
 const TestPFP = {uri: 'https://placehold.co/64'};
 
@@ -14,7 +14,8 @@ const posts = [{
     numberOfLikes: 26,
     numberOfComments: 3,
     likedByCurrentUser: false,
-    bookmarkedByCurrentUser: false
+    bookmarkedByCurrentUser: false,
+    userId: 3
 },{
     id: 2,
     profilePicture: TestPFP,
@@ -26,7 +27,8 @@ const posts = [{
     numberOfLikes: 26,
     numberOfComments: 3,
     likedByCurrentUser: true,
-    bookmarkedByCurrentUser: true
+    bookmarkedByCurrentUser: true,
+    userId: 3
 },{
     id: 3,
     profilePicture: TestPFP,
@@ -38,7 +40,8 @@ const posts = [{
     numberOfLikes: 26,
     numberOfComments: 3,
     likedByCurrentUser: false,
-    bookmarkedByCurrentUser: false
+    bookmarkedByCurrentUser: false,
+    userId: 3
 },{
     id: 4,
     profilePicture: TestPFP,
@@ -50,7 +53,8 @@ const posts = [{
     numberOfLikes: 26,
     numberOfComments: 3,
     likedByCurrentUser: false,
-    bookmarkedByCurrentUser: false
+    bookmarkedByCurrentUser: false,
+    userId: 3
 },{
     id: 5,
     profilePicture: TestPFP,
@@ -62,7 +66,8 @@ const posts = [{
     numberOfLikes: 26,
     numberOfComments: 3,
     likedByCurrentUser: false,
-    bookmarkedByCurrentUser: false
+    bookmarkedByCurrentUser: false,
+    userId: 3
 },{
     id: 6,
     profilePicture: TestPFP,
@@ -74,14 +79,15 @@ const posts = [{
     numberOfLikes: 26,
     numberOfComments: 3,
     likedByCurrentUser: false,
-    bookmarkedByCurrentUser: false
+    bookmarkedByCurrentUser: false,
+    userId: 3
 },
 ];
 
 function PostList() {
     return (
         <FlatList
-            className="p-5 sm:max-w-xl"
+            className="p-5 sm:max-w-xl w-screen"
             data={posts}
             renderItem={({ item }) => <Post post={item} />}
             keyExtractor={post => post.id}

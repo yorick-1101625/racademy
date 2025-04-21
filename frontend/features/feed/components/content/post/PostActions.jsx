@@ -2,9 +2,9 @@ import {Image, Pressable, Text, View} from 'react-native';
 import {useRef, useState} from "react";
 
 // Icons
-import ChatBubbleIcon from "../../../../assets/comment/chat-bubble.png";
-import HeartIconRed from "../../../../assets/like/heart-red.png";
-import HeartIconBlack from "../../../../assets/like/heart-black.png";
+import ChatBubbleIcon from "@/assets/icons/comment/chat-bubble.png";
+import HeartIconRed from "@/assets/icons/like/heart-red.png";
+import HeartIconBlack from "@/assets/icons/like/heart-black.png";
 
 function PostActions({ numberOfComments, numberOfLikes, likedByCurrentUser }) {
 
