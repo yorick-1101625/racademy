@@ -12,25 +12,42 @@ function LoginForm() {
     const passwordRef = useRef(null);
     const confirmPasswordRef = useRef(null);
 
+
     function handleToggleRegistering () {
         setIsRegistering(i => !i);
     }
 
     function handleFormSubmit() {
-        const email = emailRef.current.value;
-        const password = passwordRef.current.value;
+    const email = emailRef.current?.value;
+    const password = passwordRef.current?.value;
 
-        console.log(email, password);
+    const url = "http://127.0.0.1:5000/api/login/";
 
-        if (isRegistering) {
-            const confirmPassword = confirmPasswordRef.current.value;
-            console.log(confirmPassword);
-            // make new account
-        }
-        else {
-            // log in
-        }
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Success:", data);
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+
+    console.log(email, password);
+
+    if (isRegistering) {
+        const confirmPassword = confirmPasswordRef.current?.value;
+        console.log(confirmPassword);
+        // make new account
+    } else {
+        // log in
     }
+}
 
     return (
         <View className="bg-white w-full rounded-b-lg overflow-hidden">
