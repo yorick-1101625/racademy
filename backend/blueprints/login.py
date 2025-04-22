@@ -16,9 +16,10 @@ def login():
 
     data = request.get_json(force=True)
     print(data)
-    result = check_login(data)
-    print(result)
-    return jsonify({'status': 'success'}), 200
+    if check_login(data):
+        return jsonify({'status': 'success'}), 200
+    else:
+        return jsonify({'status': 'fail'}), 401
 
 
 def check_login(data):

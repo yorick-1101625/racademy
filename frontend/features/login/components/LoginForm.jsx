@@ -21,32 +21,31 @@ function LoginForm() {
     const email = emailRef.current?.value;
     const password = passwordRef.current?.value;
 
-    const url = "http://127.0.0.1:5000/api/login/";
+    const url = "http://127.0.0.1:5000/api/login/"; // trailing slash to match Flask route
 
     fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+            email,
+            password,
+        }),
     })
     .then(response => response.json())
     .then(data => {
-        console.log("Success:", data);
+        if (data.status === "success") {
+            console.log("Login successful");
+            // maybe navigate to another screen or save user token
+        } else {
+            console.log("Login failed");
+            // show error to user
+        }
     })
     .catch(error => {
-        console.error("Error:", error);
+        console.error("Error during login:", error);
     });
-
-    console.log(email, password);
-
-    if (isRegistering) {
-        const confirmPassword = confirmPasswordRef.current?.value;
-        console.log(confirmPassword);
-        // make new account
-    } else {
-        // log in
-    }
 }
 
     return (
