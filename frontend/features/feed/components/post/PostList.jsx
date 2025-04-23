@@ -1,4 +1,4 @@
-import {FlatList} from 'react-native';
+import {FlatList, Text} from 'react-native';
 import Post from "./Post";
 import useFetch from "@/hooks/useFetch";
 
@@ -90,16 +90,20 @@ function PostList() {
     const {data: posts, isPending, error} = useFetch('http://127.0.0.1:5000/api/post');
 
     return (
-        <FlatList
-            className="p-5 sm:max-w-xl w-screen"
-            data={
-                isPending
-                    ? testPosts
-                    : posts.data
+        <>
+            { isPending && <Text>Loading...</Text>}
+            { error && <Text>Error!</Text>}
+            {
+                posts && <FlatList
+                    className="p-5 sm:max-w-xl w-screen"
+                    data={
+                        posts.data
+                    }
+                    renderItem={({item}) => <Post post={item}/>}
+                    keyExtractor={post => post.id}
+                />
             }
-            renderItem={({ item }) => <Post post={item} />}
-            keyExtractor={post => post.id}
-        />
+        </>
     );
 }
 

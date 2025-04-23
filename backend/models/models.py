@@ -11,7 +11,7 @@ class BaseModel(db.Model):
     def to_dict(self):
         return {
             column.name: getattr(self, column.name)
-            for column in self.__table__.columns
+            for column in self.__mapper__.columns
         }
 
 
@@ -56,7 +56,7 @@ class User(BaseModel):
     favorite_sources = db.relationship('Source', secondary='user_favorite_source', back_populates='users_favorite')
 
     def __repr__(self):
-        return f"<User(id={self.id}, name='{self.username}')>"
+        return f"<User(id={self.id}, email='{self.email}')>"
 
 
 class Post(BaseModel):

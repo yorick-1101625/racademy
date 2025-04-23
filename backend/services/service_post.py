@@ -1,6 +1,8 @@
+from flask import jsonify
 from sqlalchemy import asc, desc, or_
 from sqlalchemy.exc import SQLAlchemyError
-from backend.models.models import Post
+
+from backend.models.models import Post, User
 from backend.database.db import db
 
 
@@ -22,7 +24,16 @@ class PostService:
         query = query.offset(offset).limit(limit)
 
         posts = query.all()
-        return [post.to_dict() for post in posts]
+        # Add user, number of comments, number of likes
+        result = []
+        for post in posts:
+            post_dict = post.to_dict()
+            post_dict['user'] = post.user.to_dict()
+            post_dict['number_of_likes'] = len(post.users_liked)
+            post_dict['number_of_comments'] = len(post.users_favorite)
+            result.append(post_dict)
+
+        return result
 
     @staticmethod
     def get_post_by_id(post_id):
