@@ -8,7 +8,7 @@ from backend.database.db import db
 class PostService:
 
     @staticmethod
-    def get_all_posts(search_term=None, offset=0, limit=10):
+    def get_all_posts(current_user_id, search_term=None, offset=0, limit=10):
         query = db.session.query(Post)
 
         if search_term:
@@ -22,14 +22,16 @@ class PostService:
 
         query = query.offset(offset).limit(limit)
 
+        current_user = User.query.get(current_user_id)
         posts = query.all()
-        # Add user, number of comments, number of likes
+        # Add user, number of comments, number of likes, liked by current user
         result = []
         for post in posts:
             post_dict = post.to_dict()
             post_dict['user'] = post.user.to_dict()
             post_dict['number_of_likes'] = len(post.users_liked)
             post_dict['number_of_comments'] = len(post.users_favorite)
+            post_dict['liked_by_current_user'] = post in current_user.liked_posts
             result.append(post_dict)
 
         return result
