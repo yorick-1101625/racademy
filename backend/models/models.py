@@ -45,6 +45,8 @@ class User(BaseModel):
 
     # user -< posts
     created_posts   = db.relationship('Post', back_populates='user')
+    # user -< sources
+    created_sources   = db.relationship('Source', back_populates='user')
     # user -< comments
     comments        = db.relationship('Comment', back_populates='user')
     # user -< ratings
@@ -106,6 +108,9 @@ class Source(BaseModel):
     url                 = db.Column(db.String(255))
     isbn                = db.Column(db.String(255))
 
+    # source >- user
+    user_id         = db.Column(db.ForeignKey('user.id'), nullable=False)
+    user            = db.relationship('User', back_populates='created_sources')
     # source -< ratings
     ratings = db.relationship('Rating', back_populates='source')
     # sources >-< users

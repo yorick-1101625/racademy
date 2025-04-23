@@ -96,9 +96,7 @@ function PostList() {
             {
                 posts && <FlatList
                     className="p-5 sm:max-w-xl w-screen"
-                    data={
-                        posts.data
-                    }
+                    data={ posts }
                     renderItem={({item}) => <Post post={item}/>}
                     keyExtractor={post => post.id}
                 />

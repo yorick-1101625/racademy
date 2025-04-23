@@ -17,7 +17,7 @@ function useFetch(url) {
                 return res.json();
             })
             .then(data => {
-                setData(data);
+                setData(data.data);
                 if (!data.success) {
                     throw Error('Something went wrong!');
                 }

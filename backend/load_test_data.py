@@ -28,7 +28,7 @@ with app.app_context():
     # Create Source
     source_1 = Source(type='video', title='Source 1', description='description',
                       school_subject='Werkplaats', subject='OOP', difficulty='moeilijk',
-                      url='www.google.com', tags=[programming_tag])
+                      url='www.google.com', tags=[programming_tag], user=user_1)
     db.session.add(source_1)
 
     # Create Rating

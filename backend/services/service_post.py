@@ -1,4 +1,3 @@
-from flask import jsonify
 from sqlalchemy import asc, desc, or_
 from sqlalchemy.exc import SQLAlchemyError
 
