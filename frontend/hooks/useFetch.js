@@ -19,6 +19,9 @@ function useFetch(url) {
             .then(data => {
                 setData(data);
                 setIsPending(false);
+                if (!data.success) {
+                    throw Error('Something went wrong!');
+                }
                 setError(null);
             })
             .catch(err => {
