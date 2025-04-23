@@ -8,7 +8,7 @@ function SourceContent({ name, image }) {
                 className="mt-2 h-80"
                 source={ image }
                 resizeMode="contain"
-                height={500}
+                // height={500}
             />
         </>
     );

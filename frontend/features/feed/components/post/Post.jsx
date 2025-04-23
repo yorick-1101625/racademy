@@ -32,7 +32,7 @@ function Post({ post }) {
                 <View className="mt-4 flex-row justify-between items-end">
                     <PostDetails createdAt={post.created_at} tags={post.tags} />
 
-                    <PostActions numberOfComments={post.number_of_comments} numberOfLikes={post.number_of_likes} likedByCurrentUser={post.likedByCurrentUser} />
+                    <PostActions numberOfComments={post.number_of_comments} numberOfLikes={post.number_of_likes} likedByCurrentUser={post.likedByCurrentUser} postId={post.id} />
                 </View>
             </View>
 

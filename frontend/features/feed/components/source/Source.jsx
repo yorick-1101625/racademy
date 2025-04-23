@@ -7,6 +7,8 @@ import ContentMenu from "../ContentMenu";
 import SourceContent from "./SourceContent";
 import SourceDetails from "./SourceDetails";
 
+import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
+
 function Source({ source }) {
 
     const [isBookmarked, setIsBookmarked] = useState(source.bookmarkedByCurrentUser);
@@ -16,14 +18,7 @@ function Source({ source }) {
         setIsBookmarked(i => !i);
     }
 
-    function calculateAverageRating(ratings) {
-        let totalRatingPoints = 0;
-        ratings.forEach(rating => {
-            totalRatingPoints += rating;
-        });
-
-        return totalRatingPoints / ratings.length;
-    }
+    const averageRating = calculateAverageRating(source.ratings);
 
     return (
         <View className="my-5">
@@ -38,7 +33,7 @@ function Source({ source }) {
                 <SourceContent name={source.name} image={source.image} type={source.type} />
 
                 <View className="mt-4 flex-row justify-between items-end">
-                    <SourceDetails createdAt={source.created_at} schoolSubject={source.school_subject} subject={source.subject} rating={calculateAverageRating(source.ratings)} />
+                    <SourceDetails createdAt={source.created_at} schoolSubject={source.school_subject} subject={source.subject} rating={averageRating} />
                 </View>
             </View>
 
