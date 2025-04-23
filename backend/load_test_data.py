@@ -1,3 +1,5 @@
+import os
+
 from app import app
 from backend.models.models import *
 
@@ -5,8 +7,9 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
+    test_pfp_path = "static/user_images/test_pfp.png"
     # Create user
-    user_1 = User(email='1@hr.nl', username='1', password='1', study='SWD')
+    user_1 = User(email='1@hr.nl', username='1', password='1', study='SWD', profile_picture=test_pfp_path)
     db.session.add(user_1)
 
     # Create post

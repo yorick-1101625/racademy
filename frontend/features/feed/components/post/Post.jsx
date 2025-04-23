@@ -20,7 +20,7 @@ function Post({ post }) {
     return (
         <View className="my-5">
 
-            <ContentAuthor profilePicture={post.user.profilePicture} username={post.user.username} userId={post.user.id} />
+            <ContentAuthor profilePicture={post.user.profile_picture} username={post.user.username} userId={post.user.id} />
 
             <View className="bg-white border border-neutral-200 mt-3 p-5 hover:shadow-md hover:shadow-neutral-200 transition-shadow rounded-lg relative cursor-pointer">
                 <Link href={`/posts/${post.id}`} className="absolute left-0 top-0 bottom-0 right-32 z-10" />

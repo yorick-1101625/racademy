@@ -40,6 +40,7 @@ class User(BaseModel):
     username        = db.Column(db.String(255), nullable=False)
     password        = db.Column(db.String(255), nullable=False)
     study           = db.Column(db.String(255), nullable=False)
+    profile_picture = db.Column(db.String(255))
     is_blocked      = db.Column(db.Boolean, default=False)
     is_admin        = db.Column(db.Boolean, default=False)
 

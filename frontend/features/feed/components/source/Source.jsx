@@ -23,7 +23,7 @@ function Source({ source }) {
     return (
         <View className="my-5">
 
-            <ContentAuthor profilePicture={source.profilePicture} username={source.user.username} userId={source.user.id} />
+            <ContentAuthor profilePicture={source.user.profile_picture} username={source.user.username} userId={source.user.id} />
 
             <View className="bg-white border border-neutral-200 mt-3 p-5 hover:shadow-md hover:shadow-neutral-200 transition-shadow rounded-lg relative cursor-pointer">
                 <Link href={`/sources/${source.id}`} className="absolute left-0 top-0 bottom-0 right-32 z-10" />
