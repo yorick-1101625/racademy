@@ -9,7 +9,7 @@ from backend.database.db import init_db, db
 instance_path = os.path.join(os.path.dirname(__file__), '..', 'instance')
 app = Flask(__name__, instance_path=instance_path)
 
-db_path = os.path.join(app.instance_path, 'database.sqlite3')
+db_path = os.path.join(app.instance_path, 'database.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -38,7 +38,7 @@ def generate_dummy_data():
             content=f"Content of post {i}. This is some random content.",
             created_at=datetime.now(),
             updated_at=datetime.now(),
-            user_id=random.choice(users).user_id
+            user=random.choice(users)
         )
         posts.append(post)
 

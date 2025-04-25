@@ -1,6 +1,6 @@
 from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
-from backend.models.models import User
+from backend.models.models import User, Post, Source
 from backend.database.db import db
 
 
@@ -56,6 +56,28 @@ class UserService:
             user.email = data.get('email', user.email)
             user.username = data.get('username', user.username)
             user.study = data.get('study', user.study)
+
+            if data.get('liked_post'):
+                liked_post = Post.query.get(data.get('liked_post'))
+                if liked_post in user.liked_posts:
+                    user.liked_posts.remove(liked_post)
+                else:
+                    user.liked_posts.append(liked_post)
+
+            if data.get('bookmarked_post'):
+                bookmarked_post = Post.query.get(data.get('bookmarked_post'))
+                if bookmarked_post in user.bookmarked_posts:
+                    user.bookmarked_posts.remove(bookmarked_post)
+                else:
+                    user.bookmarked_posts.append(bookmarked_post)
+
+            if data.get('bookmarked_source'):
+                bookmarked_source = Source.query.get(data.get('bookmarked_source'))
+                if bookmarked_source in user.bookmarked_sources:
+                    user.bookmarked_sources.remove(bookmarked_source)
+                else:
+                    user.bookmarked_sources.append(bookmarked_source)
+
             db.session.commit()
             return user.to_dict()
         except SQLAlchemyError as e:

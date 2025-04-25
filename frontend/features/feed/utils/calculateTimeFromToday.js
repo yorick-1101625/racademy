@@ -1,13 +1,16 @@
 export default function calculateTimeFromToday(datetime) {
-    const currentDate = new Date();
-    const targetDate = new Date(datetime);
+    const targetUTC = new Date(datetime);
 
-    const years = currentDate.getFullYear() - targetDate.getFullYear();
+    const currentDateTime = new Date();
+    const currentUTC = new Date(currentDateTime.getTime() - (currentDateTime.getTimezoneOffset() * 60000));
+
+
+    const years = currentUTC.getUTCFullYear() - targetUTC;
     if (years > 0) {
         return `${years} jaar geleden`;
     }
 
-    const months = currentDate.getMonth() - targetDate.getMonth();
+    const months = currentUTC.getUTCMonth() - targetUTC.getUTCMonth();
     if (months > 0) {
         return (
             months === 1
@@ -16,7 +19,7 @@ export default function calculateTimeFromToday(datetime) {
         );
     }
 
-    const difference = currentDate - targetDate;
+    const difference = currentUTC - targetUTC;
     const weeks = Math.floor(difference / 1000 / 60 / 60 / 24 / 7);
     if (weeks > 0) {
         return (

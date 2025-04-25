@@ -1,10 +1,11 @@
-import {FlatList} from 'react-native';
+import {FlatList, Text} from 'react-native';
 import Source from './Source.jsx';
+import useFetch from "@/hooks/useFetch";
 
 const TestPFP = {uri: 'https://placehold.co/64'};
 const TestImage = {uri: 'https://img.youtube.com/vi/P9-4xHVc7uk/0.jpg'};
 
-const sources = [{
+const testSources = [{
     id: 1,
     profilePicture: TestPFP,
     username: "Supercoolegast",
@@ -42,13 +43,22 @@ const sources = [{
 ];
 
 function SourceList() {
+
+    const {data: sources, isPending, error} = useFetch('http://127.0.0.1:5000/api/source');
+
     return (
-        <FlatList
-            className="p-5 sm:max-w-xl w-screen"
-            data={sources}
-            renderItem={({ item }) => <Source source={item} />}
-            keyExtractor={source => source.id}
-        />
+        <>
+            { isPending && <Text>Loading...</Text>}
+            { error && <Text>Error!</Text>}
+            {
+                sources && <FlatList
+                    className="p-5 sm:max-w-xl w-screen"
+                    data={ sources }
+                    renderItem={({item}) => <Source source={item}/>}
+                    keyExtractor={source => source.id}
+                />
+            }
+        </>
     );
 }
 

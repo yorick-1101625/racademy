@@ -1,3 +1,5 @@
+import os
+
 from app import app
 from backend.models.models import *
 
@@ -5,38 +7,39 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
+    test_pfp_path = "static/user_images/test_pfp.png"
     # Create user
-    user_1 = User(email='1@hr.nl', username='1', password='1', study='SWD')
+    user_1 = User(email='1@hr.nl', username='1', password='1', study='SWD', profile_picture=test_pfp_path)
     db.session.add(user_1)
 
+    # Create Tag
+    programming_tag = Tag(name='programmeren')
+    db.session.add(programming_tag)
+
     # Create post
-    first_post = Post(title='Eerste post', content='content', user=user_1)
+    first_post = Post(title='Eerste post', content='content', user=user_1, tags=[programming_tag])
     db.session.add(first_post)
 
     # Create comment
     first_comment = Comment(title='Leuke comment' , content='heel leuk', user=user_1, post=first_post)
     db.session.add(first_comment)
 
-    # Add post to liked and favorites
+    # Add post to liked and bookmarked
     user_1.liked_posts.append(first_post)
-    user_1.favorite_posts.append(first_post)
-
-    # Create Tag
-    programming_tag = Tag(name='programmeren')
-    db.session.add(programming_tag)
+    user_1.bookmarked_posts.append(first_post)
 
     # Create Source
     source_1 = Source(type='video', title='Source 1', description='description',
                       school_subject='Werkplaats', subject='OOP', difficulty='moeilijk',
-                      url='www.google.com', tags=[programming_tag])
+                      url='www.google.com', user=user_1)
     db.session.add(source_1)
 
     # Create Rating
     rating_1 = Rating(rating='50', content='5 sterren van mij', user=user_1, source=source_1)
     db.session.add(rating_1)
 
-    # Add source to favorites
-    user_1.favorite_sources.append(source_1)
+    # Add source to bookmarked
+    user_1.bookmarked_sources.append(source_1)
 
     db.session.commit()
 
@@ -46,6 +49,6 @@ with app.app_context():
     print('Created Post: ',  queried_user.created_posts)
     print('Comments: ',  queried_user.comments)
     print('Created Ratings: ',  queried_user.created_ratings)
-    print('Favorite Posts: ',  queried_user.favorite_posts)
+    print('Bookmarked Posts: ',  queried_user.bookmarked_posts)
     print('Liked Posts: ',  queried_user.liked_posts)
-    print('Favorite Sources: ',  queried_user.favorite_sources)
+    print('Bookmarked Sources: ',  queried_user.bookmarked_sources)

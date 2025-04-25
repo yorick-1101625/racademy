@@ -1,13 +1,14 @@
 from sqlalchemy import asc, desc, or_
 from sqlalchemy.exc import SQLAlchemyError
-from backend.models.models import Post
+
+from backend.models.models import Post, User
 from backend.database.db import db
 
 
 class PostService:
 
     @staticmethod
-    def get_all_posts(search_term=None, offset=0, limit=10):
+    def get_all_posts(current_user_id, search_term=None, offset=0, limit=10):
         query = db.session.query(Post)
 
         if search_term:
@@ -21,8 +22,21 @@ class PostService:
 
         query = query.offset(offset).limit(limit)
 
+        current_user = User.query.get(current_user_id)
         posts = query.all()
-        return [post.to_dict() for post in posts]
+        # Add user, number of comments, number of likes, liked by current user
+        result = []
+        for post in posts:
+            post_dict = post.to_dict()
+            post_dict['user'] = post.user.to_dict()
+            post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
+            post_dict['number_of_likes'] = len(post.users_liked)
+            post_dict['number_of_comments'] = len(post.comments)
+            post_dict['liked_by_current_user'] = post in current_user.liked_posts
+            post_dict['bookmarked_by_current_user'] = post in current_user.bookmarked_posts
+            result.append(post_dict)
+
+        return result
 
     @staticmethod
     def get_post_by_id(post_id):
