@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
+
 export default function AdminDashboard() {
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -7,11 +8,11 @@ export default function AdminDashboard() {
 
   // Fetch users data when the component mounts
   useEffect(() => {
-    fetch('http://localhost:5000/api/user') // Je API eindpunt voor gebruikers
+    fetch('http://localhost:5000/api/user')
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          setUser(data.data);  // Zet de gebruikersdata in de state
+          setUser(data.data);
         } else {
           setError('Failed to fetch users');
         }
@@ -23,13 +24,13 @@ export default function AdminDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Functie om een gebruiker te verwijderen
+  // Function to delete user,work in progress
   const removeUser = (userId) => {
     fetch(`http://localhost:5000/api/user/${userId}`, { method: 'DELETE' })  // Verwijder gebruiker
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          setUser(user.filter(u => u.id !== userId));  // Verwijder gebruiker uit de lijst
+          setUser(user.filter(u => u.id !== userId));
         }
       })
       .catch(err => {
@@ -47,14 +48,14 @@ export default function AdminDashboard() {
       {user.map(u => (
         <div key={u.id} className="bg-white border p-6 mb-6 rounded-xl shadow w-full">
           <div className="flex items-center space-x-6 mb-4">
-            <img
-              src={u.avatar}
-              alt="avatar"
-              className="w-16 h-16 rounded-full object-cover"
-            />
-            <div>
-              <p className="font-bold text-lg">{u.name || 'Naam onbekend'}</p>
-              <p className="text-sm text-gray-600">{u.email}</p>
+              <img
+                  src={`http://localhost:5000/${u.profile_picture}`}
+                  alt="avatar"
+                  className="w-16 h-16 rounded-full object-cover"
+              />
+              <div>
+                  <p className="font-bold text-lg">{u.username || 'Naam onbekend'}</p>
+                  <p className="text-sm text-gray-600">{u.email}</p>
               <p className="text-sm">Studie: {u.study || 'Onbekend'}</p>
               <p className="text-sm">{u.posts || 0} posts</p>
             </div>
