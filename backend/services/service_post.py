@@ -29,9 +29,11 @@ class PostService:
         for post in posts:
             post_dict = post.to_dict()
             post_dict['user'] = post.user.to_dict()
+            post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
             post_dict['number_of_likes'] = len(post.users_liked)
-            post_dict['number_of_comments'] = len(post.users_favorite)
+            post_dict['number_of_comments'] = len(post.comments)
             post_dict['liked_by_current_user'] = post in current_user.liked_posts
+            post_dict['bookmarked_by_current_user'] = post in current_user.bookmarked_posts
             result.append(post_dict)
 
         return result

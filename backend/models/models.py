@@ -15,7 +15,7 @@ class BaseModel(db.Model):
         }
 
 
-class UserFavoritePost(BaseModel):
+class UserBookmarkedPost(BaseModel):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
 
@@ -25,13 +25,13 @@ class UserLikedPost(BaseModel):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
 
 
-class UserFavoriteSource(BaseModel):
+class UserBookmarkedSource(BaseModel):
     user_id     = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     source_id   = db.Column(db.Integer, db.ForeignKey('source.id'), nullable=False)
 
 
-class SourceTag(BaseModel):
-    source_id   = db.Column(db.Integer, db.ForeignKey('source.id'), nullable=False)
+class PostTag(BaseModel):
+    post_id   = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
     tag_id      = db.Column(db.Integer, db.ForeignKey('tag.id'), nullable=False)
 
 
@@ -53,10 +53,10 @@ class User(BaseModel):
     # user -< ratings
     created_ratings = db.relationship('Rating', back_populates='user')
     # users >-< posts
-    favorite_posts  = db.relationship('Post', secondary='user_favorite_post', back_populates='users_favorite')
+    bookmarked_posts  = db.relationship('Post', secondary='user_bookmarked_post', back_populates='users_bookmarked')
     liked_posts     = db.relationship('Post', secondary='user_liked_post', back_populates='users_liked')
     # users >-< sources
-    favorite_sources = db.relationship('Source', secondary='user_favorite_source', back_populates='users_favorite')
+    bookmarked_sources = db.relationship('Source', secondary='user_bookmarked_source', back_populates='users_bookmarked')
 
     def __repr__(self):
         return f"<User(id={self.id}, email='{self.email}')>"
@@ -74,8 +74,10 @@ class Post(BaseModel):
     # post -< comments
     comments        = db.relationship('Comment', back_populates='post')
     # posts >-< users
-    users_favorite  = db.relationship('User', secondary='user_favorite_post', back_populates='favorite_posts')
+    users_bookmarked  = db.relationship('User', secondary='user_bookmarked_post', back_populates='bookmarked_posts')
     users_liked     = db.relationship('User', secondary='user_liked_post', back_populates='liked_posts')
+    # posts >-< tags
+    tags = db.relationship('Tag', secondary='post_tag', back_populates='posts')
 
     def __repr__(self):
         return f"<Post(id={self.id}, name='{self.title}')>"
@@ -115,9 +117,7 @@ class Source(BaseModel):
     # source -< ratings
     ratings = db.relationship('Rating', back_populates='source')
     # sources >-< users
-    users_favorite = db.relationship('User', secondary='user_favorite_source', back_populates='favorite_sources')
-    # sources >-< tags
-    tags = db.relationship('Tag', secondary='source_tag', back_populates='sources')
+    users_bookmarked = db.relationship('User', secondary='user_bookmarked_source', back_populates='bookmarked_sources')
 
     def __repr__(self):
         return f"<Source(id={self.id}, type='{self.type}', title='{self.title}')>"
@@ -142,8 +142,8 @@ class Rating(BaseModel):
 class Tag(BaseModel):
     name = db.Column(db.String(255), nullable=False)
 
-    # tags >-< sources
-    sources = db.relationship('Source', secondary='source_tag', back_populates='tags')
+    # tags >-< posts
+    posts = db.relationship('Post', secondary='post_tag', back_populates='tags')
 
     def __repr__(self):
         return f"<Tag(id={self.id}, name='{self.name}')>"

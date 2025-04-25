@@ -7,7 +7,8 @@ api_source = Blueprint("api_source", __name__)
 @api_source.route("/", methods=["GET"])
 def get_sources():
     try:
-        sources = SourceService.get_all_sources()
+        current_user_id = 1 # TODO: get from session
+        sources = SourceService.get_all_sources(current_user_id)
         return {
             "success": True,
             "data": sources

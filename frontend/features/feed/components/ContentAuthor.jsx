@@ -2,7 +2,6 @@ import {Image, Text} from 'react-native';
 import {Link} from "expo-router";
 
 function ContentAuthor({ profilePicture, username, userId }) {
-    console.log(`http://localhost:5000/${profilePicture}`)
 
     const profilePicturePath = `http://localhost:5000/${profilePicture}`;
 

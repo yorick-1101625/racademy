@@ -7,7 +7,7 @@ from backend.database.db import db
 class SourceService:
 
     @staticmethod
-    def get_all_sources(search_term=None, offset=0, limit=10):
+    def get_all_sources(current_user_id, search_term=None, offset=0, limit=10):
         query = db.session.query(Source)
 
         if search_term:
@@ -21,15 +21,15 @@ class SourceService:
 
         query = query.offset(offset).limit(limit)
 
+        current_user = User.query.get(current_user_id)
         sources = query.all()
         # Add user, number of comments, number of likes
         result = []
         for source in sources:
             source_dict = source.to_dict()
             source_dict['user'] = source.user.to_dict()
-            source_dict['number_of_favorites'] = len(source.users_favorite)
-            source_dict['tags'] = [tag.to_dict() for tag in source.tags]
             source_dict['ratings'] = [rating.to_dict()['rating'] for rating in source.ratings]
+            source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
             result.append(source_dict)
 
         return result
