@@ -12,25 +12,41 @@ function LoginForm() {
     const passwordRef = useRef(null);
     const confirmPasswordRef = useRef(null);
 
+
     function handleToggleRegistering () {
         setIsRegistering(i => !i);
     }
 
     function handleFormSubmit() {
-        const email = emailRef.current.value;
-        const password = passwordRef.current.value;
+    const email = emailRef.current?.value;
+    const password = passwordRef.current?.value;
 
-        console.log(email, password);
+    const url = "http://127.0.0.1:5000/api/login/"; // trailing slash to match Flask route
 
-        if (isRegistering) {
-            const confirmPassword = confirmPasswordRef.current.value;
-            console.log(confirmPassword);
-            // make new account
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email,
+            password,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            console.log("Login successful");
+            // maybe navigate to another screen or save user token
+        } else {
+            console.log("Login failed");
+            // show error to user
         }
-        else {
-            // log in
-        }
-    }
+    })
+    .catch(error => {
+        console.error("Error during login:", error);
+    });
+}
 
     return (
         <View className="bg-white w-full rounded-b-lg overflow-hidden">
