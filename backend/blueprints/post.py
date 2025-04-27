@@ -7,7 +7,8 @@ api_post = Blueprint("api_post", __name__)
 @api_post.route("/", methods=["GET"])
 def get_posts():
     try:
-        posts = PostService.get_all_posts()
+        current_user_id = 1 # TODO: get from session
+        posts = PostService.get_all_posts(current_user_id)
         return jsonify({
             "success": True,
             "data": posts

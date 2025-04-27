@@ -12,13 +12,13 @@ function ContentMenu({ isBookmarked, handleBookmark }) {
     return (
         <View className="absolute top-4 right-4 z-10 items-end">
             <Pressable
-                className={`h-7 w-7 items-center justify-center z-20 duration-150 pop-button rounded-full hover:border active:border border-neutral-300 ${ isVisible && '-rotate-90 border' }`}
+                className={`h-7 w-7 items-center justify-center z-20 duration-150 rounded-full hover:border active:border border-neutral-300 ${ isVisible && '-rotate-90 border' }`}
                 onPress={() => setIsVisible(i => !i)}
             >
                 <Image source={KebabIcon} />
             </Pressable>
 
-            <View className={`bg-neutral-100 p-3 rounded-sm shadow-lg shadow-neutral-400 ${ isVisible || 'hidden' }`}>
+            <View className={`bg-neutral-100 p-3 rounded-sm shadow-lg shadow-neutral-300 ${ isVisible || 'hidden' }`}>
 
                 <Pressable
                     className="flex-row rounded-md border border-neutral-300 p-2 items-center hover:bg-neutral-200 transition-colors"
