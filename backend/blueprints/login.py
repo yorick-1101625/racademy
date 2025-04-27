@@ -1,25 +1,28 @@
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
+from flask_jwt_extended import create_access_token
 from werkzeug.exceptions import HTTPException
 from backend.services.service_user import UserService
 
 api_login = Blueprint('api_login', __name__)
 
-@api_login.route('/', methods=['GET', 'POST', 'OPTIONS'])
+@api_login.route('/', methods=['POST'])
 @cross_origin()
 def login():
     try:
         data = request.get_json()
 
-        response = UserService.login_user(
+        user = UserService.login_user(
             data.get("email"),
             data.get("password")
         )
 
-        if response:
+        if user:
+            access_token = create_access_token(identity=user.id)
             return jsonify({
                 "success": True,
-                "message": "Login succeeded."
+                "message": "Login succeeded.",
+                "access_token": access_token
             }), 200
         else:
             return jsonify({

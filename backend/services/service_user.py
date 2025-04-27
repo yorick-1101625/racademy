@@ -53,9 +53,9 @@ class UserService:
         user = User.query.filter_by(email=email).first()
 
         if not user or user.password != password:
-            return False
+            return None
 
-        return True
+        return user
 
     @staticmethod
     def update_user(user_id, data):
