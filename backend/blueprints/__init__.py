@@ -14,11 +14,11 @@ PUBLIC_ENDPOINTS = [
 
 def register_blueprints(app):
 
-    @app.before_request
-    def require_jwt():
-        if request.endpoint in PUBLIC_ENDPOINTS or request.endpoint is None:
-            return
-        verify_jwt_in_request()
+    # @app.before_request
+    # def require_jwt():
+    #     if request.endpoint in PUBLIC_ENDPOINTS or request.endpoint is None:
+    #         return
+    #     verify_jwt_in_request()
 
     app.register_blueprint(api_post, url_prefix="/api/post")
     app.register_blueprint(api_user, url_prefix="/api/user")

@@ -3,6 +3,7 @@ from flask_cors import cross_origin
 from flask_jwt_extended import create_access_token
 from werkzeug.exceptions import HTTPException
 from backend.services.service_user import UserService
+from datetime import timedelta
 
 api_login = Blueprint('api_login', __name__)
 
@@ -18,7 +19,10 @@ def login():
         )
 
         if user:
-            access_token = create_access_token(identity=user.id)
+            access_token = create_access_token(
+                identity=user.id,
+                expires_delta = timedelta(hours=1)
+            )
             return jsonify({
                 "success": True,
                 "message": "Login succeeded.",
