@@ -35,11 +35,11 @@ function LoginForm() {
     })
     .then(response => response.json())
     .then(data => {
-        if (data.status === "success") {
-            console.log("Login successful");
+        if (data.success) {
+            console.log(data);
             // maybe navigate to another screen or save user token
         } else {
-            console.log("Login failed");
+            console.log(data);
             // show error to user
         }
     })

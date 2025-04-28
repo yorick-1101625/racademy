@@ -30,6 +30,7 @@ class UserService:
         user = User.query.get(user_id)
         return user.to_dict() if user else None
 
+    # TODO: Implement register instead of create_user
     @staticmethod
     def create_user(data):
         try:
@@ -46,6 +47,15 @@ class UserService:
             db.session.rollback()
             print(f"Error creating user: {e}")
             return None
+
+    @staticmethod
+    def login_user(email, password):
+        user = User.query.filter_by(email=email).first()
+
+        if not user or user.password != password:
+            return None
+
+        return user
 
     @staticmethod
     def update_user(user_id, data):
