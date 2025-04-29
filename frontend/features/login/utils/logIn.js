@@ -25,7 +25,7 @@ export default async function logIn(email, password) {
             console.log(data);
             return true;
         } else {
-            return Error(`Could not log in user: ${data}`);
+            return Error(data.message);
         }
     })
     .catch(error => {

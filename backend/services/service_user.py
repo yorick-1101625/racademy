@@ -1,6 +1,6 @@
 from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from backend.models.models import User, Post, Source
 from backend.database.db import db
@@ -70,8 +70,11 @@ class UserService:
     def login_user(email, password):
         user = User.query.filter_by(email=email).first()
 
-        if not user or user.password != password:
-            return None
+        if not user:
+            return Exception("User does not exist")
+
+        if not check_password_hash(user.password, password):
+            return Exception("Invalid password")
 
         return user
 

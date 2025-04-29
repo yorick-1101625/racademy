@@ -33,7 +33,7 @@ export default async function registerUser(email, password, confirmationPassword
         if (data.success) {
             return true;
         } else {
-            return Error(data.error);
+            return Error(data.message);
         }
     })
     .catch(error => {

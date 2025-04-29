@@ -55,7 +55,7 @@ def register_user():
             error = str(result)
             return {
                 "success": False,
-                "error": error
+                "message": error
             }, 400
         else:
             return {
