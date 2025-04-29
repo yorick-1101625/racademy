@@ -3,6 +3,8 @@ import EmailPasswordFields from "./EmailPasswordFields";
 import FormSubmitButton from "./FormSubmitButton";
 import ToggleRegistering from "./ToggleRegistering";
 import {useRef, useState} from "react";
+import logIn from "@/features/login/utils/logIn";
+import registerUser from "@/features/login/utils/registerUser";
 
 function LoginForm() {
 
@@ -18,35 +20,32 @@ function LoginForm() {
     }
 
     function handleFormSubmit() {
-    const email = emailRef.current?.value;
-    const password = passwordRef.current?.value;
+        const email = emailRef.current?.value;
+        const password = passwordRef.current?.value;
 
-    const url = "http://127.0.0.1:5000/api/login/"; // trailing slash to match Flask route
-
-    fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            email,
-            password,
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log(data);
-            // maybe navigate to another screen or save user token
-        } else {
-            console.log(data);
-            // show error to user
+        if (isRegistering) {
+            const confirmationPassword = confirmPasswordRef.current?.value;
+            const result = registerUser(email, password, confirmationPassword);
+            result.then(r => console.log(r))
+            if (result instanceof Error) {
+                console.error(result); // notify user
+            }
+            else {
+                console.log("success");
+                // return to login and notify user
+            }
         }
-    })
-    .catch(error => {
-        console.error("Error during login:", error);
-    });
-}
+        else {
+            const result = logIn(email, password);
+            if (result instanceof Error) {
+                console.error(result); // notify user
+            }
+            else {
+                console.log("success");
+                // maybe navigate to another screen or save user token
+            }
+        }
+    }
 
     return (
         <View className="bg-white w-full rounded-b-lg overflow-hidden">
