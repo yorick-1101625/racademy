@@ -40,8 +40,10 @@ class UserService:
             # Check if email contains @hr.nl
             email = data.get("email")
             if not validate_email(email):
-                print(validate_email(email))
                 return Exception("Must provide a valid email address")
+            # Check if email already exists
+            if User.query.filter_by(email=email).one_or_none() is not None:
+                return Exception("Email already exists")
 
             if not data.get("password"):
                 return Exception("Must provide a valid password")

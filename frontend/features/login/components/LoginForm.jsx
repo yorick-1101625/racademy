@@ -26,24 +26,29 @@ function LoginForm() {
         if (isRegistering) {
             const confirmationPassword = confirmPasswordRef.current?.value;
             const result = registerUser(email, password, confirmationPassword);
-            result.then(r => console.log(r))
-            if (result instanceof Error) {
-                console.error(result); // notify user
-            }
-            else {
-                console.log("success");
-                // return to login and notify user
-            }
+            result
+                .then(error => {
+                    if (error instanceof Error) {
+                        console.error(error); // notify user
+                    }
+                    else {
+                        console.log("success");
+                        // return to login and notify user
+                    }
+                })
         }
         else {
             const result = logIn(email, password);
-            if (result instanceof Error) {
-                console.error(result); // notify user
-            }
-            else {
-                console.log("success");
-                // maybe navigate to another screen or save user token
-            }
+            result
+                .then(error => {
+                    if (error instanceof Error) {
+                        console.error(error); // notify user
+                    }
+                    else {
+                        console.log("success");
+                        // maybe navigate to another screen or save user token
+                    }
+                })
         }
     }
 

@@ -18,7 +18,7 @@ export default async function registerUser(email, password, confirmationPassword
     // Register User
     const url = "http://127.0.0.1:5000/api/user/";
 
-    return await fetch(url, {
+    return fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -31,7 +31,6 @@ export default async function registerUser(email, password, confirmationPassword
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            console.log(data);
             return true;
         } else {
             return Error(data.error);

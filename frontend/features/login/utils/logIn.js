@@ -1,4 +1,4 @@
-export default function logIn(email, password) {
+export default async function logIn(email, password) {
     // Error Handling
     if (email.trim() === "") {
         return Error("Must provide email");
@@ -9,7 +9,7 @@ export default function logIn(email, password) {
 
     const url = "http://127.0.0.1:5000/api/login/"; // trailing slash to match Flask route
 
-    fetch(url, {
+    return fetch(url, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
