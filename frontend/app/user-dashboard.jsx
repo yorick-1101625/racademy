@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
 
-
 export default function AdminDashboard() {
-  const [user, setUser] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch users data when the component mounts
   useEffect(() => {
-    fetch('http://localhost:5000/api/user')
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          setUser(data.data);
+    Promise.all([
+      fetch('http://localhost:5000/api/user').then(res => res.json()),
+      fetch('http://localhost:5000/api/post').then(res => res.json())
+    ])
+      .then(([userData, postData]) => {
+        if (userData.success) {
+          setUsers(userData.data);
         } else {
           setError('Failed to fetch users');
+        }
+
+        if (postData.success && Array.isArray(postData.data)) {
+          setPosts(postData.data);
+        } else {
+          console.warn('Post data not in expected format:', postData);
         }
       })
       .catch(err => {
@@ -24,18 +31,21 @@ export default function AdminDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Function to delete user,work in progress
   const removeUser = (userId) => {
-    fetch(`http://localhost:5000/api/user/${userId}`, { method: 'DELETE' })  // Verwijder gebruiker
+    fetch(`http://localhost:5000/api/user/${userId}`, { method: 'DELETE' })
       .then(response => response.json())
       .then(data => {
         if (data.success) {
-          setUser(user.filter(u => u.id !== userId));
+          setUsers(users.filter(u => u.id !== userId));
         }
       })
       .catch(err => {
         console.error('Error removing user', err);
       });
+  };
+
+  const getPostCountForUser = (userId) => {
+    return posts.filter(p => p.user_id === userId).length;
   };
 
   if (loading) return <div>Loading users...</div>;
@@ -45,23 +55,22 @@ export default function AdminDashboard() {
     <div className="px-16 py-10 w-full">
       <h1 className="text-3xl font-bold mb-6">Gebruikers</h1>
 
-      {user.map(u => (
+      {users.map(u => (
         <div key={u.id} className="bg-white border p-6 mb-6 rounded-xl shadow w-full">
           <div className="flex items-center space-x-6 mb-4">
-              <img
-                  src={`http://localhost:5000/${u.profile_picture}`}
-                  alt="avatar"
-                  className="w-16 h-16 rounded-full object-cover"
-              />
-              <div>
-                  <p className="font-bold text-lg">{u.username || 'Naam onbekend'}</p>
-                  <p className="text-sm text-gray-600">{u.email}</p>
+            <img
+              src={`http://localhost:5000/${u.profile_picture}`}
+              alt="avatar"
+              className="w-16 h-16 rounded-full object-cover"
+            />
+            <div>
+              <p className="font-bold text-lg">{u.username || 'Naam onbekend'}</p>
+              <p className="text-sm text-gray-600">{u.email}</p>
               <p className="text-sm">Studie: {u.study || 'Onbekend'}</p>
-              <p className="text-sm">{u.posts || 0} posts</p>
+              <p className="text-sm">{getPostCountForUser(u.id)} posts</p>
             </div>
           </div>
 
-     
           <div className="flex flex-wrap justify-start gap-3 mt-4">
             <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300 text-sm font-medium">
               Details
