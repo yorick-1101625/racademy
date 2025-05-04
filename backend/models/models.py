@@ -39,10 +39,10 @@ class User(BaseModel):
     email           = db.Column(db.String(255), unique=True, nullable=False)
     username        = db.Column(db.String(255), nullable=False)
     password        = db.Column(db.String(255), nullable=False)
-    study           = db.Column(db.String(255), nullable=False)
+    study           = db.Column(db.String(255))
     profile_picture = db.Column(db.String(255))
-    is_blocked      = db.Column(db.Boolean, default=False)
-    is_admin        = db.Column(db.Boolean, default=False)
+    is_blocked      = db.Column(db.Boolean, default=False, nullable=False)
+    is_admin        = db.Column(db.Boolean, default=False, nullable=False)
 
     # user -< posts
     created_posts   = db.relationship('Post', back_populates='user')

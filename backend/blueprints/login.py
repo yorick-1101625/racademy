@@ -13,26 +13,26 @@ def login():
     try:
         data = request.get_json()
 
-        user = UserService.login_user(
+        result = UserService.login_user(
             data.get("email"),
             data.get("password")
         )
 
-        if user:
+        if type(result) == Exception:
+            return jsonify({
+                "success": False,
+                "message": str(result)
+            }), 401
+        else:
             access_token = create_access_token(
-                identity=user.id,
-                expires_delta = timedelta(hours=1)
+                identity=result.id,
+                expires_delta=timedelta(hours=1)
             )
             return jsonify({
                 "success": True,
                 "message": "Login succeeded.",
                 "access_token": access_token
             }), 200
-        else:
-            return jsonify({
-                "success": False,
-                "message": "Login failed."
-            }), 401
 
     except HTTPException as e:
         raise e

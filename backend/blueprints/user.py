@@ -50,19 +50,26 @@ def get_user(user_id):
 def register_user():
     data = request.get_json()
     try:
-        user = UserService.create_user(data)
-        return jsonify({
-            "success": True,
-            "data": user
-        }), 201
+        result = UserService.create_user(data)
+        if type(result) == Exception:
+            error = str(result)
+            return {
+                "success": False,
+                "message": error
+            }, 400
+        else:
+            return {
+                "success": True,
+                "data": result
+            }, 201
     except HTTPException as e:
         raise e
     except Exception as e:
         print(f"[register_user] Unexpected error: {e}")
-        return jsonify({
+        return {
             "success": False,
             "message": "An unexpected error occurred."
-        }), 500
+        }, 500
 
 
 @api_user.route("/<user_id>", methods=["PATCH"])

@@ -1,7 +1,10 @@
 from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from backend.models.models import User, Post, Source
 from backend.database.db import db
+from backend.utils.validate_email import validate_email
 
 
 class UserService:
@@ -34,11 +37,26 @@ class UserService:
     @staticmethod
     def create_user(data):
         try:
+            # Check if email contains @hr.nl
+            email = data.get("email")
+            if not validate_email(email):
+                return Exception("Must provide a valid email address")
+            # Check if email already exists
+            if User.query.filter_by(email=email).one_or_none() is not None:
+                return Exception("Email already exists")
+
+            if not data.get("password"):
+                return Exception("Must provide a valid password")
+
+            # Make username the student-number inside the email
+            username = email.split('@')[0]
+
+            hashed_password = generate_password_hash(data.get("password"))
+
             new_user = User(
-                email=data.get('email'),
-                username=data.get('username'),
-                password=data.get('password'),
-                study=data.get('study')
+                email=email,
+                password=hashed_password,
+                username=username,
             )
             db.session.add(new_user)
             db.session.commit()
@@ -46,14 +64,17 @@ class UserService:
         except SQLAlchemyError as e:
             db.session.rollback()
             print(f"Error creating user: {e}")
-            return None
+            return Exception(f"Error creating user: {e}")
 
     @staticmethod
     def login_user(email, password):
         user = User.query.filter_by(email=email).first()
 
-        if not user or user.password != password:
-            return None
+        if not user:
+            return Exception("User does not exist")
+
+        if not check_password_hash(user.password, password):
+            return Exception("Invalid password")
 
         return user
 

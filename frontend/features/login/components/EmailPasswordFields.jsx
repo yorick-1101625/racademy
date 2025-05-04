@@ -10,6 +10,8 @@ function EmailPasswordFields({ emailRef, passwordRef, confirmPassword, confirmPa
                     focus:outline-none focus:shadow-md focus:shadow-neutral-200 transition-shadow duration-100"
                 inputMode="email" placeholder="Studentnummer@hr.nl"
                 ref={emailRef}
+                autoFocus={true}
+                autoCorrect={false}
             />
 
             <Text className="text-xl font-semibold">Wachtwoord</Text>
@@ -27,8 +29,8 @@ function EmailPasswordFields({ emailRef, passwordRef, confirmPassword, confirmPa
                 <>
                     <Text className="text-xl font-semibold">Herhaal Wachtwoord</Text>
                     <TextInput
-                        className="p-5 bg-white w-full rounded-md mb-8 mt-1 border border-hr
-                            focus:outline-none focus:shadow-md focus:shadow-neutral-200 transition-shadow duration-100"
+                        className="p-5 bg-white w-full rounded-md mb-8 mt-1 border border-hr placeholder:text-neutral-500
+                            focus:outline-none focus:shadow-md focus:shadow-neutral-200 transition-shadow duration-100 border-rac"
                         placeholder="Herhaal Wachtwoord"
                         secureTextEntry={true}
                         autoCorrect={false}
