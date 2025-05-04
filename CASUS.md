@@ -10,7 +10,7 @@ Hieronder vind je een user case diagram met de functionaliteiten die erin moeten
 
 ## Requirements
 
-### Index en registratie
+### Login en registratie
 
 Om de veiligheid en relevantie van de app te waarborgen, zijn de volgende regels opgesteld:
 
