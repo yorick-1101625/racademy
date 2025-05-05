@@ -1,18 +1,20 @@
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, View} from 'react-native';
 
-import Feed from "@/features/feed/components/Feed";
+import LogoHeader from "../features/login/components/LogoHeader";
+import LoginForm from "../features/login/components/LoginForm";
 
-function Home() {
-
-
-
+function Login() {
     return (
-        <SafeAreaView className="flex-1 items-center bg-neutral-100">
+        <SafeAreaView className="flex-1 justify-center items-center bg-neutral-100">
+            <View className="w-11/12 sm:max-w-xl shadow-lg shadow-neutral-300 rounded-lg overflow-hidden">
 
-            <Feed />
+                <LogoHeader />
 
+                <LoginForm />
+
+            </View>
         </SafeAreaView>
     );
 }
 
-export default Home;
+export default Login;

@@ -1,12 +1,22 @@
-import {Slot} from "expo-router";
-import {StatusBar} from "expo-status-bar";
-import '../global.css'
+import {Stack} from 'expo-router';
 
 function RootLayout() {
     return (
         <>
-            <StatusBar hidden={true}/>
-            <Slot />
+            <Stack>
+                <Stack.Screen
+                    name="index"
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name="tabs"
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+            </Stack>
         </>
     );
 }
