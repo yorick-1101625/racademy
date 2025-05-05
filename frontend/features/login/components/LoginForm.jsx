@@ -5,6 +5,7 @@ import ToggleRegistering from "./ToggleRegistering";
 import {useRef, useState} from "react";
 import logIn from "@/features/login/utils/logIn";
 import registerUser from "@/features/login/utils/registerUser";
+import {useRouter} from "expo-router";
 
 function LoginForm() {
 
@@ -14,6 +15,7 @@ function LoginForm() {
     const passwordRef = useRef(null);
     const confirmPasswordRef = useRef(null);
 
+    const router = useRouter();
 
     function handleToggleRegistering () {
         setIsRegistering(i => !i);
@@ -33,7 +35,7 @@ function LoginForm() {
                     }
                     else {
                         console.log("success");
-                        // return to login and notify user
+                        setIsRegistering(i => !i);
                     }
                 })
         }
@@ -46,7 +48,7 @@ function LoginForm() {
                     }
                     else {
                         console.log("success");
-                        // maybe navigate to another screen or save user token
+                        router.replace('/tabs/');
                     }
                 })
         }
