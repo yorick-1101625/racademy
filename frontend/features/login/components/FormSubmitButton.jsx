@@ -1,14 +1,14 @@
-import {Pressable, Text} from 'react-native';
+import { Pressable, Text } from 'react-native';
 
 function FormSubmitButton({ text, onPress }) {
-    return (
-        <Pressable
-            className="w-2/3 items-center p-4 rounded-lg mt-4 bg-rac shadow-md shadow-neutral-300 hover:bg-sky-600 transition-colors duration-100"
-            onPress={onPress}
-        >
-            <Text className="text-xl text-white font-semibold">{ text }</Text>
-        </Pressable>
-    );
+  return (
+    <Pressable
+      className="w-full items-center py-3 rounded-md bg-rac"
+      onPress={onPress}
+    >
+      <Text className="text-base text-white font-semibold">{text}</Text>
+    </Pressable>
+  );
 }
 
 export default FormSubmitButton;

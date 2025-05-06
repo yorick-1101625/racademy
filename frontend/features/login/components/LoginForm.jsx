@@ -56,7 +56,7 @@ function LoginForm() {
 
     return (
         <View className="bg-white w-full rounded-b-lg overflow-hidden">
-            <View className="items-center w-full py-12 px-10">
+            <View className="items-center w-full py-3 px-10">
 
                 <EmailPasswordFields
                     emailRef={emailRef}
