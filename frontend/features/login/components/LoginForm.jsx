@@ -11,9 +11,9 @@ function LoginForm() {
 
     const [isRegistering, setIsRegistering] = useState(false);
 
-    const emailRef = useRef(null);
-    const passwordRef = useRef(null);
-    const confirmPasswordRef = useRef(null);
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmationPassword, setConfirmationPassword] = useState("");
 
     const router = useRouter();
 
@@ -22,11 +22,8 @@ function LoginForm() {
     }
 
     function handleFormSubmit() {
-        const email = emailRef.current?.value;
-        const password = passwordRef.current?.value;
 
         if (isRegistering) {
-            const confirmationPassword = confirmPasswordRef.current?.value;
             const result = registerUser(email, password, confirmationPassword);
             result
                 .then(error => {
@@ -59,10 +56,10 @@ function LoginForm() {
             <View className="items-center w-full py-3 px-10">
 
                 <EmailPasswordFields
-                    emailRef={emailRef}
-                    passwordRef={passwordRef}
+                    setEmail={ setEmail }
+                    setPassword={ setPassword }
+                    setConfirmationPassword={ setConfirmationPassword }
                     confirmPassword={isRegistering}
-                    confirmPasswordRef={confirmPasswordRef}
                 />
 
                 <FormSubmitButton onPress={handleFormSubmit} text={ isRegistering ? "Registreer" : "Log In"} />
