@@ -1,13 +1,13 @@
-import {Text, TextInput, View} from 'react-native';
+import {TextInput, View} from 'react-native';
 
-function EmailPasswordFields({ emailRef, passwordRef, confirmPassword, confirmPasswordRef }) {
+function EmailPasswordFields({ setEmail, setPassword, setConfirmationPassword, confirmPassword }) {
     return (
         <View className="w-full">
             <TextInput
                 className="
                     w-full border border-neutral-300 rounded-md px-4 py-3 mb-6 bg-white"
                 inputMode="email" placeholder="Studentnummer@hr.nl"
-                ref={emailRef}
+                onChangeText={ setEmail }
                 autoFocus={true}
                 autoCorrect={false}
             />
@@ -17,7 +17,7 @@ function EmailPasswordFields({ emailRef, passwordRef, confirmPassword, confirmPa
                 placeholder="Wachtwoord"
                 secureTextEntry={true}
                 autoCorrect={false}
-                ref={passwordRef}
+                onChangeText={ setPassword }
             />
 
             {
@@ -28,7 +28,7 @@ function EmailPasswordFields({ emailRef, passwordRef, confirmPassword, confirmPa
                         placeholder="Herhaal Wachtwoord"
                         secureTextEntry={true}
                         autoCorrect={false}
-                        ref={confirmPasswordRef}
+                        onChangeText={ setConfirmationPassword }
                     />
                 </>
             }
