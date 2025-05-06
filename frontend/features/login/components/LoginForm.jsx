@@ -6,6 +6,7 @@ import {useRef, useState} from "react";
 import logIn from "@/features/login/utils/logIn";
 import registerUser from "@/features/login/utils/registerUser";
 import {useRouter} from "expo-router";
+import { showSuccess, showError } from "utils/toast"
 
 function LoginForm() {
 
@@ -29,10 +30,12 @@ function LoginForm() {
                 .then(error => {
                     if (error instanceof Error) {
                         console.error(error); // notify user
+                        showError("Registratie mislukt. Probeer het opnieuw.")
                     }
                     else {
                         console.log("success");
                         setIsRegistering(i => !i);
+                        showSuccess("Je account is succesvol aangemaakt.");
                     }
                 })
         }
@@ -42,10 +45,12 @@ function LoginForm() {
                 .then(error => {
                     if (error instanceof Error) {
                         console.error(error); // notify user
+                        showError("Ongeldige inloggegevens.")
                     }
                     else {
                         console.log("success");
                         router.replace('/tabs/');
+                        showSuccess("Je bent succesvol ingelogd")
                     }
                 })
         }

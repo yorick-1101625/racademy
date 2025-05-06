@@ -1,4 +1,5 @@
 import {Stack} from 'expo-router';
+import Toast from "react-native-toast-message";
 
 function RootLayout() {
     return (
@@ -17,6 +18,7 @@ function RootLayout() {
                     }}
                 />
             </Stack>
+            <Toast />
         </>
     );
 }
