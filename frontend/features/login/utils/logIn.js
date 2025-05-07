@@ -1,5 +1,3 @@
-import { BASE_URL } from "utils/url"
-
 export default async function logIn(email, password) {
     // Error Handling
     if (email.trim() === "") {
@@ -9,7 +7,7 @@ export default async function logIn(email, password) {
         return Error("Must provide password");
     }
 
-    const url = `${BASE_URL}/api/login/`; // trailing slash to match Flask route
+    const url = "http://127.0.0.1:5000/api/login/"; // trailing slash to match Flask route
 
     return fetch(url, {
         method: "POST",
