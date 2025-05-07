@@ -2,11 +2,10 @@ import {View} from 'react-native';
 import EmailPasswordFields from "./EmailPasswordFields";
 import FormSubmitButton from "./FormSubmitButton";
 import ToggleRegistering from "./ToggleRegistering";
-import {useRef, useState} from "react";
-import logIn from "@/features/login/utils/logIn";
-import registerUser from "@/features/login/utils/registerUser";
+import {useContext, useState} from "react";
 import {useRouter} from "expo-router";
 import { showSuccess, showError } from "utils/toast"
+import {UserContext} from "@/contexts/UserContext";
 
 function LoginForm() {
 
@@ -16,43 +15,63 @@ function LoginForm() {
     const [password, setPassword] = useState("");
     const [confirmationPassword, setConfirmationPassword] = useState("");
 
+    const { register, login } = useContext(UserContext);
     const router = useRouter();
 
-    function handleToggleRegistering () {
+    function handleToggleRegistering() {
         setIsRegistering(i => !i);
     }
 
-    function handleFormSubmit() {
+    async function handleFormSubmit() {
 
         if (isRegistering) {
-            const result = registerUser(email, password, confirmationPassword);
-            result
-                .then(error => {
-                    if (error instanceof Error) {
-                        console.error(error); // notify user
-                        showError("Registratie mislukt. Probeer het opnieuw.")
-                    }
-                    else {
-                        console.log("success");
-                        setIsRegistering(i => !i);
-                        showSuccess("Je account is succesvol aangemaakt.");
-                    }
-                })
+            // Validation
+            if (email.trim() === "") {
+                showError("Vul email in.");
+                return;
+            }
+            const emailRegex = new RegExp(String.raw`^[\w\-\.]+@hr\.nl$`);
+            if (!emailRegex.test(email)) {
+                showError("Email moet eindigen op @hr.nl.");
+                return;
+            }
+            if (password.trim() === "") {
+                showError("Vul wachtwoord in.");
+                return;
+            }
+            if (password !== confirmationPassword) {
+                showError("Wachtwoorden komen niet overeen.");
+                return;
+            }
+
+            try {
+                await register(email, password);
+            }
+            catch (error) {
+                console.log(error);
+                showError("Registratie mislukt. Probeer het opnieuw.");
+            }
         }
         else {
-            const result = logIn(email, password);
-            result
-                .then(error => {
-                    if (error instanceof Error) {
-                        console.error(error); // notify user
-                        showError("Ongeldige inloggegevens.")
-                    }
-                    else {
-                        console.log("success");
-                        router.replace('/tabs/');
-                        showSuccess("Je bent succesvol ingelogd")
-                    }
-                })
+            // Validation
+            if (email.trim() === "") {
+                showError("Vul email in.");
+                return;
+            }
+            if (password.trim() === "") {
+                showError("Vul wachtwoord in.");
+                return;
+            }
+
+            try {
+                await login(email, password);
+                showSuccess("Je bent succesvol ingelogd");
+                router.replace('/home');
+            }
+            catch (error) {
+                console.log(error);
+                showError("Inloggen mislukt. Probeer het opnieuw.");
+            }
         }
     }
 

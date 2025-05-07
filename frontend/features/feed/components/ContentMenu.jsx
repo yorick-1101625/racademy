@@ -5,7 +5,6 @@ import Kebab from "@/components/Kebab";
 
 function ContentMenu({ isBookmarked, handleBookmark }) {
 
-
     return (
         <Kebab>
                 <Pressable
