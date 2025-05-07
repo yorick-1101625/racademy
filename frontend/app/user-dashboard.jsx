@@ -72,7 +72,7 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, backgroundColor: '#ffffff' }}>
         <ActivityIndicator size="large" color="#0000ff" />
         <Text>Loading users...</Text>
       </View>
@@ -81,80 +81,78 @@ export default function AdminDashboard() {
 
   if (error) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, backgroundColor: '#ffffff' }}>
         <Text style={{ color: 'red', fontSize: 16 }}>{error}</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 32 }}>
-
+    <ScrollView contentContainerStyle={{ padding: 16, backgroundColor: '#ffffff', flexGrow: 1 }}>
       <View
         style={{
-          flexDirection: 'row',
+          flexDirection: isSmallScreen ? 'column' : 'row',
           flexWrap: 'wrap',
           justifyContent: 'space-between',
         }}
       >
         {users.map((u) => (
-          <View
-            key={u.id}
-            style={{
-              width: isSmallScreen ? '100%' : '48%',
-              marginBottom: 24,
-              flexDirection: 'row',
-              alignItems: 'flex-start',
-            }}
-          >
-            <Image
-              source={{ uri: `http://localhost:5000/${u.profile_picture}` }}
-              style={{
-                width: 80,
-                height: 80,
-                borderRadius: 40,
-                resizeMode: 'cover',
-                marginRight: 12,
-              }}
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{u.username || 'Naam onbekend'}</Text>
-              <Text style={{ fontSize: 14, color: '#4B5563' }}>{u.email}</Text>
-              <Text style={{ fontSize: 14, color: '#374151' }}>
-                Studie: {u.study || 'Onbekend'}
-              </Text>
-              <Text style={{ fontSize: 14, color: '#374151' }}>
-                {getPostCountForUser(u.id)} posts
-              </Text>
+          <View key={u.id} style={{ width: isSmallScreen ? '100%' : '48%', marginBottom: 16 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', paddingRight: 8 }}>
+              <Image
+                source={{ uri: `http://localhost:5000/${u.profile_picture}` }}
+                style={{
+                  width: 60,
+                  height: 60,
+                  borderRadius: 30,
+                  resizeMode: 'cover',
+                }}
+              />
+              <View style={{ flex: 1, marginLeft: 60 }}>
+                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
+                  {u.username || 'Naam onbekend'}
+                </Text>
+                <Text style={{ fontSize: 13, color: '#4B5563' }}>{u.email}</Text>
+                <Text style={{ fontSize: 13, color: '#374151' }}>
+                  Studie: {u.study || 'Onbekend'}
+                </Text>
+                <Text style={{ fontSize: 13, color: '#374151' }}>
+                  {getPostCountForUser(u.id)} posts
+                </Text>
 
-              <View style={{ flexDirection: 'row', marginTop: 8 }}>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: '#E5E7EB',
-                    paddingVertical: 6,
-                    paddingHorizontal: 14,
-                    borderRadius: 999,
-                    marginRight: 10,
-                  }}
-                >
-                  <Text style={{ fontSize: 14, fontWeight: '500' }}>Details</Text>
-                </TouchableOpacity>
+                <View style={{ marginTop: 8, flexDirection: 'row' }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: '#E5E7EB',
+                      paddingVertical: 6,
+                      paddingHorizontal: 12,
+                      borderRadius: 999,
+                      marginRight: 8,
+                    }}
+                  >
+                    <Text style={{ fontSize: 13, fontWeight: '500' }}>Details</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => removeUser(u.id)}
-                  style={{
-                    backgroundColor: '#DC2626',
-                    paddingVertical: 6,
-                    paddingHorizontal: 14,
-                    borderRadius: 999,
-                  }}
-                >
-                  <Text style={{ color: '#ffffff', fontSize: 14, fontWeight: '500' }}>
-                    Verwijder
-                  </Text>
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => removeUser(u.id)}
+                    style={{
+                      backgroundColor: '#DC2626',
+                      paddingVertical: 6,
+                      paddingHorizontal: 12,
+                      borderRadius: 999,
+                    }}
+                  >
+                    <Text style={{ color: '#ffffff', fontSize: 13, fontWeight: '500' }}>
+                      Verwijder
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
+
+            {isSmallScreen && (
+              <View style={{ height: 1, backgroundColor: '#D1D5DB', marginTop: 12 }} />
+            )}
           </View>
         ))}
       </View>
