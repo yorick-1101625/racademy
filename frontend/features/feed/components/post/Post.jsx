@@ -2,6 +2,7 @@ import {useState} from "react";
 import {View} from 'react-native';
 import {Link} from "expo-router";
 
+import Card from "@/components/Card";
 import ContentMenu from "../ContentMenu";
 import PostContent from "./PostContent";
 import PostDetails from "./PostDetails";
@@ -37,7 +38,7 @@ function Post({ post }) {
 
             <ContentAuthor profilePicture={post.user['profile_picture']} username={post.user.username} userId={post.user.id} />
 
-            <View className="bg-white border border-neutral-200 mt-3 p-5 hover:shadow-md hover:shadow-neutral-200 transition-shadow rounded-lg relative cursor-pointer">
+            <Card>
                 <Link href={`/posts/${post.id}`} className="absolute left-0 top-0 bottom-0 right-32 z-10" />
 
                 <ContentMenu handleBookmark={handleBookmark} isBookmarked={isBookmarked} />
@@ -49,7 +50,7 @@ function Post({ post }) {
 
                     <PostActions numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']} likedByCurrentUser={post['liked_by_current_user']} postId={post.id} />
                 </View>
-            </View>
+            </Card>
 
         </View>
     );

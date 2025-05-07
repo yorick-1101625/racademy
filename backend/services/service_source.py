@@ -33,3 +33,31 @@ class SourceService:
             result.append(source_dict)
 
         return result
+
+    @staticmethod
+    def create_source(data, current_user_id):
+        try:
+            if data.get('type') == 'book' and data.get('isbn') is None:
+                return Exception('Must provide ISBN when type is book')
+            elif data.get('url') is None:
+                return Exception('Must provide URL')
+
+            current_user = User.query.get(current_user_id)
+            new_source = Source(
+                type=data.get('type'),
+                title=data.get('title'),
+                description=data.get('description'),
+                school_subject=data.get('school_subject'),
+                subject=data.get('subject'),
+                difficulty=data.get('difficulty'),
+                user=current_user,
+                url=data.get('url'),
+                isbn=data.get('isbn'),
+            )
+            db.session.add(new_source)
+            db.session.commit()
+            return new_source.to_dict()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            print(f"Error creating post: {e}")
+            return None

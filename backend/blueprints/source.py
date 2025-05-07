@@ -21,3 +21,31 @@ def get_sources():
             "success": False,
             "message": "An unexpected error occurred."
         }, 500
+
+
+@api_source.route("/", methods=["POST"])
+def create_post():
+    data = request.get_json()
+    try:
+        # TODO: access session for user id
+        current_user_id = 1
+        result = SourceService.create_source(data, current_user_id)
+        if type(result) == Exception:
+            error = str(result)
+            return {
+                "success": False,
+                "message": error
+            }, 400
+        else:
+            return {
+                "success": True,
+                "data": result
+            }, 201
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[create_post] Unexpected error: {e}")
+        return {
+            "success": False,
+            "message": "An unexpected error occurred."
+        }, 500
