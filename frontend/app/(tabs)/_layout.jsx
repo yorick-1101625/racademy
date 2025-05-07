@@ -1,41 +1,26 @@
 import {Tabs} from "expo-router";
-import '../../global.css'
+import '@/global.css'
 import colors from "tailwindcss/colors";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { withLayoutContext } from "expo-router";
+
+const { Navigator } = createMaterialTopTabNavigator();
+
+export const MaterialTopTabs = withLayoutContext(Navigator);
 
 function TabsLayout() {
     return (
         <>
-            <Tabs
-                screenOptions={{
-                    tabBarActiveTintColor: colors.rac
+            <MaterialTopTabs id={1} screenOptions={{
+                    // tabBarActiveTintColor: '#3daad3',
+                    tabBarLabelStyle: { textTransform: 'capitalize', fontSize: 16 },
+                    tabBarIndicatorStyle: { backgroundColor: '#3daad3' }
                 }}
             >
-                <Tabs.Screen
-                    name="home"
-                    options={{
-                        title: '',
-                        tabBarIcon: ({color}) => <AntDesign size={28} name="home" color={color}/>,
-                        headerShown: false,
-                    }}
-                />
-                <Tabs.Screen
-                    name="profile"
-                    options={{
-                        title: '',
-                        tabBarIcon: ({color}) => <AntDesign size={28} name="user" color={color}/>,
-                        headerShown: false,
-                    }}
-                />
-                 <Tabs.Screen
-                    name="settings"
-                    options={{
-                        title: '',
-                        tabBarIcon: ({color}) => <AntDesign size={28} name="setting" color={color}/>,
-                        headerShown: false,
-                    }}
-                />
-            </Tabs>
+                <MaterialTopTabs.Screen name="posts" />
+                <MaterialTopTabs.Screen name="sources" options={{ title: 'bronnen' }} />
+            </MaterialTopTabs>
         </>
     );
 }

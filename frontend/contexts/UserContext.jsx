@@ -60,7 +60,7 @@ export function UserProvider({ children }) {
         }
         catch (error) {
             console.error(error);
-            showError("Email bestaat al.");
+            showError("Dit email bestaat al.");
         }
     }
 

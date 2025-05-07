@@ -1,13 +1,22 @@
-import {Stack} from 'expo-router';
+import {Link, Stack} from 'expo-router';
 import Toast from "react-native-toast-message";
 import {UserProvider} from "@/contexts/UserContext";
+import {Image, View} from "react-native";
+import useUser from "@/hooks/useUser";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Logo from "@/assets/logo.png"
 
 function RootLayout() {
-    
+
+    // const { user } = useUser();
+
     return (
         <>
             <UserProvider>
-                <Stack>
+                <Stack screenOptions={{
+                    headerShadowVisible: false,
+                    headerTitleAlign: 'center',
+                }}>
                     <Stack.Screen
                         name="index"
                         options={{
@@ -17,11 +26,32 @@ function RootLayout() {
                     <Stack.Screen
                         name="(tabs)"
                         options={{
-                            headerLeft: () => {
-                                // <Image
-                                //     source={}
-                                // />
-                            }
+                            headerLeftContainerStyle: {paddingLeft: 20},
+                            headerLeft: () => (
+                                <Link href="/profile">
+                                    <Image
+                                        source={{
+                                            uri: 'http://localhost:5000/static/user_images/test_pfp.png'
+                                        }}
+                                        className="w-8 h-8 rounded-full"
+                                    />
+                                </Link>
+                            ),
+
+                            headerTitle: () => (
+                                <Image
+                                    source={Logo}
+                                    resizeMode="contain"
+                                    style={{width: 64, height: 64}}
+                                />
+                            ),
+
+                            headerRightContainerStyle: {paddingRight: 20},
+                            headerRight: () => (
+                                <Link href="/settings">
+                                    <AntDesign name="setting" size={32} />
+                                </Link>
+                            )
                         }}
                     />
                 </Stack>
