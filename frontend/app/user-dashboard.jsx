@@ -1,15 +1,33 @@
 import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
+} from 'react-native';
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   useEffect(() => {
+    const updateLayout = () => {
+      const screenWidth = Dimensions.get('window').width;
+      setIsSmallScreen(screenWidth <= 600);
+    };
+
+    updateLayout();
+    const subscription = Dimensions.addEventListener('change', updateLayout);
+
     Promise.all([
       fetch('http://localhost:5000/api/user').then(res => res.json()),
-      fetch('http://localhost:5000/api/post').then(res => res.json())
+      fetch('http://localhost:5000/api/post').then(res => res.json()),
     ])
       .then(([userData, postData]) => {
         if (userData.success) {
@@ -29,6 +47,10 @@ export default function AdminDashboard() {
         console.error(err);
       })
       .finally(() => setLoading(false));
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
 
   const removeUser = (userId) => {
@@ -48,42 +70,94 @@ export default function AdminDashboard() {
     return posts.filter(p => p.user_id === userId).length;
   };
 
-  if (loading) return <div>Loading users...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading users...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16 }}>
+        <Text style={{ color: 'red', fontSize: 16 }}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
-    <div className="px-16 py-10 w-full">
-      <h1 className="text-3xl font-bold mb-6">Gebruikers</h1>
+    <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 32 }}>
 
-      {users.map(u => (
-        <div key={u.id} className="bg-white border p-6 mb-6 rounded-xl shadow w-full">
-          <div className="flex items-center space-x-6 mb-4">
-            <img
-              src={`http://localhost:5000/${u.profile_picture}`}
-              alt="avatar"
-              className="w-16 h-16 rounded-full object-cover"
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+        }}
+      >
+        {users.map((u) => (
+          <View
+            key={u.id}
+            style={{
+              width: isSmallScreen ? '100%' : '48%',
+              marginBottom: 24,
+              flexDirection: 'row',
+              alignItems: 'flex-start',
+            }}
+          >
+            <Image
+              source={{ uri: `http://localhost:5000/${u.profile_picture}` }}
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: 40,
+                resizeMode: 'cover',
+                marginRight: 12,
+              }}
             />
-            <div>
-              <p className="font-bold text-lg">{u.username || 'Naam onbekend'}</p>
-              <p className="text-sm text-gray-600">{u.email}</p>
-              <p className="text-sm">Studie: {u.study || 'Onbekend'}</p>
-              <p className="text-sm">{getPostCountForUser(u.id)} posts</p>
-            </div>
-          </div>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{u.username || 'Naam onbekend'}</Text>
+              <Text style={{ fontSize: 14, color: '#4B5563' }}>{u.email}</Text>
+              <Text style={{ fontSize: 14, color: '#374151' }}>
+                Studie: {u.study || 'Onbekend'}
+              </Text>
+              <Text style={{ fontSize: 14, color: '#374151' }}>
+                {getPostCountForUser(u.id)} posts
+              </Text>
 
-          <div className="flex flex-wrap justify-start gap-3 mt-4">
-            <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300 text-sm font-medium">
-              Details
-            </button>
-            <button
-              onClick={() => removeUser(u.id)}
-              className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-full hover:bg-red-700"
-            >
-              Verwijder
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
+              <View style={{ flexDirection: 'row', marginTop: 8 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#E5E7EB',
+                    paddingVertical: 6,
+                    paddingHorizontal: 14,
+                    borderRadius: 999,
+                    marginRight: 10,
+                  }}
+                >
+                  <Text style={{ fontSize: 14, fontWeight: '500' }}>Details</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => removeUser(u.id)}
+                  style={{
+                    backgroundColor: '#DC2626',
+                    paddingVertical: 6,
+                    paddingHorizontal: 14,
+                    borderRadius: 999,
+                  }}
+                >
+                  <Text style={{ color: '#ffffff', fontSize: 14, fontWeight: '500' }}>
+                    Verwijder
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
 }
