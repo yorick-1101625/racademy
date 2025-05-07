@@ -12,7 +12,7 @@ function TabsLayout() {
                 }}
             >
                 <Tabs.Screen
-                    name="index"
+                    name="home"
                     options={{
                         title: '',
                         tabBarIcon: ({color}) => <AntDesign size={28} name="home" color={color}/>,
