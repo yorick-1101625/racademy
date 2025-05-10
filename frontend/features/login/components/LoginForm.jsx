@@ -51,7 +51,7 @@ function LoginForm() {
                 setIsRegistering(i => !i);
             }
             catch (error) {
-                console.log(error);
+                console.error(error);
                 showError("Dit e-mailadres bestaat al.");
             }
         }
