@@ -1,7 +1,7 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function useFetch(url) {
-
     const [data, setData] = useState(null);
     const [isPending, setIsPending] = useState(true);
     const [error, setError] = useState(null);
@@ -9,18 +9,32 @@ function useFetch(url) {
     useEffect(() => {
         const abortCont = new AbortController();
 
-        fetch(url, { signal: abortCont.signal })
+        AsyncStorage.getItem('token')
+            .then(token => {
+                console.log("Token:", token);
+                if (!token) {
+                    throw Error("Authorization token is missing");
+                }
+
+                return fetch(url, {
+                    signal: abortCont.signal,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+            })
             .then(res => {
-                if(!res.ok) {
+                if (!res.ok) {
                     throw Error('Could not fetch data for that resource');
                 }
                 return res.json();
             })
             .then(data => {
-                setData(data.data);
                 if (!data.success) {
                     throw Error('Something went wrong!');
                 }
+                setData(data.data);
                 setIsPending(false);
                 setError(null);
             })

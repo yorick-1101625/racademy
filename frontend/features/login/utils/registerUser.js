@@ -15,7 +15,7 @@ export default async function registerUser(email, password, confirmationPassword
     }
 
 
-    // Register User
+    // Register User !No token since user does not need to authenticate yet
     const url = "http://127.0.0.1:5000/api/user/";
 
     return fetch(url, {
