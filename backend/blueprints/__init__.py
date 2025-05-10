@@ -8,7 +8,8 @@ from backend.blueprints.login import api_login
 
 PUBLIC_ENDPOINTS = [
     'api_login.login',
-    'api_user.register',
+    'api_user.register_user',
+    'static'
 ]
 
 
