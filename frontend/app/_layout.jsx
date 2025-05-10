@@ -5,6 +5,7 @@ import {Image, View} from "react-native";
 import useUser from "@/hooks/useUser";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import Logo from "@/assets/logo.png"
+import CurrentUserProfilePicture from "@/components/CurrentUserProfilePicture";
 
 function RootLayout() {
 
@@ -29,12 +30,7 @@ function RootLayout() {
                             headerLeftContainerStyle: {paddingLeft: 20},
                             headerLeft: () => (
                                 <Link href="/profile">
-                                    <Image
-                                        source={{
-                                            uri: 'http://localhost:5000/static/user_images/test_pfp.png'
-                                        }}
-                                        className="w-8 h-8 rounded-full"
-                                    />
+                                    <CurrentUserProfilePicture className="w-8 h-8 rounded-full" />
                                 </Link>
                             ),
 
@@ -43,6 +39,7 @@ function RootLayout() {
                                     source={Logo}
                                     resizeMode="contain"
                                     style={{width: 64, height: 64}}
+                                    alt="logo"
                                 />
                             ),
 

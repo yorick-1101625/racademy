@@ -6,6 +6,7 @@ import {useContext, useState} from "react";
 import {useRouter} from "expo-router";
 import { showSuccess, showError } from "utils/toast"
 import {UserContext} from "@/contexts/UserContext";
+import useUser from "@/hooks/useUser";
 
 function LoginForm() {
 
@@ -15,7 +16,7 @@ function LoginForm() {
     const [password, setPassword] = useState("");
     const [confirmationPassword, setConfirmationPassword] = useState("");
 
-    const { register, login } = useContext(UserContext);
+    const { register, login } = useUser();
     const router = useRouter();
 
     function handleToggleRegistering() {
@@ -46,10 +47,12 @@ function LoginForm() {
 
             try {
                 await register(email, password);
+                showSuccess("Account is succesvol aangemaakt.");
+                setIsRegistering(i => !i);
             }
             catch (error) {
                 console.log(error);
-                showError("Registratie mislukt. Probeer het opnieuw.");
+                showError("Dit e-mailadres bestaat al.");
             }
         }
         else {
@@ -66,10 +69,10 @@ function LoginForm() {
             try {
                 await login(email, password);
                 showSuccess("Je bent succesvol ingelogd");
-                router.replace('/home');
+                router.replace('/posts');
             }
             catch (error) {
-                console.log(error);
+                console.error(error);
                 showError("Inloggen mislukt. Probeer het opnieuw.");
             }
         }
