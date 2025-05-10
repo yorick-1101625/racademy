@@ -25,6 +25,7 @@ function Post({post}) {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
+
                     },
                     body: JSON.stringify({bookmarked_post: post.id})
                 });

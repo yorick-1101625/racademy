@@ -31,7 +31,7 @@ def login():
             )
             return jsonify({
                 "success": True,
-                "message": "Index succeeded.",
+                "message": "Login succeeded.",
                 "access_token": access_token
             }), 200
 
