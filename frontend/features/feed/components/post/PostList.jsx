@@ -87,7 +87,7 @@ const testPosts = [{
 
 function PostList() {
 
-    const {data: posts, isPending, error} = useFetch('http://127.0.0.1:5000/api/post');
+    const {data: posts, isPending, error} = useFetch('http://127.0.0.1:5000/api/post/');
 
     return (
         <>

@@ -8,6 +8,7 @@ import SourceContent from "./SourceContent";
 import SourceDetails from "./SourceDetails";
 
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const userId = 1; // TODO: get from session
 function Source({ source }) {
@@ -16,20 +17,23 @@ function Source({ source }) {
 
     function handleBookmark() {
 
-        fetch(`http://127.0.0.1:5000/api/user/${userId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ bookmarked_source: source.id })
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-
-                    setIsBookmarked(i => !i);
-                }
+        AsyncStorage.getItem('token')
+        .then(token => {
+            return fetch(`http://127.0.0.1:5000/api/user/${userId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: JSON.stringify({ bookmarked_source: source.id })
             });
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                setIsBookmarked(i => !i);
+            }
+        })
     }
 
     const averageRating = calculateAverageRating(source.ratings);

@@ -24,8 +24,9 @@ def login():
                 "message": str(result)
             }), 401
         else:
+            print("result.id =", result.id, type(result.id))
             access_token = create_access_token(
-                identity=result.id,
+                identity=str(result.id),
                 expires_delta=timedelta(hours=1)
             )
             return jsonify({

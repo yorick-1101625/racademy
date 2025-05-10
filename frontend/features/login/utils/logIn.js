@@ -1,3 +1,5 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default async function logIn(email, password) {
     // Error Handling
     if (email.trim() === "") {
@@ -19,16 +21,18 @@ export default async function logIn(email, password) {
             password,
         }),
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log(data);
-            return true;
-        } else {
-            return Error(data.message);
-        }
-    })
-    .catch(error => {
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                return AsyncStorage.setItem('token', data.access_token)
+                    .then(() => {
+                        return true;
+                    });
+            } else {
+                return Error(data.message);
+            }
+        })
+        .catch(error => {
             return Error(`Could not log in user: ${error}`);
-    });
+        });
 }
