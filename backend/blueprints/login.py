@@ -29,10 +29,13 @@ def login():
                 identity=str(result.id),
                 expires_delta=timedelta(hours=1)
             )
+            result = result.to_dict()
+            result.pop('password')
             return jsonify({
                 "success": True,
                 "message": "Login succeeded.",
-                "access_token": access_token
+                "access_token": access_token,
+                "user": result
             }), 200
 
     except HTTPException as e:

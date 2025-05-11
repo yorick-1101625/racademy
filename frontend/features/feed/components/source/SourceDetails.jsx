@@ -13,10 +13,13 @@ function SourceDetails({ createdAt, schoolSubject, subject, rating }) {
                 <Text className="italic text-neutral-600">{ schoolSubject }: { subject }</Text>
             </View>
 
-            <View className="flex-row items-center">
-                <Text className="mr-1">{ formatRating(rating) }</Text>
-                <Image source={ getRatingIcon(rating) } />
-            </View>
+            {
+                isNaN(rating) ||
+                <View className="flex-row items-center">
+                    <Text className="mr-1">{ formatRating(rating) }</Text>
+                    <Image source={ getRatingIcon(rating) } />
+                </View>
+            }
         </>
     );
 }

@@ -5,7 +5,7 @@ function EmailPasswordFields({ setEmail, setPassword, setConfirmationPassword, c
         <View className="w-full">
             <TextInput
                 className="
-                    w-full border border-neutral-300 rounded-md px-4 py-3 mb-6 bg-white"
+                    w-full border border-neutral-300 rounded-md px-4 py-3 mb-6 bg-white placeholder:text-neutral-600"
                 inputMode="email" placeholder="Studentnummer@hr.nl"
                 onChangeText={ setEmail }
                 autoFocus={true}
@@ -13,7 +13,7 @@ function EmailPasswordFields({ setEmail, setPassword, setConfirmationPassword, c
             />
 
             <TextInput
-                className="w-full border border-neutral-300 rounded-md px-4 py-3 mb-6 bg-white"
+                className="w-full border border-neutral-300 rounded-md px-4 py-3 mb-6 bg-white placeholder:text-neutral-600"
                 placeholder="Wachtwoord"
                 secureTextEntry={true}
                 autoCorrect={false}
@@ -24,7 +24,7 @@ function EmailPasswordFields({ setEmail, setPassword, setConfirmationPassword, c
                 confirmPassword &&
                 <>
                     <TextInput
-                        className="w-full border border-neutral-300 rounded-md px-4 py-3 mb-6 bg-white"
+                        className="w-full border border-neutral-300 rounded-md px-4 py-3 mb-6 bg-white placeholder:text-neutral-600"
                         placeholder="Herhaal Wachtwoord"
                         secureTextEntry={true}
                         autoCorrect={false}

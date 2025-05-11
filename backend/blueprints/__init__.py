@@ -8,7 +8,8 @@ from backend.blueprints.login import api_login
 
 PUBLIC_ENDPOINTS = [
     'api_login.login',
-    'api_user.register',
+    'api_user.register_user',
+    'static'
 ]
 
 
@@ -23,7 +24,7 @@ def register_blueprints(app):
 
     # @app.before_request
     # def log_request_info():
-    #     print(f"Incoming {request.method} request to {request.path}")
+    #     print(f"Incoming {request.method} request to {request.path}, {request.endpoint}")
 
     app.register_blueprint(api_post, url_prefix="/api/post")
     app.register_blueprint(api_user, url_prefix="/api/user")

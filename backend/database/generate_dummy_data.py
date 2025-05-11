@@ -37,7 +37,6 @@ def generate_dummy_data():
     db.create_all()
 
     os.makedirs("static/user_images", exist_ok=True)
-    test_pfp_path = "static/user_images/test_pfp.png"
 
     users = []
     for i in range(10):
@@ -47,8 +46,7 @@ def generate_dummy_data():
             password=generate_password_hash("1234"),
             study=random.choice(['Software Development']),
             is_blocked=random.choice([True, False]),
-            is_admin=random.choice([True, False]),
-            profile_picture=test_pfp_path
+            is_admin=random.choice([True, False])
         )
         users.append(user)
     db.session.add_all(users)

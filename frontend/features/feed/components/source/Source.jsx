@@ -52,21 +52,7 @@ function Source({source}) {
 
                 <ContentMenu handleBookmark={handleBookmark} isBookmarked={isBookmarked}/>
 
-                {source.type === "video" ? (
-                    <View className="relative pt-[56.25%]">  {/* Aspect ratio for 16:9 video */}
-                        <iframe
-                            width="100%"
-                            height="100%"
-                            src={`https://www.youtube.com/embed/${source.url.split('v=')[1]}`}
-                            title={source.title}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="absolute top-0 left-0 w-full h-full"
-                        />
-                    </View>
-                ) : (
-                    <SourceContent title={source.title} image={source.image} type={source.type}/>
-                )}
+                <SourceContent title={source.title} image={source.image} type={source.type} url={source.url}/>
 
                 <View className="mt-4 flex-row justify-between items-end">
                     <SourceDetails
