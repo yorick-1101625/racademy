@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import get_jwt_identity
 from werkzeug.exceptions import HTTPException
 from backend.services.service_user import UserService
 
@@ -76,6 +77,12 @@ def register_user():
 def update_post(user_id):
     data = request.get_json()
     try:
+        if user_id != get_jwt_identity():
+            return {
+                "success": False,
+                "message": "You are not authorized to edit this user"
+            }, 401
+
         updated_user = UserService.update_user(user_id, data)
         if updated_user:
             return jsonify({
@@ -100,6 +107,12 @@ def update_post(user_id):
 @api_user.route("/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     try:
+        if user_id != get_jwt_identity(): # And not admin
+            return {
+                "success": False,
+                "message": "You are not authorized to delete this user"
+            }, 401
+
         deleted_user = UserService.delete_user(user_id)
         if deleted_user:
             return jsonify({

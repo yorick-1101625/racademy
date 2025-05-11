@@ -22,6 +22,8 @@ function Profile() {
             >
                 <Text>Uitloggen</Text>
             </Pressable>
+
+            <Text>Verwijder Account...</Text>
         </>
     );
 }
