@@ -3,13 +3,13 @@ import useUser from "@/hooks/useUser";
 
 function CurrentUserProfilePicture({ className, alt = "profielfoto" }) {
 
-    const {user} = useUser();
+    const { user, authChecked } = useUser();
 
-    const profilePicturePath = `http://localhost:5000/${ user['profile_picture'] }`;
     return (
-        <Image
+
+        user && <Image
             source={{
-                uri: profilePicturePath
+                uri: `http://localhost:5000/${ user['profile_picture'] }`
             }}
             className={className}
             alt={alt}

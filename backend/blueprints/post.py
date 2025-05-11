@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import get_jwt_identity
 from werkzeug.exceptions import HTTPException
 from backend.services.service_post import PostService
 
@@ -7,8 +8,7 @@ api_post = Blueprint("api_post", __name__)
 @api_post.route("/", methods=["GET"])
 def get_posts():
     try:
-        current_user_id = 1 # TODO: get from session
-        posts = PostService.get_all_posts(current_user_id)
+        posts = PostService.get_all_posts(current_user_id=get_jwt_identity())
         return jsonify({
             "success": True,
             "data": posts
@@ -70,6 +70,13 @@ def create_post():
 def update_post(post_id):
     data = request.get_json()
     try:
+        post = PostService.get_post_by_id(post_id)
+        if post.user.id != get_jwt_identity():
+            return {
+                "success": False,
+                "message": "You are not authorized to edit this post"
+            }, 401
+
         updated_post = PostService.update_post(post_id, data)
         if updated_post:
             return jsonify({
@@ -94,6 +101,13 @@ def update_post(post_id):
 @api_post.route("/<post_id>", methods=["DELETE"])
 def delete_post(post_id):
     try:
+        post = PostService.get_post_by_id(post_id)
+        if post.user.id != get_jwt_identity():  # And user not admin
+            return {
+                "success": False,
+                "message": "You are not authorized to delete this post"
+            }, 401
+
         deleted_post = PostService.delete_post(post_id)
         if deleted_post:
             return jsonify({

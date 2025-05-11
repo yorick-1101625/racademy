@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt_identity
 from werkzeug.exceptions import HTTPException
 from backend.services.service_user import UserService
 from datetime import timedelta
@@ -37,6 +37,29 @@ def login():
                 "access_token": access_token,
                 "user": result
             }), 200
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[login] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
+
+
+@api_login.route('/whoami', methods=['GET'])
+def whoami():
+    try:
+        current_user = UserService.get_user_by_id(
+            get_jwt_identity()
+        )
+
+        current_user.pop('password')
+        return jsonify({
+            "success": True,
+            "user": current_user
+        }), 200
 
     except HTTPException as e:
         raise e
