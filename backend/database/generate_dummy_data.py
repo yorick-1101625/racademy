@@ -25,7 +25,7 @@ def generate_random_isbn():
 
 def generate_random_youtube_url():
     youtube_urls = [
-        "https://www.youtube.com/watch?v=-d3ti_YW-OM",
+        "https://www.youtube.com/watch?v=gvkqT_Uoahw",
         "https://www.youtube.com/watch?v=wIyHSOugGGw",
         "https://www.youtube.com/watch?v=Ei6oX2BGrlg",
         "https://www.youtube.com/watch?v=i5_iFatibRI"
@@ -60,7 +60,14 @@ def generate_dummy_data():
     for i in range(20):
         post = Post(
             title=f"Post Titel {i}",
-            content=f"Inhoud van post {i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam posuere erat elit, sed tempus nisi cursus sed. Ut commodo arcu sit amet leo imperdiet mattis. Sed quis cursus mi. Maecenas eu orci sit amet ex aliquam ultrices. Proin sit amet porttitor ipsum. Fusce commodo neque nec placerat hendrerit. Fusce quis velit id est porta pretium a ac velit. Ut ac cursus velit. In semper justo eu dolor malesuada ultricies. Curabitur gravida felis dui. Suspendisse nec vulputate mauris. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque ultrices diam orci, eget posuere lectus dignissim non.",
+            content=(
+                f"Inhoud van post {i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
+                "Nam posuere erat elit, sed tempus nisi cursus sed. Ut commodo arcu sit amet leo "
+                "Proin sit amet porttitor ipsum.\n\n"
+                
+                "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac "
+                "turpis egestas. Pellentesque ultrices diam orci, eget posuere lectus dignissim non."
+            ),
             created_at=datetime.now(),
             updated_at=datetime.now(),
             user=random.choice(users),
