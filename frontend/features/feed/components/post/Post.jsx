@@ -1,15 +1,12 @@
 import {useState} from "react";
-import {Image, Text, TouchableOpacity, View} from 'react-native';
-import {Link} from "expo-router";
+import {View} from 'react-native';
 
-import Card from "@/components/Card";
 import ContentMenu from "../ContentMenu";
 import PostContent from "./PostContent";
 import PostDetails from "./PostDetails";
 import PostActions from "./PostActions";
 import ContentAuthor from "../ContentAuthor";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {Feather, FontAwesome} from "@expo/vector-icons";
 
 const userId = 1; // TODO: use session variables in server
 
@@ -61,21 +58,7 @@ function Post({post}) {
                          handleBookmark={handleBookmark} isBookmarked={isBookmarked}
             />
 
-
-            {/*<Card>*/}
-            {/*    <Link href={`/posts/${post.id}`} className=""/>*/}
-
             {/*<ContentMenu handleBookmark={handleBookmark} isBookmarked={isBookmarked}/>*/}
-
-            {/*    <PostContent title={post.title} content={post.content}/>*/}
-
-            {/*    <View className="">*/}
-            {/*        <PostDetails createdAt={post['created_at']} tags={post.tags}/>*/}
-
-            {/*        <PostActions numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']}*/}
-            {/*                     likedByCurrentUser={post['liked_by_current_user']} postId={post.id}/>*/}
-            {/*    </View>*/}
-            {/*</Card>*/}
 
         </View>
     );

@@ -96,7 +96,6 @@ function PostList() {
             { error && <Text>Error!</Text>}
             {
                 posts && <FlatList
-                    className=""
                     data={ posts }
                     renderItem={({item}) => <Post post={item}/>}
                     keyExtractor={post => post.id}

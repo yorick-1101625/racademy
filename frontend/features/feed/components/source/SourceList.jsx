@@ -52,7 +52,6 @@ function SourceList() {
             { error && <Text>Error!</Text>}
             {
                 sources && <FlatList
-                    className="p-5 sm:max-w-xl w-screen"
                     data={ sources }
                     renderItem={({item}) => <Source source={item}/>}
                     keyExtractor={source => source.id}

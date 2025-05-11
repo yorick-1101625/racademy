@@ -26,9 +26,6 @@ def generate_random_isbn():
 def generate_random_youtube_url():
     youtube_urls = [
         "https://www.youtube.com/watch?v=gvkqT_Uoahw",
-        "https://www.youtube.com/watch?v=wIyHSOugGGw",
-        "https://www.youtube.com/watch?v=Ei6oX2BGrlg",
-        "https://www.youtube.com/watch?v=i5_iFatibRI"
     ]
     return random.choice(youtube_urls)
 
@@ -92,7 +89,7 @@ def generate_dummy_data():
     sources = []
     for i in range(10):
         source = Source(
-            type=random.choice(['video', 'artikel', 'boek']),
+            type=random.choice(['video', 'article']),
             title=f"Bron {i}",
             description=f"Beschrijving voor bron {i}",
             school_subject=random.choice(['Werkplaats', 'Programming Essentials']),
@@ -102,8 +99,10 @@ def generate_dummy_data():
         )
         if source.type == 'video':
             source.url = generate_random_youtube_url()
-        if source.type == 'boek':
+        if source.type == 'book':
             source.isbn = generate_random_isbn()
+        if source.type == 'article':
+            source.url = "https://www.netguru.com/glossary/react-native"
 
         sources.append(source)
     db.session.add_all(sources)
