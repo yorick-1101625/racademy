@@ -1,4 +1,4 @@
-import {FlatList, Text} from 'react-native';
+import {ActivityIndicator, FlatList, Text} from 'react-native';
 import Post from "./Post";
 import useFetch from "@/hooks/useFetch";
 
@@ -92,7 +92,7 @@ function PostList() {
 
     return (
         <>
-            { isPending && <Text>Loading...</Text>}
+            { isPending && <ActivityIndicator />}
             { error && <Text>Error!</Text>}
             {
                 posts && <FlatList

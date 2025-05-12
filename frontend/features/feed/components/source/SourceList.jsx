@@ -1,4 +1,4 @@
-import {FlatList, Text} from 'react-native';
+import {ActivityIndicator, FlatList, Text} from 'react-native';
 import Source from './Source.jsx';
 import useFetch from "@/hooks/useFetch";
 
@@ -48,7 +48,7 @@ function SourceList() {
 
     return (
         <>
-            { isPending && <Text>Loading...</Text>}
+            { isPending && <ActivityIndicator />}
             { error && <Text>Error!</Text>}
             {
                 sources && <FlatList

@@ -1,10 +1,12 @@
-import {createContext, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const UserContext = createContext(null);
 
+
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
+    const [authChecked, setAuthChecked] = useState(false);
 
     async function login(email, password) {
         const url = "http://127.0.0.1:5000/api/login/";
@@ -19,9 +21,9 @@ export function UserProvider({ children }) {
             }),
         })
             .then(response => response.json())
-            .then(data => {
+            .then(async data => {
                 if (data.success) {
-                    setUser(data.user);
+                    await getUser(data.access_token);
                     return AsyncStorage.setItem('token', data.access_token)
                         .then(() => {
                             return true;
@@ -30,6 +32,29 @@ export function UserProvider({ children }) {
                     throw new Error(data.message);
                 }
             })
+    }
+
+    async function getUser(token) {
+        try {
+            const url = "http://127.0.0.1:5000/api/login/whoami";
+            const data = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(res => res.json())
+            if (data.success) {
+                setUser(data.user);
+            }
+            else {
+                setUser(null);
+            }
+        }
+        catch (error) {
+            setUser(null);
+        }
+        finally {
+            setAuthChecked(true);
+        }
     }
 
     async function register(email, password) {
@@ -58,8 +83,13 @@ export function UserProvider({ children }) {
         await AsyncStorage.clear();
     }
 
+    useEffect(() => {
+        AsyncStorage.getItem('token')
+            .then(token => getUser(token));
+    }, [])
+
     return (
-        <UserContext.Provider value={{ user, login, register, logout }}>
+        <UserContext.Provider value={{ user, login, register, logout, authChecked }}>
             { children }
         </UserContext.Provider>
     );

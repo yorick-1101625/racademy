@@ -33,7 +33,7 @@ def generate_dummy_data():
     db.drop_all()
     db.create_all()
 
-    os.makedirs("static/user_images", exist_ok=True)
+    os.makedirs("static/user_images/profile_pictures", exist_ok=True)
 
     users = []
     for i in range(10):
