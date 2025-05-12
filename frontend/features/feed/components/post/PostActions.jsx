@@ -1,14 +1,15 @@
 import {useRef, useState} from "react";
 import {Image, Pressable, Text, View} from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Icons
+// Icons #TODO Remove these icons?
 import ChatBubbleIcon from "@/assets/icons/comment/chat-bubble.png";
 import HeartIconRed from "@/assets/icons/like/heart-red.png";
 import HeartIconBlack from "@/assets/icons/like/heart-black.png";
 
+import {Feather} from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function PostActions({ numberOfComments, numberOfLikes, likedByCurrentUser, postId }) {
+function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postId, isBookmarked, handleBookmark}) {
 
     const [isLiked, setIsLiked] = useState(likedByCurrentUser);
     const numberOfLikesRef = useRef(numberOfLikes);
@@ -37,30 +38,40 @@ function PostActions({ numberOfComments, numberOfLikes, likedByCurrentUser, post
             });
     }
 
+
     return (
-        <View className="flex-row">
+        <View className="flex-row justify-between mt-4 px-2">
             <Pressable
                 className="flex-row items-center"
             >
-                <Text className="mr-1 text-neutral-700">{ numberOfComments }</Text>
-                <Image
-                    className="w-7 h-7 pop-button"
-                    source={ ChatBubbleIcon }
-                />
+                <Feather name="message-square" size={16} color="gray"/>
+                <Text className="ml-1 text-sm text-gray-600">
+                    {numberOfComments}
+                </Text>
             </Pressable>
 
             <Pressable
                 onPress={handleLike}
-                className="flex-row items-center ml-3"
+                className="flex-row items-center"
             >
-                <Text className="mr-1 text-neutral-700">{ numberOfLikesRef.current }</Text>
-                <Image
-                    className="w-7 h-7 pop-button"
-                    source={
-                        isLiked
-                        ? HeartIconRed
-                        : HeartIconBlack
-                    }
+                <Feather
+                    name="heart"
+                    size={16}
+                    className={isLiked ? "text-rac" : "black"}
+                />
+                <Text className="ml-1 text-sm text-gray-600">
+                    {numberOfLikesRef.current}
+                </Text>
+            </Pressable>
+
+            <Pressable
+                onPress={handleBookmark}
+                className="flex-row items-center"
+            >
+                <Feather
+                    name="bookmark"
+                    size={16}
+                    className={isBookmarked ? "text-rac" : "black"}
                 />
             </Pressable>
         </View>
