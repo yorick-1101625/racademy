@@ -1,78 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   View,
   Text,
-  Image,
   ScrollView,
-  TouchableOpacity,
   ActivityIndicator,
-  Dimensions,
+  StyleSheet,
+  useWindowDimensions, 
 } from 'react-native';
+import { Image } from 'react-native';
+import { Link } from 'expo-router';
+import useFetch from '../hooks/useFetch';
 
 export default function AdminDashboard() {
-  const [users, setUsers] = useState([]);
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const { width } = useWindowDimensions();
+  const isWide = width > 600; //
 
-  useEffect(() => {
-    const updateLayout = () => {
-      const screenWidth = Dimensions.get('window').width;
-      setIsSmallScreen(screenWidth <= 600);
-    };
+  const { data: users, isPending, error } = useFetch('http://localhost:5000/api/user/');
 
-    updateLayout();
-    const subscription = Dimensions.addEventListener('change', updateLayout);
-
-    Promise.all([
-      fetch('http://localhost:5000/api/user').then(res => res.json()),
-      fetch('http://localhost:5000/api/post').then(res => res.json()),
-    ])
-      .then(([userData, postData]) => {
-        if (userData.success) {
-          setUsers(userData.data);
-        } else {
-          setError('Failed to fetch users');
-        }
-
-        if (postData.success && Array.isArray(postData.data)) {
-          setPosts(postData.data);
-        } else {
-          console.warn('Post data not in expected format:', postData);
-        }
-      })
-      .catch(err => {
-        setError('Error fetching data');
-        console.error(err);
-      })
-      .finally(() => setLoading(false));
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
-  const removeUser = (userId) => {
-    fetch(`http://localhost:5000/api/user/${userId}`, { method: 'DELETE' })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          setUsers(users.filter(u => u.id !== userId));
-        }
-      })
-      .catch(err => {
-        console.error('Error removing user', err);
-      });
-  };
-
-  const getPostCountForUser = (userId) => {
-    return posts.filter(p => p.user_id === userId).length;
-  };
-
-  if (loading) {
+  if (isPending) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, backgroundColor: '#ffffff' }}>
+      <View style={styles.centered}>
         <ActivityIndicator size="large" color="#0000ff" />
         <Text>Loading users...</Text>
       </View>
@@ -81,81 +28,86 @@ export default function AdminDashboard() {
 
   if (error) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 16, backgroundColor: '#ffffff' }}>
-        <Text style={{ color: 'red', fontSize: 16 }}>{error}</Text>
+      <View style={styles.centered}>
+        <Text style={{ color: 'red' }}>{error}</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16, backgroundColor: '#ffffff', flexGrow: 1 }}>
-      <View
-        style={{
-          flexDirection: isSmallScreen ? 'column' : 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-        }}
-      >
-        {users.map((u) => (
-          <View key={u.id} style={{ width: isSmallScreen ? '100%' : '48%', marginBottom: 16 }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', paddingRight: 8 }}>
-              <Image
-                source={{ uri: `http://localhost:5000/${u.profile_picture}` }}
-                style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 30,
-                  resizeMode: 'cover',
-                }}
-              />
-              <View style={{ flex: 1, marginLeft: 60 }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-                  {u.username || 'Naam onbekend'}
-                </Text>
-                <Text style={{ fontSize: 13, color: '#4B5563' }}>{u.email}</Text>
-                <Text style={{ fontSize: 13, color: '#374151' }}>
-                  Studie: {u.study || 'Onbekend'}
-                </Text>
-                <Text style={{ fontSize: 13, color: '#374151' }}>
-                  {getPostCountForUser(u.id)} posts
-                </Text>
-
-                <View style={{ marginTop: 8, flexDirection: 'row' }}>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: '#E5E7EB',
-                      paddingVertical: 6,
-                      paddingHorizontal: 12,
-                      borderRadius: 999,
-                      marginRight: 8,
-                    }}
-                  >
-                    <Text style={{ fontSize: 13, fontWeight: '500' }}>Details</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => removeUser(u.id)}
-                    style={{
-                      backgroundColor: '#DC2626',
-                      paddingVertical: 6,
-                      paddingHorizontal: 12,
-                      borderRadius: 999,
-                    }}
-                  >
-                    <Text style={{ color: '#ffffff', fontSize: 13, fontWeight: '500' }}>
-                      Verwijder
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-
-            {isSmallScreen && (
-              <View style={{ height: 1, backgroundColor: '#D1D5DB', marginTop: 12 }} />
-            )}
+    <ScrollView style={styles.container}>
+      {users.map(user => (
+        <View key={user.id} style={styles.userRow}>
+          <Link href={`users/${user.id}`} style={styles.link}>
+            <Image
+              source={{ uri: `http://localhost:5000/${user.profile_picture}` }}
+              style={[
+                styles.avatar,
+                {
+                  width: isWide ? 56 : 48,
+                  height: isWide ? 56 : 48,
+                  borderRadius: isWide ? 28 : 24
+                },
+              ]}
+            />
+          </Link>
+          <View style={styles.textContainer}>
+            <Link href={`users/${user.id}`} style={styles.link}>
+              <Text style={[
+                styles.username,
+                { fontSize: isWide ? 18 : 16 }
+              ]}>
+                {user.username || 'Naam onbekend'}
+              </Text>
+            </Link>
+            <Text style={[
+              styles.email,
+              { fontSize: isWide ? 16 : 14 }
+            ]}>
+              {user.email}
+            </Text>
           </View>
-        ))}
-      </View>
+        </View>
+      ))}
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#ffffff',
+    padding: 16,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#ffffff',
+  },
+  userRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E5E7EB',
+    paddingBottom: 12,
+  },
+  avatar: {
+    backgroundColor: '#D4D4D4',
+  },
+  textContainer: {
+    marginLeft: 12,
+  },
+  username: {
+    fontWeight: '600',
+    color: '#2563EB',
+    textDecorationLine: 'underline',
+  },
+  email: {
+    color: '#6B7280',
+  },
+  link: {
+    cursor: 'pointer',
+  },
+});
