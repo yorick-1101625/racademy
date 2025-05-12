@@ -1,15 +1,12 @@
 import {Link, Stack} from 'expo-router';
 import Toast from "react-native-toast-message";
 import {UserProvider} from "@/contexts/UserContext";
-import {Image, View} from "react-native";
-import useUser from "@/hooks/useUser";
+import {Image} from "react-native";
 import Logo from "@/assets/logo.png"
 import CurrentUserProfilePicture from "@/components/CurrentUserProfilePicture";
 import {Feather} from "@expo/vector-icons";
 
 function RootLayout() {
-
-    // const { user } = useUser();
 
     return (
         <>

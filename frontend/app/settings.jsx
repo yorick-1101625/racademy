@@ -1,5 +1,5 @@
 import {Link, useRouter} from "expo-router";
-import {ActivityIndicator, Pressable, Text} from "react-native";
+import {Pressable, Text} from "react-native";
 import useUser from "@/hooks/useUser";
 
 function Profile() {

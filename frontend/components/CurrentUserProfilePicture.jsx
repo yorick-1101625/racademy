@@ -1,4 +1,4 @@
-import {Image, Text, View} from 'react-native';
+import {Image} from 'react-native';
 import useUser from "@/hooks/useUser";
 
 function CurrentUserProfilePicture({ className, alt = "profielfoto" }) {

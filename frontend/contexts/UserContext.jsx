@@ -36,7 +36,7 @@ export function UserProvider({ children }) {
 
     async function getUser(token) {
         try {
-            const url = "http://127.0.0.1:5000/api/login/whoami";
+            const url = "http://127.0.0.1:5000/api/user/current";
             const data = await fetch(url, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -47,6 +47,7 @@ export function UserProvider({ children }) {
             }
             else {
                 setUser(null);
+                console.log(data)
             }
         }
         catch (error) {

@@ -1,10 +1,5 @@
 import {useRef, useState} from "react";
-import {Image, Pressable, Text, View} from 'react-native';
-
-// Icons #TODO Remove these icons?
-import ChatBubbleIcon from "@/assets/icons/comment/chat-bubble.png";
-import HeartIconRed from "@/assets/icons/like/heart-red.png";
-import HeartIconBlack from "@/assets/icons/like/heart-black.png";
+import {Pressable, Text, View} from 'react-native';
 
 import {Feather} from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -57,7 +52,7 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
                 <Feather
                     name="heart"
                     size={16}
-                    className={isLiked ? "text-rac" : "black"}
+                    className={isLiked ? "text-rac" : "text-gray-600"}
                 />
                 <Text className="ml-1 text-sm text-gray-600">
                     {numberOfLikesRef.current}
@@ -71,7 +66,7 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
                 <Feather
                     name="bookmark"
                     size={16}
-                    className={isBookmarked ? "text-rac" : "black"}
+                    className={isBookmarked ? "text-rac" : "text-gray-600"}
                 />
             </Pressable>
         </View>

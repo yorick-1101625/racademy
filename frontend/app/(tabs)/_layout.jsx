@@ -1,7 +1,4 @@
-import {Tabs} from "expo-router";
 import '@/global.css'
-import colors from "tailwindcss/colors";
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { withLayoutContext } from "expo-router";
 import UserOnly from "@/components/UserOnly";

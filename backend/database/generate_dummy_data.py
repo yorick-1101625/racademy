@@ -89,7 +89,7 @@ def generate_dummy_data():
     sources = []
     for i in range(10):
         source = Source(
-            type=random.choice(['video', 'article']),
+            type=random.choice(['video', 'article', 'book']),
             title=f"Bron {i}",
             description=f"Beschrijving voor bron {i}",
             school_subject=random.choice(['Werkplaats', 'Programming Essentials']),
@@ -101,6 +101,7 @@ def generate_dummy_data():
             source.url = generate_random_youtube_url()
         if source.type == 'book':
             source.isbn = generate_random_isbn()
+            source.image = 'static/user_images/sources/bookcover.jpg'
         if source.type == 'article':
             source.url = "https://www.netguru.com/glossary/react-native"
 

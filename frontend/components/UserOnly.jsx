@@ -14,7 +14,6 @@ function UserOnly({ children }) {
         if (authChecked && user === null) {
             router.replace('/');
         }
-        console.log(authChecked, user)
     }, [user, authChecked]);
 
     if (!authChecked || !user) {

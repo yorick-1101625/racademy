@@ -10,8 +10,8 @@ function SourceDetails({createdAt, schoolSubject, subject, rating, isBookmarked,
     return (
         <>
             <View>
-                <Text className="text-xs text-gray-400 mt-2">{calculateTimeFromToday(createdAt)}</Text>
-                <Text className="text-xs text-gray-400">{schoolSubject}: {subject}</Text>
+                <Text className="text-xs text-gray-500 mt-2">{calculateTimeFromToday(createdAt)}</Text>
+                <Text className="text-xs text-gray-500">{schoolSubject}: {subject}</Text>
             </View>
 
             {
@@ -28,7 +28,7 @@ function SourceDetails({createdAt, schoolSubject, subject, rating, isBookmarked,
                         <Feather
                             name="bookmark"
                             size={16}
-                            className={isBookmarked ? "text-rac" : "black"}
+                            className={isBookmarked ? "text-rac" : "text-gray-600"}
                         />
                     </Pressable>
                 </View>
