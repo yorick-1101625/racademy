@@ -4,9 +4,9 @@ import PostList from "@/features/feed/components/post/PostList";
 function Posts() {
     return (
 
-        <SafeAreaView className="flex-1 items-center bg-neutral-100">
+        <SafeAreaView className="flex-1">
 
-            <PostList />
+            <PostList/>
 
         </SafeAreaView>
     );

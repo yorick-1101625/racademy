@@ -9,6 +9,8 @@ import SourceDetails from "./SourceDetails";
 
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import PostContent from "@/features/feed/components/post/PostContent";
+import PostDetails from "@/features/feed/components/post/PostDetails";
 
 const userId = 1; // TODO: get from session
 function Source({source}) {
@@ -39,30 +41,36 @@ function Source({source}) {
     const averageRating = calculateAverageRating(source.ratings);
 
     return (
-        <View className="my-5">
+        <View className="w-full bg-white p-4 border-t border-gray-200">
+
+            {/* Header */}
             <ContentAuthor
                 profilePicture={source.user['profile_picture']}
                 username={source.user.username}
+                email={source.user.email}
                 userId={source.user.id}
             />
 
-            <View
-                className="bg-white border border-neutral-200 mt-3 p-5 hover:shadow-md hover:shadow-neutral-200 transition-shadow rounded-lg relative cursor-pointer">
-                <Link href={`/sources/${source.id}`} className="absolute left-0 top-0 bottom-0 right-32 z-10"/>
+            {/* Content */}
+            <SourceContent
+                title={source.title}
+                image={source.image}
+                type={source.type}
+                url={source.url}
+            />
 
-                <ContentMenu handleBookmark={handleBookmark} isBookmarked={isBookmarked}/>
+            {/* Timestamp */}
+            <SourceDetails
+                createdAt={source['created_at']}
+                schoolSubject={source['school_subject']}
+                subject={source.subject}
+                rating={averageRating}
+                handleBookmark={handleBookmark}
+                isBookmarked={isBookmarked}
+            />
 
-                <SourceContent title={source.title} image={source.image} type={source.type} url={source.url}/>
+            {/*<ContentMenu handleBookmark={handleBookmark} isBookmarked={isBookmarked}/>*/}
 
-                <View className="mt-4 flex-row justify-between items-end">
-                    <SourceDetails
-                        createdAt={source['created_at']}
-                        schoolSubject={source['school_subject']}
-                        subject={source.subject}
-                        rating={averageRating}
-                    />
-                </View>
-            </View>
         </View>
     );
 }

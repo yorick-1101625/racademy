@@ -3,9 +3,9 @@ import Toast from "react-native-toast-message";
 import {UserProvider} from "@/contexts/UserContext";
 import {Image, View} from "react-native";
 import useUser from "@/hooks/useUser";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import Logo from "@/assets/logo.png"
 import CurrentUserProfilePicture from "@/components/CurrentUserProfilePicture";
+import {Feather} from "@expo/vector-icons";
 
 function RootLayout() {
 
@@ -30,7 +30,7 @@ function RootLayout() {
                             headerLeftContainerStyle: {paddingLeft: 20},
                             headerLeft: () => (
                                 <Link href="/profile">
-                                    <CurrentUserProfilePicture className="w-8 h-8 rounded-full" />
+                                    {/*<CurrentUserProfilePicture className="w-8 h-8 rounded-full" />*/}
                                 </Link>
                             ),
 
@@ -46,7 +46,7 @@ function RootLayout() {
                             headerRightContainerStyle: {paddingRight: 20},
                             headerRight: () => (
                                 <Link href="/settings">
-                                    <AntDesign name="setting" size={32} />
+                                    <Feather name="settings" size={21.5} className="text-rac" />
                                 </Link>
                             )
                         }}

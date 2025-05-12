@@ -1,8 +1,6 @@
 import {useState} from "react";
 import {View} from 'react-native';
-import {Link} from "expo-router";
 
-import Card from "@/components/Card";
 import ContentMenu from "../ContentMenu";
 import PostContent from "./PostContent";
 import PostDetails from "./PostDetails";
@@ -39,25 +37,28 @@ function Post({post}) {
     }
 
     return (
-        <View className="my-5">
+        <View className="w-full bg-white p-4 border-t border-gray-200">
 
-            <ContentAuthor profilePicture={post.user['profile_picture']} username={post.user.username}
-                           userId={post.user.id}/>
+            {/* Header */}
+            <ContentAuthor profilePicture={post.user['profile_picture']}
+                           username={post.user.username}
+                           email={post.user.email}
+                           userId={post.user.id}
+            />
 
-            <Card>
-                <Link href={`/posts/${post.id}`} className="absolute left-0 top-0 bottom-0 right-32 z-10"/>
+            {/* Content */}
+            <PostContent title={post.title} content={post.content}/>
 
-                <ContentMenu handleBookmark={handleBookmark} isBookmarked={isBookmarked}/>
+            {/* Timestamp */}
+            <PostDetails createdAt={post['created_at']} tags={post.tags}/>
 
-                <PostContent title={post.title} content={post.content}/>
+            {/* Interaction buttons */}
+            <PostActions numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']}
+                         likedByCurrentUser={post['liked_by_current_user']} postId={post.id}
+                         handleBookmark={handleBookmark} isBookmarked={isBookmarked}
+            />
 
-                <View className="mt-4 flex-row justify-between items-end">
-                    <PostDetails createdAt={post['created_at']} tags={post.tags}/>
-
-                    <PostActions numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']}
-                                 likedByCurrentUser={post['liked_by_current_user']} postId={post.id}/>
-                </View>
-            </Card>
+            {/*<ContentMenu handleBookmark={handleBookmark} isBookmarked={isBookmarked}/>*/}
 
         </View>
     );

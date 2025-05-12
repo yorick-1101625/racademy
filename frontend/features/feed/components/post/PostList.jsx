@@ -4,6 +4,7 @@ import useFetch from "@/hooks/useFetch";
 
 const TestPFP = {uri: 'https://placehold.co/64'};
 
+// #TODO Remove testPosts?
 const testPosts = [{
     id: 1,
     profilePicture: TestPFP,
@@ -95,7 +96,6 @@ function PostList() {
             { error && <Text>Error!</Text>}
             {
                 posts && <FlatList
-                    className="p-5 sm:max-w-xl w-screen"
                     data={ posts }
                     renderItem={({item}) => <Post post={item}/>}
                     keyExtractor={post => post.id}
