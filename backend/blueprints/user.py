@@ -73,16 +73,11 @@ def register_user():
         }, 500
 
 
-@api_user.route("/<user_id>", methods=["PATCH"])
-def update_post(user_id):
+@api_user.route("/", methods=["PATCH"])
+def update_post():
     data = request.get_json()
     try:
-        if user_id != get_jwt_identity():
-            return {
-                "success": False,
-                "message": "You are not authorized to edit this user"
-            }, 401
-
+        user_id = get_jwt_identity()
         updated_user = UserService.update_user(user_id, data)
         if updated_user:
             return jsonify({

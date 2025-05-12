@@ -1,12 +1,12 @@
 import {useRef, useState} from "react";
 import {Image, Pressable, Text, View} from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Icons
 import ChatBubbleIcon from "@/assets/icons/comment/chat-bubble.png";
 import HeartIconRed from "@/assets/icons/like/heart-red.png";
 import HeartIconBlack from "@/assets/icons/like/heart-black.png";
 
-const userId = 1; // TODO: change to use session variables
 
 function PostActions({ numberOfComments, numberOfLikes, likedByCurrentUser, postId }) {
 
@@ -14,14 +14,17 @@ function PostActions({ numberOfComments, numberOfLikes, likedByCurrentUser, post
     const numberOfLikesRef = useRef(numberOfLikes);
 
     function handleLike() {
-
-        fetch(`http://127.0.0.1:5000/api/user/${userId}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ liked_post: postId })
-        })
+        AsyncStorage.getItem('token')
+            .then(token => {
+                return fetch(`http://127.0.0.1:5000/api/user/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({liked_post: postId})
+                });
+            })
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
