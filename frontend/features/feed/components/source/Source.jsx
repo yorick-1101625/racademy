@@ -1,16 +1,11 @@
 import {View} from 'react-native';
 import {useState} from "react";
-import {Link} from "expo-router";
-
 import ContentAuthor from "../ContentAuthor";
-import ContentMenu from "../ContentMenu";
 import SourceContent from "./SourceContent";
 import SourceDetails from "./SourceDetails";
 
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import PostContent from "@/features/feed/components/post/PostContent";
-import PostDetails from "@/features/feed/components/post/PostDetails";
 
 function Source({source}) {
 

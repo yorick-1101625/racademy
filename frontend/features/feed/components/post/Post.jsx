@@ -7,6 +7,7 @@ import PostDetails from "./PostDetails";
 import PostActions from "./PostActions";
 import ContentAuthor from "../ContentAuthor";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {Link} from "expo-router";
 
 function Post({post}) {
 
@@ -45,7 +46,9 @@ function Post({post}) {
             />
 
             {/* Content */}
-            <PostContent title={post.title} content={post.content}/>
+            <Link href={`/posts/${post.id}`}>
+                <PostContent title={post.title} content={post.content}/>
+            </Link>
 
             {/* Timestamp */}
             <PostDetails createdAt={post['created_at']} tags={post.tags}/>
