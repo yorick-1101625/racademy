@@ -5,7 +5,7 @@ import {
   ScrollView,
   ActivityIndicator,
   StyleSheet,
-  useWindowDimensions, 
+  useWindowDimensions,
 } from 'react-native';
 import { Image } from 'react-native';
 import { Link } from 'expo-router';
