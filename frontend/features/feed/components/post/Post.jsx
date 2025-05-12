@@ -8,8 +8,6 @@ import PostActions from "./PostActions";
 import ContentAuthor from "../ContentAuthor";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const userId = 1; // TODO: use session variables in server
-
 function Post({post}) {
 
     const [isBookmarked, setIsBookmarked] = useState(post['bookmarked_by_current_user']);
@@ -18,7 +16,7 @@ function Post({post}) {
 
         AsyncStorage.getItem('token')
             .then(token => {
-                return fetch(`http://127.0.0.1:5000/api/user/${userId}`, {
+                return fetch(`http://127.0.0.1:5000/api/user/`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',

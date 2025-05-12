@@ -12,7 +12,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import PostContent from "@/features/feed/components/post/PostContent";
 import PostDetails from "@/features/feed/components/post/PostDetails";
 
-const userId = 1; // TODO: get from session
 function Source({source}) {
 
     const [isBookmarked, setIsBookmarked] = useState(source['bookmarked_by_current_user']);
@@ -21,7 +20,7 @@ function Source({source}) {
 
         AsyncStorage.getItem('token')
             .then(token => {
-                return fetch(`http://127.0.0.1:5000/api/user/${userId}`, {
+                return fetch(`http://127.0.0.1:5000/api/user/`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',

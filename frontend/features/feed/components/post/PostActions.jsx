@@ -9,8 +9,6 @@ import HeartIconBlack from "@/assets/icons/like/heart-black.png";
 import {Feather} from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const userId = 1; // TODO: change to use session variables
-
 function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postId, isBookmarked, handleBookmark}) {
 
     const [isLiked, setIsLiked] = useState(likedByCurrentUser);
@@ -19,7 +17,7 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
     function handleLike() {
         AsyncStorage.getItem('token')
             .then(token => {
-                return fetch(`http://127.0.0.1:5000/api/user/${userId}`, {
+                return fetch(`http://127.0.0.1:5000/api/user/`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
