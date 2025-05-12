@@ -2,10 +2,11 @@ import {Tabs} from "expo-router";
 import '@/global.css'
 import colors from "tailwindcss/colors";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import UserOnly from "@/components/UserOnly";
 
 function TabsLayout() {
     return (
-        <>
+        <UserOnly>
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: colors.rac
@@ -28,7 +29,7 @@ function TabsLayout() {
                     }}
                 />
             </Tabs>
-        </>
+        </UserOnly>
     );
 }
 
