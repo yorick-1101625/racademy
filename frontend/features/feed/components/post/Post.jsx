@@ -7,6 +7,7 @@ import PostActions from "./PostActions";
 import ContentAuthor from "../ContentAuthor";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Link} from "expo-router";
+import fatty from "@/utils/fatty";
 
 
 const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -17,18 +18,7 @@ function Post({post}) {
 
     function handleBookmark() {
 
-        AsyncStorage.getItem('token')
-            .then(token => {
-                return fetch(`${backendUrl}/api/user/`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({bookmarked_post: post.id})
-                });
-            })
-            .then(res => res.json())
+        fatty('/api/user/', 'PATCH', {bookmarked_post: post.id})
             .then(data => {
                 if (data.success) {
                     setIsBookmarked(i => !i);
