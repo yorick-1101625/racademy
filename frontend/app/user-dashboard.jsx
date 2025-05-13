@@ -1,89 +1,113 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
+import { Image } from 'react-native';
+import { Link } from 'expo-router';
+import useFetch from '../hooks/useFetch';
 
 export default function AdminDashboard() {
-  const [users, setUsers] = useState([]);
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { width } = useWindowDimensions();
+  const isWide = width > 600; //
 
-  useEffect(() => {
-    Promise.all([
-      fetch('http://localhost:5000/api/user').then(res => res.json()),
-      fetch('http://localhost:5000/api/post').then(res => res.json())
-    ])
-      .then(([userData, postData]) => {
-        if (userData.success) {
-          setUsers(userData.data);
-        } else {
-          setError('Failed to fetch users');
-        }
+  const { data: users, isPending, error } = useFetch('http://localhost:5000/api/user/');
 
-        if (postData.success && Array.isArray(postData.data)) {
-          setPosts(postData.data);
-        } else {
-          console.warn('Post data not in expected format:', postData);
-        }
-      })
-      .catch(err => {
-        setError('Error fetching data');
-        console.error(err);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  if (isPending) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading users...</Text>
+      </View>
+    );
+  }
 
-  const removeUser = (userId) => {
-    fetch(`http://localhost:5000/api/user/${userId}`, { method: 'DELETE' })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          setUsers(users.filter(u => u.id !== userId));
-        }
-      })
-      .catch(err => {
-        console.error('Error removing user', err);
-      });
-  };
-
-  const getPostCountForUser = (userId) => {
-    return posts.filter(p => p.user_id === userId).length;
-  };
-
-  if (loading) return <div>Loading users...</div>;
-  if (error) return <div>{error}</div>;
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text style={{ color: 'red' }}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
-    <div className="px-16 py-10 w-full">
-      <h1 className="text-3xl font-bold mb-6">Gebruikers</h1>
-
-      {users.map(u => (
-        <div key={u.id} className="bg-white border p-6 mb-6 rounded-xl shadow w-full">
-          <div className="flex items-center space-x-6 mb-4">
-            <img
-              src={`http://localhost:5000/${u.profile_picture}`}
-              alt="avatar"
-              className="w-16 h-16 rounded-full object-cover"
+    <ScrollView style={styles.container}>
+      {users.map(user => (
+        <View key={user.id} style={styles.userRow}>
+          <Link href={`users/${user.id}`} style={styles.link}>
+            <Image
+              source={{ uri: `http://localhost:5000/${user.profile_picture}` }}
+              style={[
+                styles.avatar,
+                {
+                  width: isWide ? 56 : 48,
+                  height: isWide ? 56 : 48,
+                  borderRadius: isWide ? 28 : 24
+                },
+              ]}
             />
-            <div>
-              <p className="font-bold text-lg">{u.username || 'Naam onbekend'}</p>
-              <p className="text-sm text-gray-600">{u.email}</p>
-              <p className="text-sm">Studie: {u.study || 'Onbekend'}</p>
-              <p className="text-sm">{getPostCountForUser(u.id)} posts</p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap justify-start gap-3 mt-4">
-            <button className="px-4 py-2 bg-gray-200 rounded-full hover:bg-gray-300 text-sm font-medium">
-              Details
-            </button>
-            <button
-              onClick={() => removeUser(u.id)}
-              className="px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-full hover:bg-red-700"
-            >
-              Verwijder
-            </button>
-          </div>
-        </div>
+          </Link>
+          <View style={styles.textContainer}>
+            <Link href={`users/${user.id}`} style={styles.link}>
+              <Text style={[
+                styles.username,
+                { fontSize: isWide ? 18 : 16 }
+              ]}>
+                {user.username || 'Naam onbekend'}
+              </Text>
+            </Link>
+            <Text style={[
+              styles.email,
+              { fontSize: isWide ? 16 : 14 }
+            ]}>
+              {user.email}
+            </Text>
+          </View>
+        </View>
       ))}
-    </div>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#ffffff',
+    padding: 16,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#ffffff',
+  },
+  userRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#E5E7EB',
+    paddingBottom: 12,
+  },
+  avatar: {
+    backgroundColor: '#D4D4D4',
+  },
+  textContainer: {
+    marginLeft: 12,
+  },
+  username: {
+    fontWeight: '600',
+    color: '#2563EB',
+    textDecorationLine: 'underline',
+  },
+  email: {
+    color: '#6B7280',
+  },
+  link: {
+    cursor: 'pointer',
+  },
+});
