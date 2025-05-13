@@ -33,7 +33,7 @@ function Source({source}) {
     }
 
     const averageRating = calculateAverageRating(source.ratings);
-
+    console.log(source)
     return (
         <View className="w-full bg-white p-4 border-t border-gray-200">
 

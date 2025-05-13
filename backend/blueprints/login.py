@@ -48,28 +48,6 @@ def login():
         }), 500
 
 
-@api_login.route('/whoami', methods=['GET'])
-def whoami():
-    try:
-        current_user = UserService.get_user_by_id(
-            get_jwt_identity()
-        )
-
-        current_user.pop('password')
-        return jsonify({
-            "success": True,
-            "user": current_user
-        }), 200
-
-    except HTTPException as e:
-        raise e
-    except Exception as e:
-        print(f"[login] Unexpected error: {e}")
-        return jsonify({
-            "success": False,
-            "message": "An unexpected error occurred."
-        }), 500
-
 # TODO: Find better implementation for cors?
 # if request.method == 'OPTIONS':
 #     response = jsonify({'status': 'success'})

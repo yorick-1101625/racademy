@@ -11,34 +11,34 @@ import Rating45Icon from "@/assets/icons/rating/rating-45.png";
 import Rating50Icon from "@/assets/icons/rating/rating-50.png";
 
 export default function getRatingIcon(rating) {
-    if (rating === 0) {
+    if (rating >= 0 && rating < 5) {
         return Rating00Icon;
     }
-    if (rating === 5) {
+    if (rating >= 5 && rating < 10 ) {
         return Rating05Icon;
     }
-    if (rating === 10) {
+    if (rating >= 10 && rating < 15) {
         return Rating10Icon;
     }
-    if (rating === 15) {
+    if (rating >= 15 && rating < 20) {
         return Rating15Icon;
     }
-    if (rating === 20) {
+    if (rating >= 20 && rating < 25) {
         return Rating20Icon;
     }
-    if (rating === 25) {
+    if (rating >= 25 && rating < 30) {
         return Rating25Icon;
     }
-    if (rating === 30) {
+    if (rating >= 30 && rating < 35) {
         return Rating30Icon;
     }
-    if (rating === 35) {
+    if (rating >= 35 && rating < 40) {
         return Rating35Icon;
     }
-    if (rating === 40) {
+    if (rating >= 40 && rating < 45) {
         return Rating40Icon;
     }
-    if (rating === 45) {
+    if (rating >= 45 && rating < 50) {
         return Rating45Icon;
     }
     if (rating === 50) {

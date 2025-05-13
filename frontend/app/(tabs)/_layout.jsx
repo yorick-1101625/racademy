@@ -1,4 +1,3 @@
-import {Tabs} from "expo-router";
 import '@/global.css'
 import colors from "tailwindcss/colors";
 import AntDesign from '@expo/vector-icons/AntDesign';

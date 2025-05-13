@@ -110,6 +110,7 @@ class Source(BaseModel):
     difficulty          = db.Column(db.String(255), nullable=False)
     url                 = db.Column(db.String(255))
     isbn                = db.Column(db.String(255))
+    image               = db.Column(db.String(255))
 
     # source >- user
     user_id         = db.Column(db.ForeignKey('user.id'), nullable=False)

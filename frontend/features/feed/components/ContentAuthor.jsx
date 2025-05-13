@@ -16,7 +16,7 @@ function ContentAuthor({profilePicture, username, userId, email}) {
             <Link href={`users/${userId}`}>
                 <Image
                     source={{uri: profilePicturePath}}
-                    className="w-10 h-10"
+                    className="w-10 h-10 rounded-full"
                 />
             </Link>
         </View>

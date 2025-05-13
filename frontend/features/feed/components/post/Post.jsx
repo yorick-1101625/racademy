@@ -1,7 +1,6 @@
 import {useState} from "react";
 import {View} from 'react-native';
 
-import ContentMenu from "../ContentMenu";
 import PostContent from "./PostContent";
 import PostDetails from "./PostDetails";
 import PostActions from "./PostActions";
@@ -58,8 +57,6 @@ function Post({post}) {
                          likedByCurrentUser={post['liked_by_current_user']} postId={post.id}
                          handleBookmark={handleBookmark} isBookmarked={isBookmarked}
             />
-
-            {/*<ContentMenu handleBookmark={handleBookmark} isBookmarked={isBookmarked}/>*/}
 
         </View>
     );

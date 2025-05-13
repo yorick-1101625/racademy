@@ -11,7 +11,6 @@ function useFetch(url) {
 
         AsyncStorage.getItem('token')
             .then(token => {
-                console.log("Token:", token);
                 if (!token) {
                     throw Error("Authorization token is missing");
                 }
