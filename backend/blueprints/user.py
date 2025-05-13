@@ -135,8 +135,6 @@ def get_current_user():
         current_user = UserService.get_user_by_id(
             get_jwt_identity()
         )
-
-        current_user.pop('password')
         return jsonify({
             "success": True,
             "user": current_user

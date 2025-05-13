@@ -85,8 +85,6 @@ class UserService:
         if not check_password_hash(user.password, password):
             return Exception("Invalid password")
 
-        user = user.to_dict()
-        user.pop("password", None)
         return user
 
     @staticmethod
