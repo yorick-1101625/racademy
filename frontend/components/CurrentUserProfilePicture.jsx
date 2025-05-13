@@ -1,15 +1,16 @@
 import {Image} from 'react-native';
 import useUser from "@/hooks/useUser";
+import {BASE_URL} from "@/utils/url";
 
 function CurrentUserProfilePicture({ className, alt = "profielfoto" }) {
 
-    const { user, authChecked } = useUser();
+    const { user } = useUser();
 
     return (
 
         user && <Image
             source={{
-                uri: `http://localhost:5000/${ user['profile_picture'] }`
+                uri: `${BASE_URL}${ user['profile_picture'] }`
             }}
             className={className}
             alt={alt}

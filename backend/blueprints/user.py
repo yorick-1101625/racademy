@@ -130,7 +130,7 @@ def delete_user(user_id):
 
 
 @api_user.route('/current', methods=['GET'])
-def whoami():
+def get_current_user():
     try:
         current_user = UserService.get_user_by_id(
             get_jwt_identity()

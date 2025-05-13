@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BASE_URL} from "@/utils/url";
 
 function useFetch(url) {
     const [data, setData] = useState(null);
@@ -15,7 +16,7 @@ function useFetch(url) {
                     throw Error("Authorization token is missing");
                 }
 
-                return fetch(url, {
+                return fetch(`${BASE_URL}${url}`, {
                     signal: abortCont.signal,
                     headers: {
                         'Content-Type': 'application/json',

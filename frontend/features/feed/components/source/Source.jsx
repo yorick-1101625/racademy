@@ -5,7 +5,7 @@ import SourceContent from "./SourceContent";
 import SourceDetails from "./SourceDetails";
 
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import fatty from "@/utils/fatty";
 
 function Source({source}) {
 
@@ -13,27 +13,15 @@ function Source({source}) {
 
     function handleBookmark() {
 
-        AsyncStorage.getItem('token')
-            .then(token => {
-                return fetch(`http://127.0.0.1:5000/api/user/`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({bookmarked_source: source.id})
-                });
-            })
-            .then(res => res.json())
+        fatty('/api/user/', 'PATCH', {bookmarked_source: source.id})
             .then(data => {
                 if (data.success) {
                     setIsBookmarked(i => !i);
                 }
-            })
+            });
     }
 
     const averageRating = calculateAverageRating(source.ratings);
-    console.log(source)
     return (
         <View className="w-full bg-white p-4 border-t border-gray-200">
 

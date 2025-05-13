@@ -2,7 +2,8 @@ import {useRef, useState} from "react";
 import {Pressable, Text, View} from 'react-native';
 
 import {Feather} from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import fatty from "@/utils/fatty";
 
 function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postId, isBookmarked, handleBookmark}) {
 
@@ -10,18 +11,7 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
     const numberOfLikesRef = useRef(numberOfLikes);
 
     function handleLike() {
-        AsyncStorage.getItem('token')
-            .then(token => {
-                return fetch(`http://127.0.0.1:5000/api/user/`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                    body: JSON.stringify({liked_post: postId})
-                });
-            })
-            .then(res => res.json())
+        fatty('/api/user/', 'PATCH', {liked_post: postId})
             .then(data => {
                 if (data.success) {
                     isLiked

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
-from flask_jwt_extended import create_access_token, get_jwt_identity
+from flask_jwt_extended import create_access_token
 from werkzeug.exceptions import HTTPException
 from backend.services.service_user import UserService
 from datetime import timedelta

@@ -101,7 +101,7 @@ def generate_dummy_data():
             source.url = generate_random_youtube_url()
         if source.type == 'book':
             source.isbn = generate_random_isbn()
-            source.image = 'static/user_images/sources/bookcover.jpg'
+            source.image = '/static/user_images/sources/bookcover.jpg'
         if source.type == 'article':
             source.url = "https://www.netguru.com/glossary/react-native"
 
