@@ -26,12 +26,18 @@ class UserService:
         query = query.offset(offset).limit(limit)
 
         users = query.all()
-        return [user.to_dict() for user in users]
+        users = [user.to_dict() for user in users]
+        for user in users:
+            user.pop("password", None)
+        return users
 
     @staticmethod
     def get_user_by_id(user_id):
         user = User.query.get(user_id)
-        return user.to_dict() if user else None
+        if user:
+            user = user.to_dict()
+            user.pop("password", None)
+        return user if user else None
 
     # TODO: Implement register instead of create_user
     @staticmethod
@@ -60,7 +66,10 @@ class UserService:
             )
             db.session.add(new_user)
             db.session.commit()
-            return new_user.to_dict()
+
+            new_user = new_user.to_dict()
+            new_user.pop("password", None)
+            return new_user
         except SQLAlchemyError as e:
             db.session.rollback()
             print(f"Error creating user: {e}")
@@ -76,6 +85,8 @@ class UserService:
         if not check_password_hash(user.password, password):
             return Exception("Invalid password")
 
+        user = user.to_dict()
+        user.pop("password", None)
         return user
 
     @staticmethod
@@ -110,7 +121,10 @@ class UserService:
                     user.bookmarked_sources.append(bookmarked_source)
 
             db.session.commit()
-            return user.to_dict()
+
+            user = user.to_dict()
+            user.pop("password", None)
+            return user
         except SQLAlchemyError as e:
             db.session.rollback()
             print(f"Error updating user: {e}")
