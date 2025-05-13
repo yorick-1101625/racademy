@@ -1,11 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+import {BASE_URL} from "@/utils/url";
 
 export default async function fatty(url, method, body) {
 
     const token = await AsyncStorage.getItem('token')
-    const res = await fetch(`${backendUrl}${url}`, {
+    const res = await fetch(`${BASE_URL}${url}`, {
             method: method,
             headers: {
                 'Content-Type': 'application/json',

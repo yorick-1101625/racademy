@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   View,
   Text,
@@ -10,8 +9,7 @@ import {
 import { Image } from 'react-native';
 import { Link } from 'expo-router';
 import useFetch from '../hooks/useFetch';
-
-const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+import {BASE_URL} from "@/utils/url";
 
 export default function AdminDashboard() {
   const { width } = useWindowDimensions();
@@ -42,7 +40,7 @@ export default function AdminDashboard() {
         <View key={user.id} style={styles.userRow}>
           <Link href={`users/${user.id}`} style={styles.link}>
             <Image
-              source={{ uri: `${backendUrl}${user.profile_picture}` }}
+              source={{ uri: `${BASE_URL}${user.profile_picture}` }}
               style={[
                 styles.avatar,
                 {

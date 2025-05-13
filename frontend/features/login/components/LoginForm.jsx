@@ -2,10 +2,9 @@ import {View} from 'react-native';
 import EmailPasswordFields from "./EmailPasswordFields";
 import FormSubmitButton from "./FormSubmitButton";
 import ToggleRegistering from "./ToggleRegistering";
-import {useContext, useState} from "react";
+import {useState} from "react";
 import {useRouter} from "expo-router";
 import { showSuccess, showError } from "utils/toast"
-import {UserContext} from "@/contexts/UserContext";
 import useUser from "@/hooks/useUser";
 
 function LoginForm() {

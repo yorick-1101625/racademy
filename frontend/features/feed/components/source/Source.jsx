@@ -5,7 +5,6 @@ import SourceContent from "./SourceContent";
 import SourceDetails from "./SourceDetails";
 
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import fatty from "@/utils/fatty";
 
 function Source({source}) {

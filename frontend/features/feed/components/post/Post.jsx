@@ -5,7 +5,6 @@ import PostContent from "./PostContent";
 import PostDetails from "./PostDetails";
 import PostActions from "./PostActions";
 import ContentAuthor from "../ContentAuthor";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Link} from "expo-router";
 import fatty from "@/utils/fatty";
 

@@ -1,7 +1,6 @@
 import {Image} from 'react-native';
 import useUser from "@/hooks/useUser";
-
-const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+import {BASE_URL} from "@/utils/url";
 
 function CurrentUserProfilePicture({ className, alt = "profielfoto" }) {
 
@@ -11,7 +10,7 @@ function CurrentUserProfilePicture({ className, alt = "profielfoto" }) {
 
         user && <Image
             source={{
-                uri: `${backendUrl}${ user['profile_picture'] }`
+                uri: `${BASE_URL}${ user['profile_picture'] }`
             }}
             className={className}
             alt={alt}

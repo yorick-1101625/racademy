@@ -1,12 +1,11 @@
-import React, { useState, useContext } from 'react';
+import { useState } from 'react';
 import { View, Text, Image, ActivityIndicator, ScrollView, Pressable } from 'react-native';
-import { UserContext } from '../contexts/UserContext';
 import useFetch from '../hooks/useFetch';
-
-const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+import useUser from "@/hooks/useUser";
+import {BASE_URL} from "@/utils/url";
 
 export default function Profile() {
-  const { user } = useContext(UserContext);
+  const { user } = useUser;
   const { data: users, isPending, error } = useFetch('/api/user/');
   const { data: posts } = useFetch('/api/post');
   const [activeTab, setActiveTab] = useState('favorieten');
@@ -32,7 +31,7 @@ export default function Profile() {
       {/* Gebruikersinfo */}
       <View className="items-center mb-6">
         <Image
-          source={{ uri: `${backendUrl}${currentUser.profile_picture}` }}
+          source={{ uri: `${BASE_URL}${currentUser.profile_picture}` }}
           className="w-24 h-24 rounded-full mb-4"
         />
         <Text className="text-xl font-bold">{currentUser.username || 'Naam onbekend'}</Text>

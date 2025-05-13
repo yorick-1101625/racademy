@@ -1,4 +1,4 @@
-import {Image, Text, View} from 'react-native';
+import {Image, View} from 'react-native';
 import Logo from "../../../assets/logo.png";
 
 function LogoHeader() {
