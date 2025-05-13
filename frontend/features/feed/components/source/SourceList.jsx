@@ -4,7 +4,7 @@ import useFetch from "@/hooks/useFetch";
 
 function SourceList() {
 
-    const {data: sources, isPending, error} = useFetch('http://127.0.0.1:5000/api/source/');
+    const {data: sources, isPending, error} = useFetch(`/api/source/`);
 
     return (
         <>

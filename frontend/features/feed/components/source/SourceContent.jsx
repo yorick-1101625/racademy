@@ -1,6 +1,8 @@
 import {Text, Image, View, Pressable} from 'react-native';
 import { Linking } from 'react-native';
 
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 function SourceContent({title, image, type, url}) {
     return (
         <>
@@ -51,7 +53,7 @@ function SourceContent({title, image, type, url}) {
                         {/*TODO: find better image location/formatting?*/}
                         <Image
                             className="mt-2 h-80"
-                            source={{ uri: `http://127.0.0.1:5000/${image}`}}
+                            source={{ uri: `${backendUrl}${image}`}}
                             resizeMode="center"
                         />
                     </>

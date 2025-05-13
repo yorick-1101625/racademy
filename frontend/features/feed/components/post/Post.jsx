@@ -8,6 +8,9 @@ import ContentAuthor from "../ContentAuthor";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {Link} from "expo-router";
 
+
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 function Post({post}) {
 
     const [isBookmarked, setIsBookmarked] = useState(post['bookmarked_by_current_user']);
@@ -16,12 +19,11 @@ function Post({post}) {
 
         AsyncStorage.getItem('token')
             .then(token => {
-                return fetch(`http://127.0.0.1:5000/api/user/`, {
+                return fetch(`${backendUrl}/api/user/`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`,
-
                     },
                     body: JSON.stringify({bookmarked_post: post.id})
                 });

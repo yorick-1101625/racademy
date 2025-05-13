@@ -40,7 +40,7 @@ class User(BaseModel):
     username        = db.Column(db.String(255), nullable=False)
     password        = db.Column(db.String(255), nullable=False)
     study           = db.Column(db.String(255))
-    profile_picture = db.Column(db.String(255), default="static/user_images/profile_pictures/default.png")
+    profile_picture = db.Column(db.String(255), default="/static/user_images/profile_pictures/default.png")
     is_blocked      = db.Column(db.Boolean, default=False, nullable=False)
     is_admin        = db.Column(db.Boolean, default=False, nullable=False)
 

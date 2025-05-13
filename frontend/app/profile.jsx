@@ -3,10 +3,12 @@ import { View, Text, Image, ActivityIndicator, ScrollView, Pressable } from 'rea
 import { UserContext } from '../contexts/UserContext';
 import useFetch from '../hooks/useFetch';
 
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 export default function Profile() {
   const { user } = useContext(UserContext);
-  const { data: users, isPending, error } = useFetch('http://localhost:5000/api/user/');
-  const { data: posts } = useFetch('http://localhost:5000/api/post');
+  const { data: users, isPending, error } = useFetch('/api/user/');
+  const { data: posts } = useFetch('/api/post');
   const [activeTab, setActiveTab] = useState('favorieten');
 
   if (!user) return <Text className="text-center mt-10">Niet ingelogd.</Text>;
@@ -30,7 +32,7 @@ export default function Profile() {
       {/* Gebruikersinfo */}
       <View className="items-center mb-6">
         <Image
-          source={{ uri: `http://localhost:5000/${currentUser.profile_picture}` }}
+          source={{ uri: `${backendUrl}${currentUser.profile_picture}` }}
           className="w-24 h-24 rounded-full mb-4"
         />
         <Text className="text-xl font-bold">{currentUser.username || 'Naam onbekend'}</Text>

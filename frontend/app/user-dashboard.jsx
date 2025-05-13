@@ -11,11 +11,13 @@ import { Image } from 'react-native';
 import { Link } from 'expo-router';
 import useFetch from '../hooks/useFetch';
 
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 export default function AdminDashboard() {
   const { width } = useWindowDimensions();
   const isWide = width > 600; //
 
-  const { data: users, isPending, error } = useFetch('http://localhost:5000/api/user/');
+  const { data: users, isPending, error } = useFetch('/api/user/');
 
   if (isPending) {
     return (
@@ -40,7 +42,7 @@ export default function AdminDashboard() {
         <View key={user.id} style={styles.userRow}>
           <Link href={`users/${user.id}`} style={styles.link}>
             <Image
-              source={{ uri: `http://localhost:5000/${user.profile_picture}` }}
+              source={{ uri: `${backendUrl}${user.profile_picture}` }}
               style={[
                 styles.avatar,
                 {

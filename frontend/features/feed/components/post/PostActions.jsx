@@ -4,6 +4,9 @@ import {Pressable, Text, View} from 'react-native';
 import {Feather} from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postId, isBookmarked, handleBookmark}) {
 
     const [isLiked, setIsLiked] = useState(likedByCurrentUser);
@@ -12,7 +15,7 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
     function handleLike() {
         AsyncStorage.getItem('token')
             .then(token => {
-                return fetch(`http://127.0.0.1:5000/api/user/`, {
+                return fetch(`${backendUrl}/api/user/`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',

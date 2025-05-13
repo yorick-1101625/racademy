@@ -38,7 +38,7 @@ class UserService:
     def create_user(data):
         try:
             # Check if email contains @hr.nl
-            email = data.get("email")
+            email = data.get("email").lower()
             if not validate_email(email):
                 return Exception("Must provide a valid email address")
             # Check if email already exists
@@ -68,7 +68,7 @@ class UserService:
 
     @staticmethod
     def login_user(email, password):
-        user = User.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email.lower()).first()
 
         if not user:
             return Exception("User does not exist")

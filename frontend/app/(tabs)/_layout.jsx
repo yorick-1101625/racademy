@@ -2,6 +2,7 @@ import '@/global.css'
 import colors from "tailwindcss/colors";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import UserOnly from "@/components/UserOnly";
+import {Tabs} from "expo-router";
 
 function TabsLayout() {
     return (

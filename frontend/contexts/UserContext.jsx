@@ -4,12 +4,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const UserContext = createContext(null);
 
 
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
     const [authChecked, setAuthChecked] = useState(false);
 
     async function login(email, password) {
-        const url = "http://127.0.0.1:5000/api/login/";
+        const url = `${backendUrl}/api/login/`;
         await fetch(url, {
             method: "POST",
             headers: {
@@ -36,7 +38,7 @@ export function UserProvider({ children }) {
 
     async function getUser(token) {
         try {
-            const url = "http://127.0.0.1:5000/api/user/current";
+            const url = `${backendUrl}/api/user/current`;
             const data = await fetch(url, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -47,7 +49,7 @@ export function UserProvider({ children }) {
             }
             else {
                 setUser(null);
-                console.log(data)
+                console.log('ffff', data)
             }
         }
         catch (error) {
@@ -59,7 +61,7 @@ export function UserProvider({ children }) {
     }
 
     async function register(email, password) {
-        const url = "http://127.0.0.1:5000/api/user/";
+        const url = `${backendUrl}/api/user/`;
         await fetch(url, {
             method: "POST",
             headers: {
@@ -81,6 +83,7 @@ export function UserProvider({ children }) {
     }
 
     async function logout() {
+        setUser(null);
         await AsyncStorage.clear();
     }
 

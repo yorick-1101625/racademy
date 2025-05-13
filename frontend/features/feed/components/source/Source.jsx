@@ -7,6 +7,8 @@ import SourceDetails from "./SourceDetails";
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 function Source({source}) {
 
     const [isBookmarked, setIsBookmarked] = useState(source['bookmarked_by_current_user']);
@@ -15,7 +17,7 @@ function Source({source}) {
 
         AsyncStorage.getItem('token')
             .then(token => {
-                return fetch(`http://127.0.0.1:5000/api/user/`, {
+                return fetch(`${backendUrl}/api/user/`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -33,7 +35,6 @@ function Source({source}) {
     }
 
     const averageRating = calculateAverageRating(source.ratings);
-    console.log(source)
     return (
         <View className="w-full bg-white p-4 border-t border-gray-200">
 

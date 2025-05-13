@@ -1,9 +1,9 @@
 import {Image, Text, View} from 'react-native';
 import {Link} from "expo-router";
 
-function ContentAuthor({profilePicture, username, userId, email}) {
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
 
-    const profilePicturePath = `http://localhost:5000/${profilePicture}`;
+function ContentAuthor({profilePicture, username, userId, email}) {
 
     return (
         <View className="flex-row justify-between items-center mb-2">
@@ -15,7 +15,7 @@ function ContentAuthor({profilePicture, username, userId, email}) {
             </View>
             <Link href={`users/${userId}`}>
                 <Image
-                    source={{uri: profilePicturePath}}
+                    source={{uri: `${backendUrl}${profilePicture}`}}
                     className="w-10 h-10 rounded-full"
                 />
             </Link>

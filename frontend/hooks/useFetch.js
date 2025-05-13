@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+
 function useFetch(url) {
     const [data, setData] = useState(null);
     const [isPending, setIsPending] = useState(true);
@@ -15,7 +17,7 @@ function useFetch(url) {
                     throw Error("Authorization token is missing");
                 }
 
-                return fetch(url, {
+                return fetch(`${backendUrl}${url}`, {
                     signal: abortCont.signal,
                     headers: {
                         'Content-Type': 'application/json',
