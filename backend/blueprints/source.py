@@ -1,14 +1,20 @@
 from flask import Blueprint, request
+from flask_cors import cross_origin
 from flask_jwt_extended import get_jwt_identity
 from werkzeug.exceptions import HTTPException
 from backend.services.service_source import SourceService
 
 api_source = Blueprint("api_source", __name__)
 
-@api_source.route("/", methods=["GET"])
+@api_source.route("/", methods=["GET"],  strict_slashes=False)
+@cross_origin()
 def get_sources():
     try:
-        sources = SourceService.get_all_sources(current_user_id=get_jwt_identity())
+        search_term = request.args.get('search')
+        sources = SourceService.get_all_sources(
+            current_user_id=get_jwt_identity(),
+            search_term=search_term
+        )
         return {
             "success": True,
             "data": sources

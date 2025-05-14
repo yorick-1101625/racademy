@@ -15,7 +15,7 @@ class SourceService:
             query = query.filter(
                 or_(
                     db.func.lower(Source.title).like(search_term),
-                    db.func.lower(Source.content).like(search_term)
+                    db.func.lower(Source.description).like(search_term)
                 )
             )
 
