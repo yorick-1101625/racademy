@@ -9,14 +9,16 @@ class PostService:
 
     @staticmethod
     def get_all_posts(current_user_id, search_term=None, offset=0, limit=10):
-        query = db.session.query(Post)
+        query = db.session.query(Post).join(Post.user)
 
         if search_term:
             search_term = f"%{search_term.lower()}%"
             query = query.filter(
                 or_(
                     db.func.lower(Post.title).like(search_term),
-                    db.func.lower(Post.content).like(search_term)
+                    db.func.lower(Post.content).like(search_term),
+                    db.func.lower(User.username).like(search_term),
+                    db.func.lower(User.email).like(search_term)
                 )
             )
 
