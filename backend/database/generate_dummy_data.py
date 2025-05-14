@@ -35,17 +35,55 @@ def generate_dummy_data():
 
     os.makedirs("static/user_images/profile_pictures", exist_ok=True)
 
-    users = []
-    for i in range(10):
-        user = User(
-            email=f"test{i}@hr.nl",
-            username=f"user{i}",
+    users = [
+        User(
+            email="test@hr.nl",
+            username="test",
             password=generate_password_hash("1234"),
-            study=random.choice(['Software Development']),
-            is_blocked=random.choice([True, False]),
-            is_admin=random.choice([True, False])
-        )
-        users.append(user)
+            study="Software Development",
+            is_blocked=False,
+            is_admin=True,
+            profile_picture="/static/user_images/profile_pictures/default.png"
+        ),
+        User(
+            email="hoiyorick@hr.nl",
+            username="Yo rick",
+            password=generate_password_hash("1234"),
+            study="Software Development",
+            is_blocked=False,
+            is_admin=True,
+            profile_picture="/static/user_images/profile_pictures/yorick.webp"
+        ),
+        User(
+            email="hoimarco@hr.nl",
+            username="Marco",
+            password=generate_password_hash("1234"),
+            study="Software Development",
+            is_blocked=False,
+            is_admin=True,
+            profile_picture="/static/user_images/profile_pictures/marco.webp"
+        ),
+        User(
+            email="hoikevin@hr.nl",
+            username="kevin",
+            password=generate_password_hash("1234"),
+            study="Software Development",
+            is_blocked=False,
+            is_admin=True,
+            profile_picture="/static/user_images/profile_pictures/kevin.webp"
+        ),
+    ]
+
+    # for i in range(10):
+    #     user = User(
+    #         email=f"test{i}@hr.nl",
+    #         username=f"user{i}",
+    #         password=generate_password_hash("1234"),
+    #         study=random.choice(['Software Development']),
+    #         is_blocked=random.choice([True, False]),
+    #         is_admin=random.choice([True, False])
+    #     )
+    #     users.append(user)
     db.session.add_all(users)
     db.session.commit()
 
@@ -53,18 +91,34 @@ def generate_dummy_data():
     db.session.add_all(tags)
     db.session.commit()
 
+    sample_post_texts = [
+        "Eerste keer dat ik Flask gebruik, en ik ben verkocht! 🔥 #Python #WebDev",
+        "SQL lijkt simpel, maar er zit zoveel kracht achter. 💪",
+        "React hooks... ik snap het nog steeds niet helemaal 😅 #frontend",
+        "Weekendproject: eigen portfolio bouwen met React 🚀",
+        "Async Python gelezen vandaag. Echt mindblowing 🤯",
+        "Waarom duurt debuggen altijd 80% van de tijd? 😩",
+        "Flask en React combineren werkt verrassend goed ❤️",
+        "Eindelijk begrepen hoe database migraties werken in Flask. 🙌",
+        "Even pauze. Tijd om wat zonlicht te zien 🌞 #coderlife",
+        "Ik blijf maar dezelfde bug tegenkomen... help 😤",
+        "Code werkt in één keer... dat kan niet kloppen 😎",
+        "Refactoren is leuk, tot je je eigen spaghetti tegenkomt 🍝",
+        "Een jaar geleden begonnen met coderen. Wat een reis 💻✨",
+        "Wat is volgens jullie de beste folderstructuur voor een React project? 🤔",
+        "Clean Code lezen voor de tweede keer. Elke keer leer ik iets nieuws 📘",
+        "Flask is top, maar misschien toch eens Django proberen?",
+        "List comprehensions in Python... heerlijk kort en krachtig.",
+        "Vandaag NativeWind uitgeprobeerd. Ziet er strak uit! 🎨",
+        "Late night coderen met lo-fi op de achtergrond 🌙 #devvibes",
+        "Eerste pull request geaccepteerd! Open source is tof 🎉"
+    ]
+
     posts = []
     for i in range(20):
         post = Post(
             title=f"Post Titel {i}",
-            content=(
-                f"Inhoud van post {i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit. "
-                "Nam posuere erat elit, sed tempus nisi cursus sed. Ut commodo arcu sit amet leo "
-                "Proin sit amet porttitor ipsum.\n\n"
-                
-                "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac "
-                "turpis egestas. Pellentesque ultrices diam orci, eget posuere lectus dignissim non."
-            ),
+            content=random.choice(sample_post_texts),
             created_at=datetime.now(),
             updated_at=datetime.now(),
             user=random.choice(users),
