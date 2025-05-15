@@ -17,8 +17,8 @@ function TabsLayout() {
                     tabBarIndicatorStyle: { backgroundColor: '#3daad3' }
                 }}
             >
-                <MaterialTopTabs.Screen name="posts" />
-                <MaterialTopTabs.Screen name="sources" options={{ title: 'bronnen' }} />
+                <MaterialTopTabs.Screen name="post" />
+                <MaterialTopTabs.Screen name="source" options={{ title: 'bron' }} />
             </MaterialTopTabs>
         </>
     );

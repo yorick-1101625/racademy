@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {View, TextInput, Text, Pressable} from "react-native";
+import {View, TextInput, Text, Pressable, SafeAreaView} from "react-native";
 import PostList from "@/features/feed/components/post/PostList";
 import SourceList from "@/features/feed/components/source/SourceList";
 import NoResults from "@/features/search/components/NoResults";
@@ -15,7 +15,7 @@ const Search = () => {
     const showResults = query.trim().length > 0;
 
     return (
-        <View className="flex-1 bg-gray-100">
+        <SafeAreaView className="flex-1 bg-gray-100">
             <View className="bg-white px-4 pt-4 pb-0">
                 <TextInput
                     placeholder="Zoeken..."
@@ -78,7 +78,7 @@ const Search = () => {
                     <NoResults/>
                 )}
             </View>
-        </View>
+        </SafeAreaView>
     );
 };
 

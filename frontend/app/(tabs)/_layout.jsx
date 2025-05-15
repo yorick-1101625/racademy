@@ -1,5 +1,4 @@
 import '@/global.css'
-import colors from "tailwindcss/colors";
 import UserOnly from "@/components/UserOnly";
 import {Tabs} from "expo-router";
 import {Feather} from "@expo/vector-icons";
@@ -9,7 +8,7 @@ function TabsLayout() {
         <UserOnly>
             <Tabs
                 screenOptions={{
-                    tabBarActiveTintColor: colors.rac
+                    tabBarActiveTintColor: '#3daad3'
                 }}
             >
                 <Tabs.Screen
