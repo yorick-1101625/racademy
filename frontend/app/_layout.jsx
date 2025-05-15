@@ -4,7 +4,7 @@ import {UserProvider} from "@/contexts/UserContext";
 import {Image} from "react-native";
 import Logo from "@/assets/logo.png"
 import CurrentUserProfilePicture from "@/components/CurrentUserProfilePicture";
-import {Feather} from "@expo/vector-icons";
+import {Feather, Ionicons} from "@expo/vector-icons";
 
 function RootLayout() {
 
@@ -43,7 +43,7 @@ function RootLayout() {
                             headerRightContainerStyle: {paddingRight: 20},
                             headerRight: () => (
                                 <Link href="/settings">
-                                    <Feather name="settings" size={21.5} className="text-rac" />
+                                    <Ionicons name="settings-outline" size={26} className="text-rac" />
                                 </Link>
                             )
                         }}

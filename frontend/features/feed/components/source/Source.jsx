@@ -51,8 +51,6 @@ function Source({source}) {
                 isBookmarked={isBookmarked}
             />
 
-            {/*<ContentMenu handleBookmark={handleBookmark} isBookmarked={isBookmarked}/>*/}
-
         </View>
     );
 }

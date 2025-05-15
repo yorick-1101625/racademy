@@ -1,7 +1,7 @@
 import '@/global.css'
 import UserOnly from "@/components/UserOnly";
 import {Tabs} from "expo-router";
-import {Feather} from "@expo/vector-icons";
+import {Feather, Ionicons} from "@expo/vector-icons";
 
 function TabsLayout() {
     return (
@@ -15,7 +15,7 @@ function TabsLayout() {
                     name="(feed)"
                     options={{
                         title: '',
-                        tabBarIcon: ({color}) => <Feather size={21.5} name="home" color={color}/>,
+                        tabBarIcon: ({color}) => <Ionicons size={24} name="home-outline" color={color}/>,
                         headerShown: false,
                     }}
                 />
