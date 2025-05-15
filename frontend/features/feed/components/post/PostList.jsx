@@ -1,14 +1,15 @@
-import {ActivityIndicator, FlatList, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList} from 'react-native';
 import Post from "./Post";
 import useFetch from "@/hooks/useFetch";
 import NoResults from "@/features/search/components/NoResults";
+import Error from "@/components/Error"
 
 function PostList({url = `/api/post/`}) {
 
     const {data: posts, isPending, error} = useFetch(url);
 
-    if (isPending) return <ActivityIndicator/>;
-    if (error) return <Text>Error!</Text>;
+    if (isPending) return <ActivityIndicator color="#3daad3" />;
+    if (error) return <Error />;
 
     if (!posts || posts.length === 0) {
         return (

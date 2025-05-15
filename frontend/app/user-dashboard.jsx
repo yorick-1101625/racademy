@@ -10,6 +10,7 @@ import { Image } from 'react-native';
 import { Link } from 'expo-router';
 import useFetch from '../hooks/useFetch';
 import {BASE_URL} from "@/utils/url";
+import Error from "@/components/Error";
 
 export default function AdminDashboard() {
   const { width } = useWindowDimensions();
@@ -20,19 +21,13 @@ export default function AdminDashboard() {
   if (isPending) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator color="#3daad3" />
         <Text>Loading users...</Text>
       </View>
     );
   }
 
-  if (error) {
-    return (
-      <View style={styles.centered}>
-        <Text style={{ color: 'red' }}>{error}</Text>
-      </View>
-    );
-  }
+  if (error) return <Error />
 
   return (
     <ScrollView style={styles.container}>

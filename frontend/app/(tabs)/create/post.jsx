@@ -1,9 +1,10 @@
 import {SafeAreaView, Text, View} from 'react-native';
+import Error from "@/components/Error";
 
 function CreatePost() {
     return (
-        <SafeAreaView>
-            <Text>Post</Text>
+        <SafeAreaView className="flex-1">
+            <Error />
         </SafeAreaView>
     );
 }

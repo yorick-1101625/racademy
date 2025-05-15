@@ -27,7 +27,7 @@ function RootLayout() {
                             headerLeftContainerStyle: {paddingLeft: 20},
                             headerLeft: () => (
                                 <Link href="/profile">
-                                    <CurrentUserProfilePicture className="w-8 h-8 rounded-full" />
+                                    <CurrentUserProfilePicture className="w-9 h-9 rounded-full" />
                                 </Link>
                             ),
 
