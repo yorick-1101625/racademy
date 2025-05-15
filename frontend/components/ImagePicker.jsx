@@ -30,7 +30,7 @@ export default function ImagePicker() {
                     className="flex-1"
                     onPress={() => setFocus(true)}
                 >
-                    <Image source={{ uri: image }} className="w-full h-full"/>
+                    <Image source={{ uri: image }} className="w-full h-full" resizeMode="contain"/>
                 </Pressable>
             :   <Pressable
                     onPress={pickImage}
@@ -60,10 +60,15 @@ export default function ImagePicker() {
                             </Pressable>
                         </View>
 
-                        <Image
-                            source={{ uri: image }} className="w-full h-full"
-                            resizeMode="contain"
-                        />
+                        <Pressable
+                                className="flex-1"
+                                onPress={() => setFocus(false)}
+                        >
+                            <Image
+                                source={{ uri: image }} className="w-full h-full"
+                                resizeMode="contain"
+                            />
+                        </Pressable>
                     </View>
                 )
             }

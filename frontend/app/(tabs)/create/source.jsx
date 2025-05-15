@@ -24,6 +24,11 @@ function CreateSource() {
 
     return (
         <SafeAreaView className="flex-1 bg-white h-screen relative">
+            {/* Titel */}
+            <TextInput
+                className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                placeholder="Titel"
+            />
             <View className="flex-row">
                 <TextInput
                     className="w-1/2 border-b border-r border-neutral-300 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
@@ -55,13 +60,6 @@ function CreateSource() {
             </View>
 
             <TopTabs tabs={SOURCE_TYPES} state={[sourceType, setSourceType]} />
-
-            {/*<View className="bg-neutral-100 flex-1 h-full">*/}
-            {/* Titel */}
-            <TextInput
-                className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                placeholder="Titel"
-            />
 
             {/* URL */}
             {

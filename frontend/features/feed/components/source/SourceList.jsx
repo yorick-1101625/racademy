@@ -20,6 +20,7 @@ function SourceList({url = `/api/source/`}) {
             data={sources}
             renderItem={({item}) => <Source source={item}/>}
             keyExtractor={(source) => source.id.toString()}
+            className="relative"
         />
     );
 }
