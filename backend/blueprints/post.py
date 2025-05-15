@@ -1,14 +1,21 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt_identity
+from flask_cors import cross_origin
 from werkzeug.exceptions import HTTPException
 from backend.services.service_post import PostService
 
 api_post = Blueprint("api_post", __name__)
+
 # TODO: More Error handling https://medium.com/@dmostoller/mastering-error-handling-in-flask-with-werkzeug-exceptions-ensuring-robust-server-side-validations-a00a9862566a
-@api_post.route("/", methods=["GET"])
+@api_post.route("/", methods=["GET"], strict_slashes=False)
+@cross_origin()
 def get_posts():
     try:
-        posts = PostService.get_all_posts(current_user_id=get_jwt_identity())
+        search_term = request.args.get('search')
+        posts = PostService.get_all_posts(
+            current_user_id=get_jwt_identity(),
+            search_term=search_term
+        )
         return jsonify({
             "success": True,
             "data": posts
