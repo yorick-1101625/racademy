@@ -1,6 +1,7 @@
-import {Pressable, SafeAreaView, Text, TextInput, View} from 'react-native';
+import {Pressable, SafeAreaView, ScrollView, Text, TextInput, View} from 'react-native';
 import {useState} from "react";
 import TopTabs from "@/components/TopTabs";
+import ImagePicker from "@/components/ImagePicker";
 
 const SOURCE_TYPES = [
     {value: 'video', label: 'Video'},
@@ -16,18 +17,16 @@ const DIFFICULTIES = [
     {value: 'extra_hard', label: 'Heel Moeilijk'}
 ]
 
-
-
 function CreateSource() {
 
     const [sourceType, setSourceType] = useState('video');
     const [difficulty, setDifficulty] = useState('easy');
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <SafeAreaView className="flex-1 bg-white h-screen relative">
             <View className="flex-row">
                 <TextInput
-                    className="w-1/2 border-b border-r border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                    className="w-1/2 border-b border-r border-neutral-300 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
                     placeholder="Vak"
                 />
                 <TextInput
@@ -57,13 +56,19 @@ function CreateSource() {
 
             <TopTabs tabs={SOURCE_TYPES} state={[sourceType, setSourceType]} />
 
-            <View className="flex-1 bg-neutral-100">
+            {/*<View className="bg-neutral-100 flex-1 h-full">*/}
             {/* Titel */}
+            <TextInput
+                className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                placeholder="Titel"
+            />
+
+            {/* URL */}
             {
-                sourceType !== 'video' && (
+                sourceType !== 'book' && (
                     <TextInput
                         className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                        placeholder="Titel"
+                        placeholder={ sourceType === 'video' ? 'youtube.com/...' : 'voorbeeld.com/...' }
                     />
                 )
             }
@@ -77,20 +82,9 @@ function CreateSource() {
                     />
                 )
             }
-
-            {/* URL */}
             {
-                sourceType !== 'book' && (
-                    <TextInput
-                        className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                        placeholder={ sourceType === 'video' ? 'youtube.com/...' : 'voorbeeld.com/...' }
-                    />
-                )
+                sourceType === 'book' && <ImagePicker />
             }
-            </View>
-
-
-
         </SafeAreaView>
     );
 }
