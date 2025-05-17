@@ -1,14 +1,19 @@
 from flask import Blueprint, request, jsonify
+from flask_cors import cross_origin
 from flask_jwt_extended import get_jwt_identity
 from werkzeug.exceptions import HTTPException
 from backend.services.service_user import UserService
 
 api_user = Blueprint("api_user", __name__)
 
-@api_user.route("/", methods=["GET"])
+@api_user.route("/", methods=["GET"], strict_slashes=False)
+@cross_origin()
 def get_users():
     try:
-        users = UserService.get_all_users()
+        search_term = request.args.get('search')
+        users = UserService.get_all_users(
+            search_term=search_term
+        )
         return jsonify({
             "success": True,
             "data": users
