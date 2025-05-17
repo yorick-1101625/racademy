@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from backend.models.models import User, Post, Source
 from backend.database.db import db
-from backend.utils.validate_email import validate_email
+from backend.utils.validators import is_hr_mail
 
 
 class UserService:
@@ -45,7 +45,7 @@ class UserService:
         try:
             # Check if email contains @hr.nl
             email = data.get("email").lower()
-            if not validate_email(email):
+            if not is_hr_mail(email):
                 return Exception("Must provide a valid email address")
             # Check if email already exists
             if User.query.filter_by(email=email).one_or_none() is not None:

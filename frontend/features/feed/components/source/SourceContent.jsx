@@ -1,6 +1,7 @@
 import {Text, Image, View, Pressable} from 'react-native';
 import { Linking } from 'react-native';
 import {BASE_URL} from "@/utils/url";
+import FocusableImage from "@/components/FocusableImage";
 
 function SourceContent({title, image, type, url}) {
     return (
@@ -49,8 +50,7 @@ function SourceContent({title, image, type, url}) {
                 type === "book" && (
                     <>
                         <Text>{ title }</Text>
-                        {/*TODO: find better image location/formatting?*/}
-                        <Image
+                        <FocusableImage
                             className="mt-2 h-80"
                             source={{ uri: `${BASE_URL}${image}`}}
                             resizeMode="center"

@@ -30,7 +30,7 @@ def get_sources():
 
 
 @api_source.route("/", methods=["POST"])
-def create_post():
+def create_source():
     data = request.get_json()
     try:
         result = SourceService.create_source(data, current_user_id=get_jwt_identity())

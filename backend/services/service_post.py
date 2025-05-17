@@ -22,7 +22,7 @@ class PostService:
                 )
             )
 
-        query = query.offset(offset).limit(limit)
+        query = query.order_by(desc(Post.created_at)).offset(offset).limit(limit)
 
         current_user = User.query.get(current_user_id)
         posts = query.all()
