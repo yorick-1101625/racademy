@@ -2,6 +2,8 @@ import {Pressable, SafeAreaView, ScrollView, Text, TextInput, View} from 'react-
 import {useState} from "react";
 import TopTabs from "@/components/TopTabs";
 import ImagePicker from "@/components/ImagePicker";
+import {Ionicons} from "@expo/vector-icons";
+import fatty from "@/utils/fatty";
 
 const SOURCE_TYPES = [
     {value: 'video', label: 'Video'},
@@ -11,16 +13,63 @@ const SOURCE_TYPES = [
 ]
 
 const DIFFICULTIES = [
-    {value: 'easy', label: 'Makkelijk'},
+    {value: 'easy', label: 'Beginner'},
     {value: 'medium', label: 'Gemiddeld'},
-    {value: 'hard', label: 'Moeilijk'},
-    {value: 'extra_hard', label: 'Heel Moeilijk'}
+    {value: 'hard', label: 'Gevorderd'},
+    {value: 'expert', label: 'Professional'}
 ]
 
 function CreateSource() {
 
-    const [sourceType, setSourceType] = useState('video');
+    const [title, setTitle] = useState(null);
+    const [schoolSubject, setSchoolSubject] = useState(null);
+    const [subject, setSubject] = useState(null);
+    const [description, setDescription] = useState(null);
     const [difficulty, setDifficulty] = useState('easy');
+    const [sourceType, setSourceType] = useState('video');
+    const [url, setUrl] = useState(null);
+    const [isbn, setIsbn] = useState(null);
+    const [image, setImage] = useState(null);
+
+    function handleSubmit() {
+        console.log(`
+        ${title}
+        ${schoolSubject}
+        ${subject}
+        ${description}
+        ${difficulty}
+        ${sourceType}
+        ${url}
+        ${isbn}
+        ${image}
+        
+        `)
+        // TODO: validation
+        if (image.type !== 'image') {
+            return;
+        }
+
+        const imageData = {
+            base64: image.base64,
+            'file_name': image.fileName,
+
+        }
+
+        fatty('/api/source/', 'POST', {
+            'school_subject': schoolSubject,
+            type: sourceType,
+            image: imageData,
+            description,
+            difficulty,
+            subject,
+            title,
+            isbn,
+            url
+        })
+            .then(console.log)
+    }
+
+
 
     return (
         <SafeAreaView className="flex-1 bg-white h-screen relative">
@@ -28,21 +77,25 @@ function CreateSource() {
             <TextInput
                 className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
                 placeholder="Titel"
+                onChangeText={setTitle}
             />
             <View className="flex-row">
                 <TextInput
                     className="w-1/2 border-b border-r border-neutral-300 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
                     placeholder="Vak"
+                    onChangeText={setSchoolSubject}
                 />
                 <TextInput
                     className="w-1/2 border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
                     placeholder="Onderwerp"
+                    onChangeText={setSubject}
                 />
             </View>
 
             <TextInput
                 className="h-32 border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
                 placeholder="Beschrijving" multiline={true}
+                onChangeText={setDescription}
             />
 
             {/* Difficulty */}
@@ -67,6 +120,7 @@ function CreateSource() {
                     <TextInput
                         className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
                         placeholder={ sourceType === 'video' ? 'youtube.com/...' : 'voorbeeld.com/...' }
+                        onChangeText={setUrl}
                     />
                 )
             }
@@ -77,12 +131,23 @@ function CreateSource() {
                     <TextInput
                         className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
                         placeholder="ISBN"
+                        onChangeText={setIsbn}
                     />
                 )
             }
             {
-                sourceType === 'book' && <ImagePicker />
+                sourceType === 'book' && <ImagePicker state={[image, setImage]} />
             }
+
+            <View className="w-full absolute bottom-0 bg-white">
+                <Pressable
+                    className="w-full h-14 items-center justify-center border-t border-neutral-300"
+                    onPress={() => handleSubmit()}
+                >
+                    <Ionicons name="return-up-forward" size={36} color="#3daad3"/>
+                </Pressable>
+            </View>
+
         </SafeAreaView>
     );
 }

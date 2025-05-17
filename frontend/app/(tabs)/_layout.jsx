@@ -2,6 +2,7 @@ import '@/global.css'
 import UserOnly from "@/components/UserOnly";
 import {Tabs} from "expo-router";
 import {Feather, Ionicons} from "@expo/vector-icons";
+import {View} from "react-native";
 
 function TabsLayout() {
     return (
@@ -23,7 +24,7 @@ function TabsLayout() {
                     name="create"
                     options={{
                         title: '',
-                        tabBarIcon: ({color}) => <Feather size={21.5} name="plus-circle" color={color}/>,
+                        tabBarIcon: ({color}) => <View><Feather size={21.5} name="plus-circle" color={color}/></View>,
                         headerShown: false,
                     }}
                 />

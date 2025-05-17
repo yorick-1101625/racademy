@@ -1,5 +1,8 @@
+import base64
+
 from sqlalchemy import asc, desc, or_
 from sqlalchemy.exc import SQLAlchemyError
+from flask import current_app
 
 from backend.models.models import Source, User
 from backend.database.db import db
@@ -41,24 +44,34 @@ class SourceService:
         try:
             if data.get('type') == 'book' and data.get('isbn') is None:
                 return Exception('Must provide ISBN when type is book')
-            elif data.get('url') is None:
+
+            if data.get('type') != 'book' and data.get('url') is None:
                 return Exception('Must provide URL')
 
-            current_user = User.query.get(current_user_id)
-            new_source = Source(
-                type=data.get('type'),
-                title=data.get('title'),
-                description=data.get('description'),
-                school_subject=data.get('school_subject'),
-                subject=data.get('subject'),
-                difficulty=data.get('difficulty'),
-                user=current_user,
-                url=data.get('url'),
-                isbn=data.get('isbn'),
-            )
-            db.session.add(new_source)
-            db.session.commit()
-            return new_source.to_dict()
+            if data.get('type') == 'book' and data.get('image') is None:
+                return Exception('Must provide image when type is book')
+
+            if data.get('image') and data.get('type') == 'book':
+                image = data.get('image')
+                with open(current_app.config['IMAGE_UPLOAD_FOLDER'] / 'sources' / image['file_name'], 'wb') as file:
+                    file.write(base64.b64decode(image['base64']))
+
+            # current_user = User.query.get(current_user_id)
+            # new_source = Source(
+            #     type=data.get('type'),
+            #     title=data.get('title'),
+            #     description=data.get('description'),
+            #     school_subject=data.get('school_subject'),
+            #     subject=data.get('subject'),
+            #     difficulty=data.get('difficulty'),
+            #     user=current_user,
+            #     url=data.get('url'),
+            #     isbn=data.get('isbn'),
+            # )
+            # db.session.add(new_source)
+            # db.session.commit()
+            # return new_source.to_dict()
+            return True
         except SQLAlchemyError as e:
             db.session.rollback()
             print(f"Error creating post: {e}")

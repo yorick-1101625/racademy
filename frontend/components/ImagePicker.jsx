@@ -1,16 +1,15 @@
 import { useState } from 'react';
-import {Image, Pressable, ScrollView, Text, View} from 'react-native';
+import {Image, Pressable, View} from 'react-native';
 import {launchImageLibraryAsync} from "expo-image-picker";
 import {Ionicons} from "@expo/vector-icons";
 
-export default function ImagePicker() {
-    const [image, setImage] = useState(null);
+export default function ImagePicker({ state }) {
+    const [image, setImage] = state;
     const [focus, setFocus] = useState(false);
-    console.log(image)
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
-        let result = await launchImageLibraryAsync({
+        const result = await launchImageLibraryAsync({
             mediaTypes: ['images'],
             allowsEditing: true,
             // aspect: [4, 3],
@@ -18,7 +17,9 @@ export default function ImagePicker() {
         });
 
         if (!result.canceled) {
-            setImage(result.assets[0].uri);
+            const data = result.assets[0]
+            data['base64'] = data.uri.split(',')[1]
+            setImage(data);
         }
     };
 
@@ -30,7 +31,7 @@ export default function ImagePicker() {
                     className="flex-1"
                     onPress={() => setFocus(true)}
                 >
-                    <Image source={{ uri: image }} className="w-full h-full" resizeMode="contain"/>
+                    <Image source={{ uri: image.uri }} className="w-full h-full" resizeMode="contain"/>
                 </Pressable>
             :   <Pressable
                     onPress={pickImage}
@@ -65,7 +66,7 @@ export default function ImagePicker() {
                                 onPress={() => setFocus(false)}
                         >
                             <Image
-                                source={{ uri: image }} className="w-full h-full"
+                                source={{ uri: image.uri }} className="w-full h-full"
                                 resizeMode="contain"
                             />
                         </Pressable>
