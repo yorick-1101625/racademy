@@ -1,5 +1,5 @@
-import React, {useState} from "react";
-import {View, TextInput, Text, Pressable} from "react-native";
+import React, {useEffect, useState} from "react";
+import {View, TextInput, Text, Pressable, ActivityIndicator} from "react-native";
 import PostList from "@/features/feed/components/post/PostList";
 import SourceList from "@/features/feed/components/source/SourceList";
 import NoResults from "@/features/search/components/NoResults";
@@ -10,10 +10,25 @@ const FILTERS = ["Posts", "Sources", "Users"];
 const Search = () => {
     const [query, setQuery] = useState("");
     const [filter, setFilter] = useState("Posts");
+    const [isTyping, setIsTyping] = useState(false);
 
     const endpoint = filter === "Posts" ? "post" : filter === "Sources" ? "source" : "user";
     const url = `/api/${endpoint}?search=${encodeURIComponent(query)}`;
     const showResults = query.trim().length > 0;
+
+    useEffect(() => {
+        if (query.trim() === "") {
+            setIsTyping(false);
+            return;
+        }
+
+        setIsTyping(true);
+        const timer = setTimeout(() => {
+            setIsTyping(false);
+        }, 300); // Typing delay
+
+        return () => clearTimeout(timer);
+    }, [query]);
 
     return (
         <View className="flex-1 bg-gray-100">
@@ -47,16 +62,20 @@ const Search = () => {
             </View>
 
             <View className="flex-1">
-                {showResults ? (
+                {isTyping ? (
+                    <View className="flex-1 justify-center items-center">
+                        <ActivityIndicator size="large"/>
+                    </View>
+                ) : showResults ? (
                     filter === "Posts" ? (
-                        <PostList url={url} />
+                        <PostList url={url}/>
                     ) : filter === "Sources" ? (
-                        <SourceList url={url} />
+                        <SourceList url={url}/>
                     ) : (
-                        <UserList url={url} />
+                        <UserList url={url}/>
                     )
                 ) : (
-                    <NoResults />
+                    <NoResults/>
                 )}
             </View>
         </View>

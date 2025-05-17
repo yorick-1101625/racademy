@@ -15,7 +15,7 @@ function User({user}) {
             />
             <View className="flex-1">
                 <Text className="font-semibold text-base text-black">
-                    {user.email || "Naam onbekend"}
+                    {user.email}
                 </Text>
                 <Text className="text-gray-500">@{user.username}</Text>
             </View>
