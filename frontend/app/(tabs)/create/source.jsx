@@ -43,10 +43,12 @@ function CreateSource() {
         if (!sourceType) {showError('Brontype is verplicht.'); return;}
         if (sourceType !== 'book' && !url) {showError('URL is verplicht.'); return;}
         if (sourceType === 'book' && !isbn) {showError('ISBN is verplicht'); return;}
-        // if (!isISBN(isbn)) {showError('ISBN is niet geldig'); return;}
+        if (sourceType === 'book' && !isISBN(isbn)) {showError('ISBN is niet geldig'); return;}
         if (sourceType === 'book' && !image) {showError('Foto is verplicht'); return;}
         if (image && image.type !== 'image') {showError('Bestand moet een foto zijn.'); return;}
-
+        if (sourceType === 'video' && url.slice(0, 23) !== 'https://www.youtube.com') {
+            showError('URL moet op https://www.youtube.com/.... lijken'); return;
+        }
         const imageData = ( image ? {
             base64: image.base64,
             'mime_type': image.mimeType,
@@ -77,34 +79,34 @@ function CreateSource() {
 
 
     return (
-        <SafeAreaView className="flex-1 bg-white h-screen relative">
+        <SafeAreaView className="flex-1 h-screen relative">
             {/* Titel */}
             <TextInput
-                className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                className="border-b border-neutral-200 bg-white px-4 py-3 placeholder:text-neutral-600 outline-none"
                 placeholder="Titel"
                 onChangeText={setTitle}
             />
-            <View className="flex-row">
+            <View className="flex-row bg-white">
                 <TextInput
-                    className="w-1/2 border-b border-r border-neutral-300 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                    className="w-1/2 border-b border-r border-neutral-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
                     placeholder="Vak"
                     onChangeText={setSchoolSubject}
                 />
                 <TextInput
-                    className="w-1/2 border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                    className="w-1/2 border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
                     placeholder="Onderwerp"
                     onChangeText={setSubject}
                 />
             </View>
 
             <TextInput
-                className="h-32 border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                className="h-32 border-b bg-white border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
                 placeholder="Beschrijving" multiline={true}
                 onChangeText={setDescription}
             />
 
             {/* Difficulty */}
-            <View className="flex-row h-14 mb-4 border-b border-neutral-300">
+            <View className="flex-row h-14 border-b bg-white border-neutral-200">
                 {
                     DIFFICULTIES.map(item => (
                         <Pressable
@@ -118,13 +120,15 @@ function CreateSource() {
                 }
             </View>
 
+            <View className="py-2 bg-white"/>
+
             <TopTabs tabs={SOURCE_TYPES} state={[sourceType, setSourceType]} />
 
             {/* URL */}
             {
                 sourceType !== 'book' && (
                     <TextInput
-                        className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
                         placeholder={ sourceType === 'video' ? 'youtube.com/...' : 'voorbeeld.com/...' }
                         onChangeText={setUrl}
                     />
@@ -135,17 +139,17 @@ function CreateSource() {
             {
                 sourceType === 'book' && (
                     <TextInput
-                        className="border-b border-neutral-300 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
                         placeholder="ISBN"
                         onChangeText={setIsbn}
                     />
                 )
             }
             {
-                sourceType === 'book' && <ImagePicker state={[image, setImage]} />
+                sourceType === 'book' ? <ImagePicker state={[image, setImage]} /> : <View className="flex-1" />
             }
 
-            <View className="w-full absolute bottom-0 bg-white">
+            <View className="w-full bg-white">
                 <Pressable
                     className="w-full h-14 items-center justify-center border-t border-neutral-300"
                     onPress={() => handleSubmit()}

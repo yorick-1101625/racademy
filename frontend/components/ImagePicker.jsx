@@ -43,9 +43,19 @@ export default function ImagePicker({ state }) {
             }
 
             {
-                focus && (
+                focus && image && (
                     <View className="absolute top-0 bottom-0 left-0 right-0 bg-white z-10">
                         <View className="absolute bottom-0 right-0 z-20 bg-white shadow-md rounded-t-md flex-row">
+                            {/* Clear image */}
+                            <Pressable
+                                className="w-16 h-16 items-center justify-center"
+                                onPress={() => {
+                                    setFocus(false);
+                                    setImage(null);
+                                }}
+                            >
+                                <Ionicons name="trash-outline" size={36} color="#3daad3" />
+                            </Pressable>
                             {/* Re-Upload */}
                             <Pressable
                                 className="w-16 h-16 items-center justify-center"

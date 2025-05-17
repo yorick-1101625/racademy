@@ -1,4 +1,5 @@
 import base64
+import os
 from uuid import uuid4
 
 from sqlalchemy import asc, desc, or_
@@ -27,7 +28,7 @@ class SourceService:
                 )
             )
 
-        query = query.offset(offset).limit(limit)
+        query = query.order_by(desc(Source.created_at)).offset(offset).limit(limit)
 
         current_user = User.query.get(current_user_id)
         sources = query.all()
@@ -89,7 +90,7 @@ class SourceService:
                 with open(image_path, 'wb') as file:
                     file.write(base64.b64decode(image['base64']))
 
-                image_path = str(image_path.relative_to(current_app.config['ROOT_PATH']))
+                image_path = '/' + str(image_path.relative_to(current_app.config['ROOT_PATH'])).replace(os.sep, '/')
                 new_source.image = image_path
 
             db.session.add(new_source)
