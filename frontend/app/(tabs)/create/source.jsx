@@ -1,22 +1,24 @@
-import {Pressable, SafeAreaView, ScrollView, Text, TextInput, View} from 'react-native';
+import {Pressable, SafeAreaView, Text, TextInput, View} from 'react-native';
 import {useState} from "react";
 import TopTabs from "@/components/TopTabs";
 import ImagePicker from "@/components/ImagePicker";
 import {Ionicons} from "@expo/vector-icons";
 import fatty from "@/utils/fatty";
+import {showError, showSuccess} from "@/utils/toast";
+import {isISBN} from "@/utils/validators";
 
 const SOURCE_TYPES = [
-    {value: 'video', label: 'Video'},
-    {value: 'book', label: 'Boek'},
-    {value: 'article', label: 'Artikel'},
-    {value: 'course', label: 'Cursus'}
+    {value: 'video',    label: 'Video'},
+    {value: 'book',     label: 'Boek'},
+    {value: 'article',  label: 'Artikel'},
+    {value: 'course',   label: 'Cursus'}
 ]
 
 const DIFFICULTIES = [
-    {value: 'easy', label: 'Beginner'},
-    {value: 'medium', label: 'Gemiddeld'},
-    {value: 'hard', label: 'Gevorderd'},
-    {value: 'expert', label: 'Professional'}
+    {value: 'easy',     label: 'Beginner'},
+    {value: 'medium',   label: 'Gemiddeld'},
+    {value: 'hard',     label: 'Gevorderd'},
+    {value: 'expert',   label: 'Professional'}
 ]
 
 function CreateSource() {
@@ -32,28 +34,23 @@ function CreateSource() {
     const [image, setImage] = useState(null);
 
     function handleSubmit() {
-        console.log(`
-        ${title}
-        ${schoolSubject}
-        ${subject}
-        ${description}
-        ${difficulty}
-        ${sourceType}
-        ${url}
-        ${isbn}
-        ${image}
-        
-        `)
-        // TODO: validation
-        if (image.type !== 'image') {
-            return;
-        }
+        // Validation
+        if (!title) {showError('Titel is verplicht.'); return;}
+        if (!schoolSubject) {showError('Vak is verplicht.'); return;}
+        if (!subject) {showError('Onderwerp is verplicht.'); return;}
+        if (!description) {showError('Beschrijving is verplicht.'); return;}
+        if (!difficulty) {showError('Moeilijkheid is verplicht.'); return;}
+        if (!sourceType) {showError('Brontype is verplicht.'); return;}
+        if (sourceType !== 'book' && !url) {showError('URL is verplicht.'); return;}
+        if (sourceType === 'book' && !isbn) {showError('ISBN is verplicht'); return;}
+        // if (!isISBN(isbn)) {showError('ISBN is niet geldig'); return;}
+        if (sourceType === 'book' && !image) {showError('Foto is verplicht'); return;}
+        if (image && image.type !== 'image') {showError('Bestand moet een foto zijn.'); return;}
 
-        const imageData = {
+        const imageData = ( image ? {
             base64: image.base64,
-            'file_name': image.fileName,
-
-        }
+            'mime_type': image.mimeType,
+        } : null );
 
         fatty('/api/source/', 'POST', {
             'school_subject': schoolSubject,
@@ -66,7 +63,15 @@ function CreateSource() {
             isbn,
             url
         })
-            .then(console.log)
+            .then(data => {
+                if (data.success) {
+                    showSuccess('Bron succesvol aangemaakt!');
+                }
+                else {
+                    console.error(data.message);
+                    showError('Er is iets misgegaan.');
+                }
+            });
     }
 
 
@@ -105,6 +110,7 @@ function CreateSource() {
                         <Pressable
                             className={`flex-1 justify-center items-center transition-colors duration-75 ${difficulty === item.value && 'bg-rac rounded-md'}`}
                             onPress={() => setDifficulty(item.value)}
+                            key={item.value}
                         >
                             <Text className={`text-[0.9rem] transition-colors duration-75 ${difficulty === item.value ? 'text-white' : 'text-gray'} `}>{item.label}</Text>
                         </Pressable>

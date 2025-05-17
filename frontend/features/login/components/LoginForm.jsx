@@ -6,6 +6,7 @@ import {useState} from "react";
 import {useRouter} from "expo-router";
 import { showSuccess, showError } from "utils/toast"
 import useUser from "@/hooks/useUser";
+import {isHrMail} from "@/utils/validators";
 
 function LoginForm() {
 
@@ -30,8 +31,7 @@ function LoginForm() {
                 showError("Vul email in.");
                 return;
             }
-            const emailRegex = new RegExp(String.raw`^[\w\-\.]+@hr\.nl$`);
-            if (!emailRegex.test(email)) {
+            if (!isHrMail()) {
                 showError("Email moet eindigen op @hr.nl.");
                 return;
             }

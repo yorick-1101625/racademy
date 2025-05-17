@@ -19,6 +19,7 @@ export default function ImagePicker({ state }) {
         if (!result.canceled) {
             const data = result.assets[0]
             data['base64'] = data.uri.split(',')[1]
+            console.log(result)
             setImage(data);
         }
     };
