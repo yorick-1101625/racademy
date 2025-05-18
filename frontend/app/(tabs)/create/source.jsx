@@ -10,8 +10,7 @@ import {isISBN} from "@/utils/validators";
 const SOURCE_TYPES = [
     {value: 'video',    label: 'Video'},
     {value: 'book',     label: 'Boek'},
-    {value: 'article',  label: 'Artikel'},
-    {value: 'course',   label: 'Cursus'}
+    {value: 'link',  label: 'Link'}
 ]
 
 const DIFFICULTIES = [
@@ -43,8 +42,8 @@ function CreateSource() {
         if (!sourceType) {showError('Brontype is verplicht.'); return;}
         if (sourceType !== 'book' && !url) {showError('URL is verplicht.'); return;}
         if (sourceType === 'book' && !isbn) {showError('ISBN is verplicht'); return;}
-        if (sourceType === 'book' && !isISBN(isbn)) {showError('ISBN is niet geldig'); return;}
-        if (sourceType === 'book' && !image) {showError('Foto is verplicht'); return;}
+        if (sourceType === 'book' && !isISBN(isbn)) {showError('ISBN is niet geldig.'); return;}
+        if (sourceType === 'book' && !image) {showError('Foto is verplicht bij boeken.'); return;}
         if (image && image.type !== 'image') {showError('Bestand moet een foto zijn.'); return;}
         if (sourceType === 'video' && url.slice(0, 23) !== 'https://www.youtube.com') {
             showError('URL moet op https://www.youtube.com/.... lijken'); return;
@@ -129,7 +128,7 @@ function CreateSource() {
                 sourceType !== 'book' && (
                     <TextInput
                         className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                        placeholder={ sourceType === 'video' ? 'youtube.com/...' : 'voorbeeld.com/...' }
+                        placeholder={ sourceType === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...' }
                         onChangeText={setUrl}
                     />
                 )
@@ -146,7 +145,7 @@ function CreateSource() {
                 )
             }
             {
-                sourceType === 'book' ? <ImagePicker state={[image, setImage]} /> : <View className="flex-1" />
+                sourceType !== 'video' ? <ImagePicker state={[image, setImage]} /> : <View className="flex-1" />
             }
 
             <View className="w-full bg-white">
