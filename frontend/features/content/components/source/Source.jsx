@@ -4,7 +4,7 @@ import ContentAuthor from "../ContentAuthor";
 import SourceContent from "./SourceContent";
 import SourceDetails from "./SourceDetails";
 
-import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
+import calculateAverageRating from "@/features/content/utils/calculateAverageRating";
 import fatty from "@/utils/fatty";
 
 function Source({source}) {

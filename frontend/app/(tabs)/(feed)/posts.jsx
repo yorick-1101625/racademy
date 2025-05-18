@@ -1,5 +1,5 @@
 import {SafeAreaView} from 'react-native';
-import PostList from "@/features/feed/components/post/PostList";
+import PostList from "@/features/content/components/post/PostList";
 
 function Posts() {
     return (

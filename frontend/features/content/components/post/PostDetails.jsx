@@ -1,5 +1,5 @@
 import {Text} from 'react-native';
-import calculateTimeFromToday from "@/features/feed/utils/calculateTimeFromToday";
+import calculateTimeFromToday from "@/features/content/utils/calculateTimeFromToday";
 
 function PostDetails({ createdAt, tags }) {
     return (

@@ -1,9 +1,9 @@
 import {Image, Pressable, Text, View} from 'react-native';
 
-import calculateTimeFromToday from "@/features/feed/utils/calculateTimeFromToday";
-import formatRating from "@/features/feed/utils/formatRating";
-import getRatingIcon from "@/features/feed/utils/getRatingIcon";
-import {Feather, Ionicons} from "@expo/vector-icons";
+import calculateTimeFromToday from "@/features/content/utils/calculateTimeFromToday";
+import formatRating from "@/features/content/utils/formatRating";
+import getRatingIcon from "@/features/content/utils/getRatingIcon";
+import {Ionicons} from "@expo/vector-icons";
 
 function SourceDetails({createdAt, schoolSubject, subject, rating, isBookmarked, handleBookmark}) {
 

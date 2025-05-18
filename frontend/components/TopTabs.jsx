@@ -13,9 +13,9 @@ function TopTabs({ tabs, state }) {
     const [_state, _setState] = state;
 
     return (
-        <View className="justify-around bg-white flex-row h-12 shadow-sm shadow-gray-200 items-end">
+        <View className="justify-around flex-row h-12 pt-0.5 shadow-sm shadow-gray-200 items-end">
             {
-                tabs.map((tab, i) => (
+                tabs.map((tab) => (
                      <Pressable
                          key={tab.value}
                          className="flex-1 justify-end h-full"

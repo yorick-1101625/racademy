@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {View, TextInput, Text, Pressable, SafeAreaView} from "react-native";
-import PostList from "@/features/feed/components/post/PostList";
-import SourceList from "@/features/feed/components/source/SourceList";
+import PostList from "@/features/content/components/post/PostList";
+import SourceList from "@/features/content/components/source/SourceList";
 import NoResults from "@/features/search/components/NoResults";
 
 const FILTERS = ["Posts", "Sources"];

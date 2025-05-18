@@ -2,10 +2,9 @@ import {Text, Image, View, Pressable} from 'react-native';
 import { Linking } from 'react-native';
 import {BASE_URL} from "@/utils/url";
 import FocusableImage from "@/components/FocusableImage";
-import truncate from "@/features/feed/utils/truncate";
-import {Link} from "expo-router";
+import truncate from "@/features/content/utils/truncate";
 
-function SourceContent({title, image, type, url, description}) {
+function CreateSourceContent({title, image, type, url, description}) {
     return (
         <View className="px-2">
             {
@@ -71,4 +70,4 @@ function SourceContent({title, image, type, url, description}) {
     );
 }
 
-export default SourceContent;
+export default CreateSourceContent;

@@ -3,7 +3,7 @@ import {Image, Pressable, View} from 'react-native';
 import {launchImageLibraryAsync} from "expo-image-picker";
 import {Ionicons} from "@expo/vector-icons";
 
-export default function ImagePicker({ state }) {
+export default function ImagePicker({ state, className = "" }) {
     const [image, setImage] = state;
     const [focus, setFocus] = useState(false);
 
@@ -29,7 +29,7 @@ export default function ImagePicker({ state }) {
             {
             image
             ?   <Pressable
-                    className="flex-1"
+                    className={className}
                     onPress={() => setFocus(true)}
                 >
                     <Image source={{ uri: image.uri }} className="w-full h-full" resizeMode="contain"/>
