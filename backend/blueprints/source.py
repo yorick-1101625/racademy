@@ -11,9 +11,11 @@ api_source = Blueprint("api_source", __name__)
 def get_sources():
     try:
         search_term = request.args.get('search')
+        sort_by = request.args.get('sort')
         sources = SourceService.get_all_sources(
             current_user_id=get_jwt_identity(),
-            search_term=search_term
+            search_term=search_term,
+            sort_by=sort_by
         )
         return {
             "success": True,

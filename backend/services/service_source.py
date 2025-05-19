@@ -1,13 +1,13 @@
 from sqlalchemy import asc, desc, or_
 from sqlalchemy.exc import SQLAlchemyError
 
-from backend.models.models import Source, User
+from backend.models.models import Source, User, Rating
 from backend.database.db import db
 
 class SourceService:
 
     @staticmethod
-    def get_all_sources(current_user_id, search_term=None, offset=0, limit=10):
+    def get_all_sources(current_user_id, search_term=None, sort_by='recent', offset=0, limit=None):
         query = db.session.query(Source).join(Source.user)
 
         if search_term:
@@ -21,6 +21,16 @@ class SourceService:
                 )
             )
 
+        if sort_by == 'recent':
+            query = query.order_by(Source.created_at.desc())
+        elif sort_by == 'rating':
+            query = (
+                query.outerjoin(Source.ratings)
+                .group_by(Source.id)
+                .order_by(
+                    db.func.avg(Rating.rating).desc(), # Calculate average rating for a source
+                    Source.created_at.desc()
+                ))
         query = query.offset(offset).limit(limit)
 
         current_user = User.query.get(current_user_id)

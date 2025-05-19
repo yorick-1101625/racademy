@@ -34,6 +34,20 @@ const Search = () => {
         return () => clearTimeout(timer);
     }, [query]);
 
+    let sortOptions = [];
+
+    if (filter === "Posts") {
+        sortOptions = [
+            {label: "Meest recent", value: "recent"},
+            {label: "Meeste likes", value: "likes"},
+        ];
+    } else if (filter === "Sources") {
+        sortOptions = [
+            {label: "Meest recent", value: "recent"},
+            {label: "Hoogste rating", value: "rating"},
+        ];
+    }
+
     return (
         <View className="flex-1 bg-gray-100">
             <View className="bg-white px-4 pt-4 pb-0">
@@ -101,10 +115,7 @@ const Search = () => {
                     <View className="bg-white p-6 rounded-t-2xl">
                         <Text className="text-lg font-semibold mb-4">Sorteer op</Text>
 
-                        {[
-                            {label: "Meest recent", value: "recent"},
-                            {label: "Meeste likes", value: "likes"},
-                        ].map(option => (
+                        {sortOptions.map(option => (
                             <Pressable
                                 key={option.value}
                                 onPress={() => setSortBy(option.value)}
