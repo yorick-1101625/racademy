@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {View, TextInput, Text, Pressable, ActivityIndicator} from "react-native";
+import {View, TextInput, Text, Pressable, ActivityIndicator, Modal} from "react-native";
 import PostList from "@/features/feed/components/post/PostList";
 import SourceList from "@/features/feed/components/source/SourceList";
 import NoResults from "@/features/search/components/NoResults";
 import UserList from "@/features/search/components/user/UserList";
+import {Ionicons} from "@expo/vector-icons";
 
 const FILTERS = ["Posts", "Sources", "Users"];
 
@@ -12,8 +13,11 @@ const Search = () => {
     const [filter, setFilter] = useState("Posts");
     const [isTyping, setIsTyping] = useState(false);
 
+    const [sortBy, setSortBy] = useState("recent");
+    const [filterModalVisible, setFilterModalVisible] = useState(false);
+
     const endpoint = filter === "Posts" ? "post" : filter === "Sources" ? "source" : "user";
-    const url = `/api/${endpoint}?search=${encodeURIComponent(query)}`;
+    const url = `/api/${endpoint}?search=${encodeURIComponent(query)}&sort=${sortBy}`;
     const showResults = query.trim().length > 0;
 
     useEffect(() => {
@@ -33,12 +37,20 @@ const Search = () => {
     return (
         <View className="flex-1 bg-gray-100">
             <View className="bg-white px-4 pt-4 pb-0">
-                <TextInput
-                    placeholder="Zoeken..."
-                    value={query}
-                    onChangeText={setQuery}
-                    className="border border-gray-300 rounded-lg px-4 py-2 mb-3 bg-gray-50"
-                />
+                <View className="relative mb-3">
+                    <TextInput
+                        placeholder="Zoeken..."
+                        value={query}
+                        onChangeText={setQuery}
+                        className="border border-gray-300 rounded-lg px-4 py-2 bg-gray-50 pr-10"
+                    />
+                    <Pressable
+                        onPress={() => setFilterModalVisible(true)}
+                        className="absolute right-2 top-2"
+                    >
+                        <Ionicons name="options-outline" size={21.5} color="#8e8e8f"/>
+                    </Pressable>
+                </View>
 
                 <View className="flex-row mb-4">
                     {FILTERS.map((item) => {
@@ -78,6 +90,44 @@ const Search = () => {
                     <NoResults/>
                 )}
             </View>
+
+            <Modal
+                visible={filterModalVisible}
+                animationType="slide"
+                transparent={true}
+                onRequestClose={() => setFilterModalVisible(false)}
+            >
+                <View className="flex-1 justify-end bg-black bg-opacity-30">
+                    <View className="bg-white p-6 rounded-t-2xl">
+                        <Text className="text-lg font-semibold mb-4">Sorteer op</Text>
+
+                        {[
+                            {label: "Meest recent", value: "recent"},
+                            {label: "Meeste likes", value: "likes"},
+                        ].map(option => (
+                            <Pressable
+                                key={option.value}
+                                onPress={() => setSortBy(option.value)}
+                                className={`py-3 px-4 rounded-md mb-2 ${
+                                    sortBy === option.value ? "bg-rac" : "bg-gray-200"
+                                }`}
+                            >
+                                <Text className={sortBy === option.value ? "text-white" : "text-black"}>
+                                    {option.label}
+                                </Text>
+                            </Pressable>
+                        ))}
+
+                        <Pressable
+                            onPress={() => setFilterModalVisible(false)}
+                            className="mt-4 bg-rac py-3 rounded-md"
+                        >
+                            <Text className="text-white text-center font-semibold">Toepassen</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
+
         </View>
     );
 };
