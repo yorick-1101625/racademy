@@ -3,6 +3,7 @@ import { View, Text, Image, ActivityIndicator, ScrollView, Pressable } from 'rea
 import useFetch from '../hooks/useFetch';
 import useUser from "@/hooks/useUser";
 import {BASE_URL} from "@/utils/url";
+import Error from "@/components/Error";
 
 export default function Profile() {
   const { user } = useUser;
@@ -11,8 +12,8 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState('favorieten');
 
   if (!user) return <Text className="text-center mt-10">Niet ingelogd.</Text>;
-  if (isPending) return <ActivityIndicator size="large" className="mt-10" />;
-  if (error) return <Text className="text-center mt-10">{error}</Text>;
+  if (isPending) return <ActivityIndicator className="mt-10" color="#3daad3" />;
+  if (error) return <Error />;
 
   const currentUser = users?.find(u => u.id === user.id);
   const userPosts = posts?.filter(p => p.user_id === user.id) || [];

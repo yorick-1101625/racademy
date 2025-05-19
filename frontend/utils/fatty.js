@@ -12,7 +12,6 @@ export default async function fatty(url, method = 'GET', body = null, refresh = 
     const item = (refresh ? 'refresh' : 'access');
     let token = await AsyncStorage.getItem(item);
 
-    console.log(isTokenExpired(token))
     if (!refresh && token && isTokenExpired(token)) {
         await refreshToken(); // refresh access token if it is almost expired
         token = await AsyncStorage.getItem(item);

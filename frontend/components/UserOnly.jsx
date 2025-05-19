@@ -17,7 +17,7 @@ function UserOnly({ children }) {
     }, [user, authChecked]);
 
     if (!authChecked || !user) {
-        return <ActivityIndicator />
+        return <ActivityIndicator color="#3daad3" />
     }
 
     return children;

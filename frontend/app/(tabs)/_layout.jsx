@@ -1,22 +1,22 @@
 import '@/global.css'
-import colors from "tailwindcss/colors";
 import UserOnly from "@/components/UserOnly";
 import {Tabs} from "expo-router";
-import {Feather} from "@expo/vector-icons";
+import {Feather, Ionicons} from "@expo/vector-icons";
+import {View} from "react-native";
 
 function TabsLayout() {
     return (
         <UserOnly>
             <Tabs
                 screenOptions={{
-                    tabBarActiveTintColor: colors.rac
+                    tabBarActiveTintColor: '#3daad3'
                 }}
             >
                 <Tabs.Screen
                     name="(feed)"
                     options={{
                         title: '',
-                        tabBarIcon: ({color}) => <Feather size={21.5} name="home" color={color}/>,
+                        tabBarIcon: ({color}) => <Ionicons size={24} name="home-outline" color={color}/>,
                         headerShown: false,
                     }}
                 />
@@ -24,7 +24,7 @@ function TabsLayout() {
                     name="create"
                     options={{
                         title: '',
-                        tabBarIcon: ({color}) => <Feather size={21.5} name="plus-circle" color={color}/>,
+                        tabBarIcon: ({color}) => <View><Feather size={21.5} name="plus-circle" color={color}/></View>,
                         headerShown: false,
                     }}
                 />

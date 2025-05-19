@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -12,6 +14,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'key'
+app.config['ROOT_PATH'] = Path(__file__).parent.resolve()
+app.config['IMAGE_UPLOAD_FOLDER'] = app.config['ROOT_PATH'] / 'static' / 'user_images'
 
 
 init_db(app)

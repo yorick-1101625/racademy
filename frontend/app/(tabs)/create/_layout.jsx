@@ -1,7 +1,4 @@
-import {Tabs} from "expo-router";
 import '@/global.css'
-import colors from "tailwindcss/colors";
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { withLayoutContext } from "expo-router";
 
@@ -17,8 +14,8 @@ function TabsLayout() {
                     tabBarIndicatorStyle: { backgroundColor: '#3daad3' }
                 }}
             >
-                <MaterialTopTabs.Screen name="posts" />
-                <MaterialTopTabs.Screen name="sources" options={{ title: 'bronnen' }} />
+                <MaterialTopTabs.Screen name="post" />
+                <MaterialTopTabs.Screen name="source" options={{ title: 'bron' }} />
             </MaterialTopTabs>
         </>
     );
