@@ -12,9 +12,11 @@ api_post = Blueprint("api_post", __name__)
 def get_posts():
     try:
         search_term = request.args.get('search')
+        sort_by = request.args.get('sort')
         posts = PostService.get_all_posts(
             current_user_id=get_jwt_identity(),
-            search_term=search_term
+            search_term=search_term,
+            sort_by=sort_by
         )
         return jsonify({
             "success": True,

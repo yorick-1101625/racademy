@@ -1,5 +1,6 @@
 from sqlalchemy import asc, desc, or_
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import aliased
 
 from backend.models.models import Post, User
 from backend.database.db import db
@@ -8,7 +9,7 @@ from backend.database.db import db
 class PostService:
 
     @staticmethod
-    def get_all_posts(current_user_id, search_term=None, offset=0, limit=10):
+    def get_all_posts(current_user_id, search_term=None, sort_by='recent', offset=0, limit=None):
         query = db.session.query(Post).join(Post.user)
 
         if search_term:
@@ -22,7 +23,21 @@ class PostService:
                 )
             )
 
-        query = query.order_by(desc(Post.created_at)).offset(offset).limit(limit)
+        # Joining twice on same model does not work? So have to use alias
+        user = aliased(User)
+
+        if sort_by == 'recent':
+            query = query.order_by(Post.created_at.desc())
+        elif sort_by == 'likes':
+            query = (
+                query.outerjoin(Post.users_liked.of_type(user))  # Outerjoin to show posts with 0 likes in results
+                .group_by(Post.id)
+                .order_by(
+                    db.func.count(user.id).desc(),
+                    Post.created_at.desc()
+            ))
+
+        query = query.offset(offset).limit(limit)
 
         current_user = User.query.get(current_user_id)
         posts = query.all()
