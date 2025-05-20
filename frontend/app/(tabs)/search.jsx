@@ -53,6 +53,7 @@ const Search = () => {
             <View className="bg-white px-4 pt-4 pb-0">
                 <View className="relative mb-3">
                     <TextInput
+                        autoFocus={true}
                         placeholder="Zoeken..."
                         value={query}
                         onChangeText={setQuery}
@@ -111,7 +112,7 @@ const Search = () => {
                 transparent={true}
                 onRequestClose={() => setFilterModalVisible(false)}
             >
-                <View className="flex-1 justify-end bg-black bg-opacity-30">
+                <View  className="flex-1 justify-end" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
                     <View className="bg-white p-6 rounded-t-2xl">
                         <Text className="text-lg font-semibold mb-4">Sorteer op</Text>
 

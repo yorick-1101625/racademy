@@ -40,7 +40,7 @@ function Settings() {
                 transparent={true}
                 onRequestClose={() => setModalVisible(false)}
             >
-                <View className="flex-1 justify-end bg-black bg-opacity-30">
+                <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
                     <View className="bg-white p-6 rounded-t-2xl">
 
                         <View className="items-center mb-4">
