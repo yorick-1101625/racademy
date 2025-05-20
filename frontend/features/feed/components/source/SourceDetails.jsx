@@ -14,7 +14,7 @@ function SourceDetails({createdAt, schoolSubject, subject, rating, isBookmarked,
                 <Text className="text-xs text-gray-500">{schoolSubject}: {subject}</Text>
             </View>
 
-            <View className="flex-row items-center justify-between mt-4 px-2">
+            <View className="flex-row items-center justify-between mt-4">
                 <Pressable
                     onPress={handleBookmark}
                     className="flex-row items-center"
