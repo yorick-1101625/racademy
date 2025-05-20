@@ -138,7 +138,6 @@ const Search = () => {
                     </View>
                 </View>
             </Modal>
-
         </View>
     );
 };
