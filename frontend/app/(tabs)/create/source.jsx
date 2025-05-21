@@ -240,6 +240,8 @@ function CreateSource() {
             {/*    type !== 'video' ? <ImagePicker state={[image, setImage]} /> : <View className="flex-1" />*/}
             {/*}*/}
 
+            <View className="flex-1" />
+
             <View className="w-full bg-white">
                 <Pressable
                     className="w-full h-14 items-center justify-center border-t border-neutral-300"
