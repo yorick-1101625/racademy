@@ -2,6 +2,7 @@ import {Pressable, SafeAreaView, TextInput, Text, KeyboardAvoidingView, View} fr
 import MultilineTextInput from "@/components/MultilineTextInput";
 import {useState} from "react";
 import {showError} from "@/utils/toast";
+import {Ionicons} from "@expo/vector-icons";
 
 function CreatePost() {
 
@@ -45,22 +46,27 @@ function CreatePost() {
             <View className="border-b border-gray-300 w-full h-full">
                 <MultilineTextInput
                     placeholder="Wat wil je zeggen..."
-                    className="px-4 py-3 placeholder:text-gray-600 text-lg bg-white"
+                    className="px-4 py-3 placeholder:text-gray-600 text-lg bg-white border border-gray-100"
                     onChangeText={setContent}
                 />
                 <TextInput
                     placeholder="#..."
-                    className="px-4 py-3 placeholder:text-gray-600 bg-white"
+                    className="px-4 py-3 placeholder:text-gray-600 bg-white border border-gray-200"
                     onChangeText={handleTags}
                 />
+                <Pressable
+                    onPress={() => console.log('ee')}
+                >
+                    <TextInput placeholder="Bron toevoegen"></TextInput>
+                </Pressable>
             </View>
 
             <KeyboardAvoidingView className="absolute right-0 bottom-0">
                 <Pressable
                     onPress={handleSubmit}
-                    className="bg-rac w-24 h-10 items-center justify-center rounded-full mb-3 mr-3"
+                    className="bg-rac w-24 h-12 items-center justify-center rounded-full mb-3 mr-3"
                 >
-                    <Text className="text-white text-lg">Post</Text>
+                    <Ionicons name="return-up-forward" size={36} color="white"/>
                 </Pressable>
             </KeyboardAvoidingView>
         </SafeAreaView>

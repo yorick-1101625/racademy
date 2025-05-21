@@ -45,17 +45,22 @@ class SourceService:
         # Add user, number of comments, number of likes
         result = []
         for source in sources:
+            user = source.user.to_dict()
+            user.pop('password')
             source_dict = source.to_dict()
-            source_dict['user'] = source.user.to_dict()
+            source_dict['user'] = user
             source_dict['ratings'] = [rating.to_dict()['rating'] for rating in source.ratings]
             source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
+            source_dict['rated_by_current_user'] = source in [rating.source for rating in current_user.created_ratings]
             result.append(source_dict)
+
 
         return result
 
     @staticmethod
     def create_source(data, current_user_id):
         try:
+            print(data)
             # Validation
             if not data.get('type'):            return Exception('Must provide source type.')
             if not data.get('title'):           return Exception('Must provide title.')
@@ -73,10 +78,10 @@ class SourceService:
             if data.get('type') == 'book' and data.get('image') is None:
                 return Exception('Must provide image when type is book')
 
-            if not is_isbn(data.get('isbn')):
+
+            if data.get('type') == 'book' and not is_isbn(data.get('isbn')):
                 return Exception('Invalid ISBN')
 
-            current_user = User.query.get(current_user_id)
             new_source = Source(
                 type=data.get('type'),
                 title=data.get('title'),
@@ -84,7 +89,7 @@ class SourceService:
                 school_subject=data.get('school_subject'),
                 subject=data.get('subject'),
                 difficulty=data.get('difficulty'),
-                user=current_user,
+                user_id=current_user_id,
                 url=data.get('url'),
                 isbn=data.get('isbn'),
                 image=None
@@ -108,9 +113,9 @@ class SourceService:
             return new_source.to_dict()
         except SQLAlchemyError as e:
             db.session.rollback()
-            print(f"Error creating post: {e}")
-            return None
+            print(f"Error creating source: {e}")
+            return Exception('Error creating source')
         except Exception as e:
-            print(f"Error creating post: {e}")
+            print(f"Error creating source: {e}")
             db.session.rollback()
-            return None
+            return Exception('Error creating source')

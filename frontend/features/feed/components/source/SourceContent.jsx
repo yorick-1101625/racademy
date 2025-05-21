@@ -3,6 +3,8 @@ import { Linking } from 'react-native';
 import {BASE_URL} from "@/utils/url";
 import FocusableImage from "@/components/FocusableImage";
 import truncate from "@/features/feed/utils/truncate";
+import formatRating from "@/features/feed/utils/formatRating";
+import getRatingIcon from "@/features/feed/utils/getRatingIcon";
 
 function SourceContent({title, image, type, url, description}) {
     return (

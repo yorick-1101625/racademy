@@ -8,9 +8,6 @@ import ContentAuthor from "../ContentAuthor";
 import {Link} from "expo-router";
 import fatty from "@/utils/fatty";
 
-
-const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
-
 function Post({post}) {
 
     const [isBookmarked, setIsBookmarked] = useState(post['bookmarked_by_current_user']);
@@ -40,15 +37,16 @@ function Post({post}) {
                 <PostContent title={post.title} content={post.content}/>
             </Link>
 
-            {/* Timestamp */}
-            <PostDetails createdAt={post['created_at']} tags={post.tags}/>
+            <View className="flex-row justify-between">
+                {/* Timestamp */}
+                <PostDetails createdAt={post['created_at']} tags={post.tags}/>
 
-            {/* Interaction buttons */}
-            <PostActions numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']}
-                         likedByCurrentUser={post['liked_by_current_user']} postId={post.id}
-                         handleBookmark={handleBookmark} isBookmarked={isBookmarked}
-            />
-
+                {/* Interaction buttons */}
+                <PostActions numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']}
+                             likedByCurrentUser={post['liked_by_current_user']} postId={post.id}
+                             handleBookmark={handleBookmark} isBookmarked={isBookmarked}
+                />
+            </View>
         </View>
     );
 }

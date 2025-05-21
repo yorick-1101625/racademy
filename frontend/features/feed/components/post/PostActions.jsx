@@ -26,7 +26,7 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
 
 
     return (
-        <View className="">
+        <View className="items-end">
             <View className="flex-row justify-between mt-4 px-2 w-52">
                 <Pressable
                     className="flex-row items-center"

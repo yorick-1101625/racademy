@@ -50,6 +50,7 @@ function Source({source}) {
                 rating={averageRating}
                 handleBookmark={handleBookmark}
                 isBookmarked={isBookmarked}
+                isRated={source['rated_by_current_user']}
             />
 
         </View>

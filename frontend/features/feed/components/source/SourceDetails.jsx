@@ -2,19 +2,32 @@ import {Image, Pressable, Text, View} from 'react-native';
 
 import calculateTimeFromToday from "@/features/feed/utils/calculateTimeFromToday";
 import formatRating from "@/features/feed/utils/formatRating";
-import getRatingIcon from "@/features/feed/utils/getRatingIcon";
 import {Ionicons} from "@expo/vector-icons";
+import StarIcon from "@/assets/icons/rating/star-full.png";
 
-function SourceDetails({createdAt, schoolSubject, subject, rating, isBookmarked, handleBookmark}) {
+function SourceDetails({createdAt, schoolSubject, subject, rating, isBookmarked, handleBookmark, isRated}) {
 
     return (
-        <>
+        <View className="flex-row justify-between">
             <View>
                 <Text className="text-xs text-gray-500 mt-2">{calculateTimeFromToday(createdAt)}</Text>
                 <Text className="text-xs text-gray-500">{schoolSubject}: {subject}</Text>
             </View>
 
-            <View className="flex-row items-center justify-between mt-4 px-2">
+            <View className="flex-row items-center justify-between mt-2 pr-2 w-32">
+                {/*{*/}
+                {/*    isNaN(rating) || <View className="flex-row items-center">*/}
+                {/*            <Text className="mr-1">{formatRating(rating)}</Text>*/}
+                {/*            <Image source={getRatingIcon(rating)}/>*/}
+                {/*        </View>*/}
+                {/*}*/}
+                <Pressable
+                    className="flex-row items-center"
+                >
+                    <Ionicons name={isRated ? 'star' : 'star-outline'} size={19} color={ isRated ? '#ebc553' : 'gray'}/>
+                    <Text className="ml-1">{isNaN(rating) ? '-' : formatRating(rating)}</Text>
+                </Pressable>
+
                 <Pressable
                     onPress={handleBookmark}
                     className="flex-row items-center"
@@ -25,15 +38,8 @@ function SourceDetails({createdAt, schoolSubject, subject, rating, isBookmarked,
                         color={isBookmarked ? "#3daad3" : "gray"}
                     />
                 </Pressable>
-                {
-                    isNaN(rating) ||
-                        <View className="flex-row items-center">
-                            <Text className="mr-1">{formatRating(rating)}</Text>
-                            <Image source={getRatingIcon(rating)}/>
-                        </View>
-                }
             </View>
-        </>
+        </View>
     );
 }
 
