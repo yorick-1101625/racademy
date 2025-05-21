@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, ActivityIndicator, ScrollView, Pressable } from 'react-native';
 import useFetch from '../hooks/useFetch';
 import useUser from "@/hooks/useUser";
@@ -12,13 +12,15 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState('favorieten');
 
   if (!user) return <Text className="text-center mt-10">Niet ingelogd.</Text>;
-  if (isPending) return <ActivityIndicator className="mt-10" color="#3daad3" />;
+  if (isPending) return <View className="flex-1 justify-center items-center">
+                            <ActivityIndicator size="large" color="#3daad3"/>
+                        </View>;
   if (error) return <Error />;
 
   const currentUser = users?.find(u => u.id === user.id);
   const userPosts = posts?.filter(p => p.user_id === user.id) || [];
 
-  if (!currentUser) return <Text className="text-center mt-10">Gebruiker niet gevonden.</Text>;
+  if (!currentUser) return <Error title="Gebruiker niet gevonden." message=""/>;
 
   return (
     <ScrollView className="p-6">

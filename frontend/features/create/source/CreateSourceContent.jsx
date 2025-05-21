@@ -2,7 +2,7 @@ import {Text, Image, View, Pressable} from 'react-native';
 import { Linking } from 'react-native';
 import {BASE_URL} from "@/utils/url";
 import FocusableImage from "@/components/FocusableImage";
-import truncate from "@/features/content/utils/truncate";
+import truncate from "@/features/feed/utils/truncate";
 
 function CreateSourceContent({title, image, type, url, description}) {
     return (

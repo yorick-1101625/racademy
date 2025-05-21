@@ -6,10 +6,10 @@ import {Ionicons} from "@expo/vector-icons";
 import fatty from "@/utils/fatty";
 import {showError, showSuccess} from "@/utils/toast";
 import {isISBN} from "@/utils/validators";
-import ContentAuthor from "@/features/content/components/ContentAuthor";
+import ContentAuthor from "@/features/feed/components/ContentAuthor";
 import useUser from "@/hooks/useUser";
 import CreateSourceContent from "@/features/create/source/CreateSourceContent";
-import truncate from "@/features/content/utils/truncate";
+import truncate from "@/features/feed/utils/truncate";
 import FocusableImage from "@/components/FocusableImage";
 import {BASE_URL} from "@/utils/url";
 import MultilineTextInput from "@/components/MultilineTextInput";
@@ -171,82 +171,83 @@ function CreateSource() {
                 }
                 </View>
             </View>
+            <View className="mt-20"/>
 
-            {/* Titel */}
-            <TextInput
-                className="border-b border-neutral-200 bg-white px-4 py-3 placeholder:text-neutral-600 outline-none"
-                placeholder="Titel"
-                onChangeText={setTitle}
-            />
-            <View className="flex-row bg-white">
-                <TextInput
-                    className="w-1/2 border-b border-r border-neutral-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                    placeholder="Vak"
-                    onChangeText={setSchoolSubject}
-                />
-                <TextInput
-                    className="w-1/2 border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                    placeholder="Onderwerp"
-                    onChangeText={setSubject}
-                />
-            </View>
+            {/*/!* Titel *!/*/}
+            {/*<TextInput*/}
+            {/*    className="border-b border-neutral-200 bg-white px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
+            {/*    placeholder="Titel"*/}
+            {/*    onChangeText={setTitle}*/}
+            {/*/>*/}
+            {/*<View className="flex-row bg-white">*/}
+            {/*    <TextInput*/}
+            {/*        className="w-1/2 border-b border-r border-neutral-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
+            {/*        placeholder="Vak"*/}
+            {/*        onChangeText={setSchoolSubject}*/}
+            {/*    />*/}
+            {/*    <TextInput*/}
+            {/*        className="w-1/2 border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
+            {/*        placeholder="Onderwerp"*/}
+            {/*        onChangeText={setSubject}*/}
+            {/*    />*/}
+            {/*</View>*/}
 
-            <TextInput
-                className="h-32 border-b bg-white border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                placeholder="Beschrijving" multiline={true}
-                onChangeText={setDescription}
-            />
+            {/*<TextInput*/}
+            {/*    className="h-32 border-b bg-white border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
+            {/*    placeholder="Beschrijving" multiline={true}*/}
+            {/*    onChangeText={setDescription}*/}
+            {/*/>*/}
 
-            {/* Difficulty */}
-            <View className="flex-row h-14 border-b bg-white border-neutral-200">
-                {
-                    DIFFICULTIES.map(item => (
-                        <Pressable
-                            className={`flex-1 justify-center items-center transition-colors duration-75 ${difficulty === item.value && 'bg-rac rounded-md'}`}
-                            onPress={() => setDifficulty(item.value)}
-                            key={item.value}
-                        >
-                            <Text className={`text-[0.9rem] transition-colors duration-75 ${difficulty === item.value ? 'text-white' : 'text-gray'} `}>{item.label}</Text>
-                        </Pressable>
-                    ))
-                }
-            </View>
+            {/*/!* Difficulty *!/*/}
+            {/*<View className="flex-row h-14 border-b bg-white border-neutral-200">*/}
+            {/*    {*/}
+            {/*        DIFFICULTIES.map(item => (*/}
+            {/*            <Pressable*/}
+            {/*                className={`flex-1 justify-center items-center transition-colors duration-75 ${difficulty === item.value && 'bg-rac rounded-md'}`}*/}
+            {/*                onPress={() => setDifficulty(item.value)}*/}
+            {/*                key={item.value}*/}
+            {/*            >*/}
+            {/*                <Text className={`text-[0.9rem] transition-colors duration-75 ${difficulty === item.value ? 'text-white' : 'text-gray'} `}>{item.label}</Text>*/}
+            {/*            </Pressable>*/}
+            {/*        ))*/}
+            {/*    }*/}
+            {/*</View>*/}
 
 
 
-            {/* URL */}
-            {
-                type !== 'book' && (
-                    <TextInput
-                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                        placeholder={ type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...' }
-                        onChangeText={setUrl}
-                    />
-                )
-            }
+            {/*/!* URL *!/*/}
+            {/*{*/}
+            {/*    type !== 'book' && (*/}
+            {/*        <TextInput*/}
+            {/*            className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
+            {/*            placeholder={ type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...' }*/}
+            {/*            onChangeText={setUrl}*/}
+            {/*        />*/}
+            {/*    )*/}
+            {/*}*/}
 
-            {/* ISBN */}
-            {
-                type === 'book' && (
-                    <TextInput
-                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                        placeholder="ISBN"
-                        onChangeText={setIsbn}
-                    />
-                )
-            }
-            {
-                type !== 'video' ? <ImagePicker state={[image, setImage]} /> : <View className="flex-1" />
-            }
+            {/*/!* ISBN *!/*/}
+            {/*{*/}
+            {/*    type === 'book' && (*/}
+            {/*        <TextInput*/}
+            {/*            className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
+            {/*            placeholder="ISBN"*/}
+            {/*            onChangeText={setIsbn}*/}
+            {/*        />*/}
+            {/*    )*/}
+            {/*}*/}
+            {/*{*/}
+            {/*    type !== 'video' ? <ImagePicker state={[image, setImage]} /> : <View className="flex-1" />*/}
+            {/*}*/}
 
-            <View className="w-full bg-white">
-                <Pressable
-                    className="w-full h-14 items-center justify-center border-t border-neutral-300"
-                    onPress={() => handleSubmit()}
-                >
-                    <Ionicons name="return-up-forward" size={36} color="#3daad3"/>
-                </Pressable>
-            </View>
+            {/*<View className="w-full bg-white">*/}
+            {/*    <Pressable*/}
+            {/*        className="w-full h-14 items-center justify-center border-t border-neutral-300"*/}
+            {/*        onPress={() => handleSubmit()}*/}
+            {/*    >*/}
+            {/*        <Ionicons name="return-up-forward" size={36} color="#3daad3"/>*/}
+            {/*    </Pressable>*/}
+            {/*</View>*/}
 
         </SafeAreaView>
     );

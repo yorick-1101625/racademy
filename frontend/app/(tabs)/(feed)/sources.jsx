@@ -1,5 +1,5 @@
 import {SafeAreaView} from 'react-native'
-import SourceList from "@/features/content/components/source/SourceList";
+import SourceList from "@/features/feed/components/source/SourceList";
 
 function Sources() {
 

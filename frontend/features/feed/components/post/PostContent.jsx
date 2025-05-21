@@ -1,5 +1,5 @@
 import {Text} from 'react-native';
-import truncate from "@/features/content/utils/truncate";
+import truncate from "@/features/feed/utils/truncate";
 
 function PostContent({ title, content }) {
     return (
