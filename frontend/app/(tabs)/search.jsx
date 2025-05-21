@@ -5,6 +5,7 @@ import SourceList from "@/features/feed/components/source/SourceList";
 import NoResults from "@/features/search/components/NoResults";
 import UserList from "@/features/search/components/user/UserList";
 import {Ionicons} from "@expo/vector-icons";
+import BottomModal from "@/components/BottomModal";
 
 const FILTERS = ["Posts", "Sources", "Users"];
 
@@ -106,39 +107,29 @@ const Search = () => {
                 )}
             </View>
 
-            <Modal
-                visible={filterModalVisible}
-                animationType="slide"
-                transparent={true}
-                onRequestClose={() => setFilterModalVisible(false)}
-            >
-                <View  className="flex-1 justify-end" style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}>
-                    <View className="bg-white p-6 rounded-t-2xl">
-                        <Text className="text-lg font-semibold mb-4">Sorteer op</Text>
+            <BottomModal state={[filterModalVisible, setFilterModalVisible]}>
+                <Text className="text-lg font-semibold mb-4">Sorteer op</Text>
+                {sortOptions.map(option => (
+                    <Pressable
+                        key={option.value}
+                        onPress={() => setSortBy(option.value)}
+                        className={`py-3 px-4 rounded-md mb-2 ${
+                            sortBy === option.value ? "bg-rac" : "bg-gray-200"
+                        }`}
+                    >
+                        <Text className={sortBy === option.value ? "text-white" : "text-black"}>
+                            {option.label}
+                        </Text>
+                    </Pressable>
+                ))}
 
-                        {sortOptions.map(option => (
-                            <Pressable
-                                key={option.value}
-                                onPress={() => setSortBy(option.value)}
-                                className={`py-3 px-4 rounded-md mb-2 ${
-                                    sortBy === option.value ? "bg-rac" : "bg-gray-200"
-                                }`}
-                            >
-                                <Text className={sortBy === option.value ? "text-white" : "text-black"}>
-                                    {option.label}
-                                </Text>
-                            </Pressable>
-                        ))}
-
-                        <Pressable
-                            onPress={() => setFilterModalVisible(false)}
-                            className="mt-4 bg-rac py-3 rounded-md"
-                        >
-                            <Text className="text-white text-center font-semibold">Toepassen</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
+                <Pressable
+                    onPress={() => setFilterModalVisible(false)}
+                    className="mt-4 bg-rac py-3 rounded-md"
+                >
+                    <Text className="text-white text-center font-semibold">Toepassen</Text>
+                </Pressable>
+            </BottomModal>
         </View>
     );
 };
