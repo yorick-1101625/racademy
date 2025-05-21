@@ -35,16 +35,16 @@ function CreateSource() {
 
     function handleSubmit() {
         // Validation
-        if (!title) {showError('Titel is verplicht.'); return;}
-        if (!schoolSubject) {showError('Vak is verplicht.'); return;}
-        if (!subject) {showError('Onderwerp is verplicht.'); return;}
-        if (!description) {showError('Beschrijving is verplicht.'); return;}
-        if (!difficulty) {showError('Moeilijkheid is verplicht.'); return;}
-        if (!sourceType) {showError('Brontype is verplicht.'); return;}
-        if (sourceType !== 'book' && !url) {showError('URL is verplicht.'); return;}
-        if (sourceType === 'book' && !isbn) {showError('ISBN is verplicht'); return;}
+        if (!(title.trim())) {showError('Titel is verplicht.'); return;}
+        if (!(schoolSubject.trim())) {showError('Vak is verplicht.'); return;}
+        if (!(subject.trim())) {showError('Onderwerp is verplicht.'); return;}
+        if (!(description.trim())) {showError('Beschrijving is verplicht.'); return;}
+        if (!(difficulty.trim())) {showError('Moeilijkheid is verplicht.'); return;}
+        if (!(sourceType.trim())) {showError('Brontype is verplicht.'); return;}
+        if (sourceType !== 'book' && !(url.trim())) {showError('URL is verplicht.'); return;}
+        if (sourceType === 'book' && !(isbn.trim())) {showError('ISBN is verplicht'); return;}
         if (sourceType === 'book' && !isISBN(isbn)) {showError('ISBN is niet geldig'); return;}
-        if (sourceType === 'book' && !image) {showError('Foto is verplicht'); return;}
+        if (sourceType === 'book' && !(image.trim())) {showError('Foto is verplicht'); return;}
         if (image && image.type !== 'image') {showError('Bestand moet een foto zijn.'); return;}
         if (sourceType === 'video' && url.slice(0, 23) !== 'https://www.youtube.com') {
             showError('URL moet op https://www.youtube.com/.... lijken'); return;

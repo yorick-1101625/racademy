@@ -1,10 +1,10 @@
-import {SafeAreaView, Text, View} from 'react-native';
-import Error from "@/components/Error";
+import {SafeAreaView, TextInput, View} from 'react-native';
 
 function CreatePost() {
     return (
         <SafeAreaView className="flex-1">
-            <Error />
+            <TextInput placeholder="Titel" />
+
         </SafeAreaView>
     );
 }
