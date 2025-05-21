@@ -31,7 +31,7 @@ function LoginForm() {
                 showError("Vul email in.");
                 return;
             }
-            if (!isHrMail()) {
+            if (!isHrMail(email)) {
                 showError("Email moet eindigen op @hr.nl.");
                 return;
             }
