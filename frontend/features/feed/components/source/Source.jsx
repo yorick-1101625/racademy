@@ -23,7 +23,7 @@ function Source({source}) {
 
     const averageRating = calculateAverageRating(source.ratings);
     return (
-        <View className="w-full bg-white p-4 border-t border-gray-200">
+        <View className="w-full bg-white p-4 border-t border-gray-200 relative">
 
             {/* Header */}
             <ContentAuthor
@@ -39,6 +39,7 @@ function Source({source}) {
                 image={source.image}
                 type={source.type}
                 url={source.url}
+                description={source.description}
             />
 
             {/* Timestamp */}

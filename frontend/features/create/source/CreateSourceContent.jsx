@@ -4,7 +4,7 @@ import {BASE_URL} from "@/utils/url";
 import FocusableImage from "@/components/FocusableImage";
 import truncate from "@/features/feed/utils/truncate";
 
-function SourceContent({title, image, type, url, description}) {
+function CreateSourceContent({title, image, type, url, description}) {
     return (
         <View className="px-2">
             {
@@ -20,7 +20,7 @@ function SourceContent({title, image, type, url, description}) {
                                 allowFullScreen={true}
                                 className="absolute top-0 left-0 bottom-0 right-0 rounded-md"
                             />
-                            <Text className="font-semibold text-lg text-neutral-900">{ title }</Text>
+                            <Text className="font-bold text-lg text-neutral-900">{ title }</Text>
                         </View>
                         <Text className="text-gray-500 text-s mt-2">{ truncate(description, 110) }</Text>
                     </>
@@ -43,8 +43,8 @@ function SourceContent({title, image, type, url, description}) {
                                 <View className="mt-2">
                                     <Image
                                         className="w-full h-20 rounded"
-                                         source={{ uri: `${BASE_URL}${image}`}}
-                                        resizeMode="contain"
+                                        source={image}
+                                        resizeMode="cover"
                                     />
                                 </View>
                             }
@@ -58,12 +58,7 @@ function SourceContent({title, image, type, url, description}) {
                 type === "book" && (
                     <>
                         <Text>{ title }</Text>
-                        {/*<FocusableImage*/}
-                        {/*    className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl border border-gray-200 rounded-md"*/}
-                        {/*    source={{ uri: `${BASE_URL}${image}`}}*/}
-                        {/*    resizeMode="contain"*/}
-                        {/*/>*/}
-                        <Image
+                        <FocusableImage
                             className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl border border-gray-200 rounded-md"
                             source={{ uri: `${BASE_URL}${image}`}}
                             resizeMode="contain"
@@ -75,4 +70,4 @@ function SourceContent({title, image, type, url, description}) {
     );
 }
 
-export default SourceContent;
+export default CreateSourceContent;

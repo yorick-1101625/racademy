@@ -11,7 +11,7 @@ export default function FocusableImage({ source, className="", resizeMode }) {
                 className={ className }
                 onPress={() => setFocus(true)}
             >
-                <Image source={ source } className="w-full h-full" resizeMode={ resizeMode }/>
+                <Image source={ source } className="h-full w-full" resizeMode={ resizeMode } />
             </Pressable>
 
             {
