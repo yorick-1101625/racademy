@@ -3,7 +3,6 @@ import {Image, Pressable, Text, View} from 'react-native';
 import calculateTimeFromToday from "@/features/feed/utils/calculateTimeFromToday";
 import formatRating from "@/features/feed/utils/formatRating";
 import {Ionicons} from "@expo/vector-icons";
-import StarIcon from "@/assets/icons/rating/star-full.png";
 
 function SourceDetails({createdAt, schoolSubject, subject, rating, isBookmarked, handleBookmark, isRated}) {
 
@@ -15,12 +14,6 @@ function SourceDetails({createdAt, schoolSubject, subject, rating, isBookmarked,
             </View>
 
             <View className="flex-row items-center justify-between mt-2 pr-2 w-32">
-                {/*{*/}
-                {/*    isNaN(rating) || <View className="flex-row items-center">*/}
-                {/*            <Text className="mr-1">{formatRating(rating)}</Text>*/}
-                {/*            <Image source={getRatingIcon(rating)}/>*/}
-                {/*        </View>*/}
-                {/*}*/}
                 <Pressable
                     className="flex-row items-center"
                 >
