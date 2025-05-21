@@ -21,7 +21,6 @@ function Source({source}) {
             });
     }
 
-    const averageRating = calculateAverageRating(source.ratings);
     return (
         <View className="w-full bg-white p-4 border-t border-gray-200 relative">
 
@@ -47,7 +46,7 @@ function Source({source}) {
                 createdAt={source['created_at']}
                 schoolSubject={source['school_subject']}
                 subject={source.subject}
-                rating={averageRating}
+                ratings={source.ratings}
                 handleBookmark={handleBookmark}
                 isBookmarked={isBookmarked}
                 isRated={source['rated_by_current_user']}
