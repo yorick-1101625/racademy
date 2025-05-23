@@ -168,9 +168,8 @@ def generate_dummy_data():
     for i in range(15):
         rating = Rating(
             rating=random.choice([10, 20, 30, 40, 50]),
-            content=f"Dit is rating {i}",
             user=random.choice(users),
-            source=random.choice(sources)
+            source=sources[i % len(sources)]
         )
         ratings.append(rating)
     db.session.add_all(ratings)

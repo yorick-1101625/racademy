@@ -126,7 +126,6 @@ class Source(BaseModel):
 
 class Rating(BaseModel):
     rating          = db.Column(db.Integer, nullable=False)
-    content         = db.Column(db.Text, nullable=False)
     created_at      = db.Column(db.DateTime, default=datetime.now)
 
     # rating >- user

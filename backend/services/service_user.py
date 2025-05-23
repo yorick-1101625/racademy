@@ -1,8 +1,8 @@
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from backend.models.models import User, Post, Source
+from backend.models.models import User, Post, Source, Rating
 from backend.database.db import db
 from backend.utils.validators import is_hr_mail
 
@@ -117,6 +117,37 @@ class UserService:
                     user.bookmarked_sources.remove(bookmarked_source)
                 else:
                     user.bookmarked_sources.append(bookmarked_source)
+
+            if data.get('rated_source'):
+                source_id = data.get('rated_source')
+
+                if data.get('rating'):
+                    rating = int(data.get('rating'))
+                    if rating not in [10,20,30,40,50]:
+                        return Exception("Invalid rating")
+
+                    current_rating = Rating.query.filter(
+                        and_(Rating.user_id==user_id, Rating.source_id==source_id)
+                    ).one_or_none()
+                    # Update rating
+                    if current_rating:
+                        current_rating.rating = rating
+
+                    # Create rating
+                    else:
+                        new_rating = Rating(
+                            rating=rating,
+                            source_id=source_id,
+                            user_id=user_id
+                        )
+                        db.session.add(new_rating)
+                else:
+                    deleted_rating = Rating.query.filter(
+                        and_(Rating.user_id==user_id, Rating.source_id==source_id)
+                    ).one_or_none()
+
+                    if deleted_rating:
+                        db.session.delete(deleted_rating)
 
             db.session.commit()
 

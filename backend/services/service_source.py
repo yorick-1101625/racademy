@@ -2,7 +2,7 @@ import base64
 import os
 from uuid import uuid4
 
-from sqlalchemy import asc, desc, or_
+from sqlalchemy import asc, desc, or_, and_
 from sqlalchemy.exc import SQLAlchemyError
 from flask import current_app
 
@@ -45,13 +45,19 @@ class SourceService:
         # Add user, number of comments, number of likes
         result = []
         for source in sources:
+            current_rating = Rating.query.filter(
+                and_(Rating.user_id == current_user_id, Rating.source_id == source.id)
+            ).one_or_none()
+            if current_rating:
+                current_rating = current_rating.rating
+
             user = source.user.to_dict()
             user.pop('password')
             source_dict = source.to_dict()
             source_dict['user'] = user
             source_dict['ratings'] = [rating.to_dict()['rating'] for rating in source.ratings]
             source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
-            source_dict['rated_by_current_user'] = source in [rating.source for rating in current_user.created_ratings]
+            source_dict['current_rating'] = current_rating
             result.append(source_dict)
 
 

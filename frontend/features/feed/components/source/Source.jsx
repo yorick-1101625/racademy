@@ -43,13 +43,14 @@ function Source({source}) {
 
             {/* Timestamp */}
             <SourceDetails
+                sourceId={source.id}
                 createdAt={source['created_at']}
                 schoolSubject={source['school_subject']}
                 subject={source.subject}
                 ratings={source.ratings}
                 handleBookmark={handleBookmark}
                 isBookmarked={isBookmarked}
-                isRated={source['rated_by_current_user']}
+                currentRating={source['current_rating']}
             />
 
         </View>

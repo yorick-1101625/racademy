@@ -6,15 +6,35 @@ import {Ionicons} from "@expo/vector-icons";
 import BottomModal from "@/components/BottomModal";
 import {useState} from "react";
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
+import fatty from "@/utils/fatty";
+import {showError, showSuccess} from "@/utils/toast";
 
-function SourceDetails({createdAt, schoolSubject, subject, ratings, isBookmarked, handleBookmark, isRated}) {
+function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, isBookmarked, handleBookmark, currentRating}) {
 
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [userRating, setUserRating] = useState(null);
-    const [_isRated, _setIsRated] = useState(isRated);
+    const [userRating, setUserRating] = useState(currentRating);
+    const [selectedRating, setSelectedRating] = useState(currentRating);
+
+    function handleRating(value) {
+        console.log(value)
+        fatty('/api/user/', "PATCH", {
+                "rated_source": sourceId,
+                "rating": value
+            })
+            .then(data => {
+                if (data.success) {
+                    setUserRating(value);
+                    showSuccess("Beoordeling aangepast.");
+                }
+                else {
+                    console.error(data.message);
+                    showError("Kon beoordeling niet aanpassen.");
+                }
+            })
+    }
 
     const totalRatings = ratings.slice() || [];
-    (userRating && _isRated) && totalRatings.push(userRating);
+    (userRating) && totalRatings.push(userRating);
     const averageRating = calculateAverageRating(totalRatings);
 
     return (
@@ -30,7 +50,7 @@ function SourceDetails({createdAt, schoolSubject, subject, ratings, isBookmarked
                         className="flex-row items-center"
                         onPress={() => setIsModalVisible(true)}
                     >
-                        <Ionicons name={_isRated ? 'star' : 'star-outline'} size={19} color={ _isRated ? '#ebc553' : 'gray'}/>
+                        <Ionicons name={userRating ? 'star' : 'star-outline'} size={19} color={ userRating ? '#ebc553' : 'gray'}/>
                         <Text className="ml-1">{isNaN(averageRating) ? '-' : formatRating(averageRating)}</Text>
                     </Pressable>
 
@@ -54,9 +74,9 @@ function SourceDetails({createdAt, schoolSubject, subject, ratings, isBookmarked
                         <Pressable
                             key={i}
                             className="mx-1"
-                            onPress={() => setUserRating(i)}
+                            onPress={() => setSelectedRating(i)}
                         >
-                            <Ionicons name={ userRating >= i ? 'star' : 'star-outline'} color={ userRating >= i ? '#ebc553' : 'gray'} size={36} />
+                            <Ionicons name={ selectedRating >= i ? 'star' : 'star-outline'} color={ selectedRating >= i ? '#ebc553' : 'gray'} size={36} />
                         </Pressable>
                     ))
                 }
@@ -67,10 +87,7 @@ function SourceDetails({createdAt, schoolSubject, subject, ratings, isBookmarked
                     <Pressable
                         className="flex-1 py-3 bg-gray-200 rounded-md"
                         onPress={() => {
-                            setUserRating(null);
-                            _setIsRated(false);
-                            setIsModalVisible(false);
-                        //     TODO: Send fetch to delete rating
+                            setSelectedRating(null);
                         }}
                     >
                         <Text className="text-center text-black font-semibold">Verwijderen</Text>
@@ -79,10 +96,7 @@ function SourceDetails({createdAt, schoolSubject, subject, ratings, isBookmarked
                     <Pressable
                         className="flex-1 py-3 bg-rac rounded-md"
                         onPress={() => {
-                            // TODO: send fetch to create rating
-                            if (userRating) {
-                                _setIsRated(true);
-                            }
+                            handleRating(selectedRating); // Create rating
                             setIsModalVisible(false);
                         }}
                     >
