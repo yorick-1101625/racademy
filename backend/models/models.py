@@ -63,7 +63,6 @@ class User(BaseModel):
 
 
 class Post(BaseModel):
-    title           = db.Column(db.String(255), nullable=False)
     content         = db.Column(db.Text, nullable=False)
     created_at      = db.Column(db.DateTime, default=datetime.now)
     updated_at      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
@@ -78,13 +77,15 @@ class Post(BaseModel):
     users_liked     = db.relationship('User', secondary='user_liked_post', back_populates='liked_posts')
     # posts >-< tags
     tags = db.relationship('Tag', secondary='post_tag', back_populates='posts')
+    # post - source
+    source_id = db.Column(db.Integer, db.ForeignKey('source.id'))
+    source = db.relationship('Source')
 
     def __repr__(self):
         return f"<Post(id={self.id}, name='{self.title}')>"
 
 
 class Comment(BaseModel):
-    title           = db.Column(db.String(255), nullable=False)
     content         = db.Column(db.Text, nullable=False)
     created_at      = db.Column(db.DateTime, default=datetime.now)
     updated_at      = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)

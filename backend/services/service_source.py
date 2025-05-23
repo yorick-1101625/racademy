@@ -66,7 +66,6 @@ class SourceService:
     @staticmethod
     def create_source(data, current_user_id):
         try:
-            print(data)
             # Validation
             if not data.get('type'):            return Exception('Must provide source type.')
             if not data.get('title'):           return Exception('Must provide title.')

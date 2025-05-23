@@ -1,4 +1,3 @@
-import fatty from "@/utils/fatty";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {BASE_URL} from "@/utils/url";
 

@@ -118,7 +118,6 @@ def generate_dummy_data():
     posts = []
     for i in range(20):
         post = Post(
-            title=f"Post Titel {i}",
             content=random.choice(sample_post_texts),
             created_at=datetime.now(),
             updated_at=datetime.now(),
@@ -132,7 +131,6 @@ def generate_dummy_data():
     comments = []
     for i in range(30):
         comment = Comment(
-            title=f"Comment {i}",
             content=f"Dit is een comment {i}.",
             user=random.choice(users),
             post=random.choice(posts)
@@ -165,11 +163,11 @@ def generate_dummy_data():
     db.session.commit()
 
     ratings = []
-    for i in range(15):
+    for i in range(len(sources)):
         rating = Rating(
             rating=random.choice([10, 20, 30, 40, 50]),
             user=random.choice(users),
-            source=sources[i % len(sources)]
+            source=sources[i]
         )
         ratings.append(rating)
     db.session.add_all(ratings)

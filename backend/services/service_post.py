@@ -2,7 +2,7 @@ from sqlalchemy import asc, desc, or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import aliased
 
-from backend.models.models import Post, User
+from backend.models.models import Post, User, Tag
 from backend.database.db import db
 
 
@@ -16,7 +16,6 @@ class PostService:
             search_term = f"%{search_term.lower()}%"
             query = query.filter(
                 or_(
-                    db.func.lower(Post.title).like(search_term),
                     db.func.lower(Post.content).like(search_term),
                     db.func.lower(User.username).like(search_term),
                     db.func.lower(User.email).like(search_term)
@@ -61,19 +60,30 @@ class PostService:
         return post.to_dict() if post else None
 
     @staticmethod
-    def create_post(data):
+    def create_post(data, current_user_id):
         try:
+            if not data.get('content'): return Exception("Must provide content")
+
+            # Create Tags
+            tags = []
+            for t in data.get('tags'):
+                tag = Tag(name=t.lower())
+                tags.append(tag)
+
             new_post = Post(
-                title=data.get('title'),
-                content=data.get('content')
+                content=data.get('content'),
+                user_id=current_user_id,
+                source_id=data.get('source_id'),
+                tags=tags
             )
+
             db.session.add(new_post)
             db.session.commit()
             return new_post.to_dict()
         except SQLAlchemyError as e:
             db.session.rollback()
             print(f"Error creating post: {e}")
-            return None
+            return Exception(f"Error creating post: {e}")
 
     @staticmethod
     def update_post(post_id, data):
@@ -81,7 +91,6 @@ class PostService:
         if not post:
             return None
         try:
-            post.title = data.get('title', post.title)
             post.content = data.get('content', post.content)
             db.session.commit()
             return post.to_dict()

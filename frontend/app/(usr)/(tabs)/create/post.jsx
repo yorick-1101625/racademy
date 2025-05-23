@@ -8,11 +8,12 @@ import {
 } from 'react-native';
 import MultilineTextInput from "@/components/MultilineTextInput";
 import {useState} from "react";
-import {showError} from "@/utils/toast";
+import {showError, showSuccess} from "@/utils/toast";
 import {Ionicons} from "@expo/vector-icons";
 import BottomModal from "@/components/BottomModal";
 import CompactSourceSelector from "@/features/create/post/CompactSourceSelector";
 import CompactSource from "@/features/create/post/CompactSource";
+import fatty from "@/utils/fatty";
 
 function CreatePost() {
 
@@ -38,24 +39,40 @@ function CreatePost() {
     }
 
     function handleSubmit() {
+        if (!(content.trim())) {
+            showError("Post mag niet leeg zijn.");
+            return
+        }
+
         // Split tags to array, remove empty strings, to lowercase, remove #
-        const formattedTags = tags
+        let formattedTags = tags
             .trim()
             .split(' ');
 
-        const hasInvalidTag = formattedTags.some(tag => tag[0] !== '#' || tag.length === 1);
+        const hasInvalidTag = formattedTags.some(tag => (tag[0] !== '#' && tag.length > 0) || tag.length === 1);
         if (hasInvalidTag) {
             showError("Tag kan niet leeg zijn.");
             return;
         }
 
-        formattedTags
-            .map(tag => tag.slice(1, -1))
-            .filter(tag => tag !== '');
+        formattedTags = formattedTags
+            .filter(tag => tag !== '')
+            .map(tag => (tag.replace("#", "")).toLowerCase());
 
-        console.log(formattedTags, '#dewfs'.slice(1,-1))
-
-        // TODO: backend
+        fatty('/api/post/', 'POST', {
+            content: content,
+            tags: formattedTags,
+            'source_id': linkedSource?.id
+        })
+            .then(data => {
+                if (data.success) {
+                    showSuccess("Post succesvol aangemaakt.");
+                }
+                else {
+                    console.error(data.message);
+                    showError("Er ging iets fout.");
+                }
+            })
     }
 
     return (
@@ -79,7 +96,7 @@ function CreatePost() {
                         linkedSource
                             ?   <CompactSource username={linkedSource.user.username} title={linkedSource.title} />
                             :   <View className="border-b border-gray-200">
-                                    <Text className="text-gray-600">Bron toevoegen</Text>
+                                    <Text className="text-gray-600 py-3">Bron toevoegen</Text>
                                 </View>
 
                     }
