@@ -1,12 +1,11 @@
 import '@/global.css'
-import UserOnly from "@/components/UserOnly";
 import {Tabs} from "expo-router";
 import {Feather, Ionicons} from "@expo/vector-icons";
 import {View} from "react-native";
 
 function TabsLayout() {
     return (
-        <UserOnly>
+        <>
             <Tabs
                 screenOptions={{
                     tabBarActiveTintColor: '#3daad3'
@@ -37,7 +36,7 @@ function TabsLayout() {
                     }}
                 />
             </Tabs>
-        </UserOnly>
+        </>
     );
 }
 

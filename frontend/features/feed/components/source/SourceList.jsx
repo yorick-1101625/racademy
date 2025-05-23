@@ -8,9 +8,12 @@ import React from "react";
 function SourceList({url = `/api/source/`}) {
     const {data: sources, isPending, error} = useFetch(url);
 
-    if (isPending) return <View className="flex-1 justify-center items-center">
-                            <ActivityIndicator size="large" color="#3daad3"/>
-                        </View>;
+    if (isPending) return (
+        <View className="flex-1 justify-center items-center">
+            <ActivityIndicator size="large" color="#3daad3"/>
+        </View>
+    );
+
     if (error) return <Error />;
 
     if (!sources || sources.length === 0) {

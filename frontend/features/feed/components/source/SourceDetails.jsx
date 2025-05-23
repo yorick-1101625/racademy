@@ -7,7 +7,7 @@ import BottomModal from "@/components/BottomModal";
 import {useState} from "react";
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
 import fatty from "@/utils/fatty";
-import {showError, showSuccess} from "@/utils/toast";
+import {showError} from "@/utils/toast";
 
 function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, isBookmarked, handleBookmark, currentRating}) {
 
@@ -24,7 +24,6 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
             .then(data => {
                 if (data.success) {
                     setUserRating(value);
-                    showSuccess("Beoordeling aangepast.");
                 }
                 else {
                     console.error(data.message);

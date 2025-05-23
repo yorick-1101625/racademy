@@ -7,6 +7,7 @@ import PostActions from "./PostActions";
 import ContentAuthor from "../ContentAuthor";
 import {Link} from "expo-router";
 import fatty from "@/utils/fatty";
+import {showError} from "@/utils/toast";
 
 function Post({post}) {
 
@@ -19,6 +20,10 @@ function Post({post}) {
                 if (data.success) {
                     setIsBookmarked(i => !i);
                 }
+                else {
+                    console.error(data.message)
+                    showError("Kon niet toevoegen aan favorieten");
+                }
             })
     }
 
@@ -26,10 +31,11 @@ function Post({post}) {
         <View className="w-full bg-white p-4 border-t border-gray-200">
 
             {/* Header */}
-            <ContentAuthor profilePicture={post.user['profile_picture']}
-                           username={post.user.username}
-                           email={post.user.email}
-                           userId={post.user.id}
+            <ContentAuthor
+                profilePicture={post.user['profile_picture']}
+                username={post.user.username}
+                email={post.user.email}
+                userId={post.user.id}
             />
 
             {/* Content */}
@@ -42,9 +48,10 @@ function Post({post}) {
                 <PostDetails createdAt={post['created_at']} tags={post.tags}/>
 
                 {/* Interaction buttons */}
-                <PostActions numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']}
-                             likedByCurrentUser={post['liked_by_current_user']} postId={post.id}
-                             handleBookmark={handleBookmark} isBookmarked={isBookmarked}
+                <PostActions
+                    numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']}
+                    likedByCurrentUser={post['liked_by_current_user']} postId={post.id}
+                    handleBookmark={handleBookmark} isBookmarked={isBookmarked}
                 />
             </View>
         </View>
