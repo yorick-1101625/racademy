@@ -3,6 +3,7 @@ import {Modal, Pressable, Text, View} from "react-native";
 import useUser from "@/hooks/useUser";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons";
 import React, {useState} from "react";
+import BottomModal from "@/components/BottomModal";
 
 function Settings() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -34,41 +35,31 @@ function Settings() {
                 </View>
             </View>
 
-            <Modal
-                visible={modalVisible}
-                animationType="slide"
-                transparent={true}
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View className="flex-1 justify-end bg-black bg-opacity-30">
-                    <View className="bg-white p-6 rounded-t-2xl">
-
-                        <View className="items-center mb-4">
-                            <MaterialIcons name="logout" size={64} color="#EF4444"/>
-                        </View>
-
-                        <Text className="text-lg font-semibold mb-6 text-center text-black">
-                            Weet je zeker dat je wilt uitloggen?
-                        </Text>
-
-                        <View className="flex-row justify-between space-x-3">
-                            <Pressable
-                                onPress={() => setModalVisible(false)}
-                                className="flex-1 py-3 bg-gray-200 rounded-md"
-                            >
-                                <Text className="text-center text-black font-semibold">Nee</Text>
-                            </Pressable>
-
-                            <Pressable
-                                onPress={handleLogout}
-                                className="flex-1 py-3 bg-red-600 rounded-md"
-                            >
-                                <Text className="text-center text-white font-semibold">Ja</Text>
-                            </Pressable>
-                        </View>
-                    </View>
+            <BottomModal state={[modalVisible, setModalVisible]}>
+                <View className="items-center mb-4">
+                    <MaterialIcons name="logout" size={64} color="#EF4444"/>
                 </View>
-            </Modal>
+
+                <Text className="text-lg font-semibold mb-6 text-center text-black">
+                    Weet je zeker dat je wilt uitloggen?
+                </Text>
+
+                <View className="flex-row justify-between space-x-3">
+                    <Pressable
+                        onPress={() => setModalVisible(false)}
+                        className="flex-1 py-3 bg-gray-200 rounded-md"
+                    >
+                        <Text className="text-center text-black font-semibold">Nee</Text>
+                    </Pressable>
+
+                    <Pressable
+                        onPress={handleLogout}
+                        className="flex-1 py-3 bg-red-600 rounded-md"
+                    >
+                        <Text className="text-center text-white font-semibold">Ja</Text>
+                    </Pressable>
+                </View>
+            </BottomModal>
         </>
     );
 }
