@@ -1,4 +1,5 @@
-import {Text, Image, View, Pressable} from 'react-native';
+import React from 'react';
+import {Text, Image, View, Pressable, Dimensions} from 'react-native';
 import { Linking } from 'react-native';
 import {BASE_URL} from "@/utils/url";
 import YoutubePlayer from 'react-native-youtube-iframe';

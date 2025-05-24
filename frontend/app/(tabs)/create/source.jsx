@@ -92,162 +92,81 @@ function CreateSource() {
 
             <TopTabs tabs={SOURCE_TYPES} state={[type, setType]} />
 
-            <View className="w-full p-4 border-b border-gray-200">
-                <ContentAuthor profilePicture={user['profile_picture']} username={user.username} email={user.email} userId={user.id}/>
-
-                <View className="px-2">
-                {
-                    type === "video" && (
-                        <>
-                            <TextInput
-                                className="font-semibold text-lg placeholder:text-neutral-500 placeholder:font-normal px-1"
-                                placeholder="Titel"
-                                onChangeText={setTitle}
-                            />
-                            <TextInput
-                                className="placeholder:text-neutral-500 p-1"
-                                placeholder="https://www.youtube.com/..."
-                            />
-                            {
-                                url &&
-                                <View className="relative min-h-40 max-h-96 max-w-2xl aspect-video z-50">
-                                    <iframe
-                                        width="100%"
-                                        height="100%"
-                                        src={`https://www.youtube.com/embed/${url.split('v=')[1]}`}
-                                        title={title}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen={true}
-                                        className="absolute top-0 left-0 bottom-0 right-0 rounded-md"
-                                    />
-                                </View>
-                            }
-                            <TextInput
-                                className="placeholder:text-gray-500 text-s mt-2 h-auto p-1"
-                                placeholder="Bescrijving"
-                                multiline={true}
-                                numberOfLines={0}
-                            />
-                            {/*TODO*/}
-                            <MultilineTextInput />
-                        </>
-                    )
-                }
-
-                {
-                    type === "link" && (
-                        <View className="max-w-2xl border border-gray-200 rounded-md overflow-hidden">
-                            <View className="p-3">
-                                <TextInput className="font-medium mt-1 placeholder:text-neutral-500" placeholder="Titel" />
-                                <TextInput className="text-gray-500 text-xs" placeholder="URL"/>
-                                {
-                                    image &&
-                                    <View className="mt-2">
-                                        <Image
-                                            className="w-full h-20 rounded"
-                                            source={image}
-                                            resizeMode="cover"
-                                        />
-                                    </View>
-                                }
-                                <TextInput className="text-gray-500 text-s mt-2" placeholder="Beschrijving" />
-                            </View>
-                        </View>
-                    )
-                }
-
-                {
-                    type === "book" && (
-                        <>
-                            <TextInput placeholder="Titel"/>
-                            <ImagePicker className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl border border-gray-200 rounded-md" state={[image, setImage]} />
-                            {/*<FocusableImage*/}
-                            {/*    className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl border border-gray-200 rounded-md"*/}
-                            {/*    source={{ uri: `${BASE_URL}${image}`}}*/}
-                            {/*    resizeMode="contain"*/}
-                            {/*/>*/}
-                        </>
-                    )
-                }
-                </View>
+            {/* Titel */}
+            <TextInput
+                className="border-b border-neutral-200 bg-white px-4 py-3 placeholder:text-neutral-600 outline-none"
+                placeholder="Titel"
+                onChangeText={setTitle}
+            />
+            <View className="flex-row bg-white">
+                <TextInput
+                    className="w-1/2 border-b border-r border-neutral-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                    placeholder="Vak"
+                    onChangeText={setSchoolSubject}
+                />
+                <TextInput
+                    className="w-1/2 border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                    placeholder="Onderwerp"
+                    onChangeText={setSubject}
+                />
             </View>
-            <View className="mt-20"/>
 
-            {/*/!* Titel *!/*/}
-            {/*<TextInput*/}
-            {/*    className="border-b border-neutral-200 bg-white px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
-            {/*    placeholder="Titel"*/}
-            {/*    onChangeText={setTitle}*/}
-            {/*/>*/}
-            {/*<View className="flex-row bg-white">*/}
-            {/*    <TextInput*/}
-            {/*        className="w-1/2 border-b border-r border-neutral-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
-            {/*        placeholder="Vak"*/}
-            {/*        onChangeText={setSchoolSubject}*/}
-            {/*    />*/}
-            {/*    <TextInput*/}
-            {/*        className="w-1/2 border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
-            {/*        placeholder="Onderwerp"*/}
-            {/*        onChangeText={setSubject}*/}
-            {/*    />*/}
-            {/*</View>*/}
+            <TextInput
+                className="h-32 border-b bg-white border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                placeholder="Beschrijving" multiline={true}
+                onChangeText={setDescription}
+            />
 
-            {/*<TextInput*/}
-            {/*    className="h-32 border-b bg-white border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
-            {/*    placeholder="Beschrijving" multiline={true}*/}
-            {/*    onChangeText={setDescription}*/}
-            {/*/>*/}
-
-            {/*/!* Difficulty *!/*/}
-            {/*<View className="flex-row h-14 border-b bg-white border-neutral-200">*/}
-            {/*    {*/}
-            {/*        DIFFICULTIES.map(item => (*/}
-            {/*            <Pressable*/}
-            {/*                className={`flex-1 justify-center items-center transition-colors duration-75 ${difficulty === item.value && 'bg-rac rounded-md'}`}*/}
-            {/*                onPress={() => setDifficulty(item.value)}*/}
-            {/*                key={item.value}*/}
-            {/*            >*/}
-            {/*                <Text className={`text-[0.9rem] transition-colors duration-75 ${difficulty === item.value ? 'text-white' : 'text-gray'} `}>{item.label}</Text>*/}
-            {/*            </Pressable>*/}
-            {/*        ))*/}
-            {/*    }*/}
-            {/*</View>*/}
+            {/* Difficulty */}
+            <View className="flex-row h-14 border-b bg-white border-neutral-200">
+                {
+                    DIFFICULTIES.map(item => (
+                        <Pressable
+                            className={`flex-1 justify-center items-center transition-colors duration-75 ${difficulty === item.value && 'bg-rac rounded-md'}`}
+                            onPress={() => setDifficulty(item.value)}
+                            key={item.value}
+                        >
+                            <Text className={`text-[0.9rem] transition-colors duration-75 ${difficulty === item.value ? 'text-white' : 'text-gray'} `}>{item.label}</Text>
+                        </Pressable>
+                    ))
+                }
+            </View>
 
 
 
-            {/*/!* URL *!/*/}
-            {/*{*/}
-            {/*    type !== 'book' && (*/}
-            {/*        <TextInput*/}
-            {/*            className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
-            {/*            placeholder={ type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...' }*/}
-            {/*            onChangeText={setUrl}*/}
-            {/*        />*/}
-            {/*    )*/}
-            {/*}*/}
+            {/* URL */}
+            {
+                type !== 'book' && (
+                    <TextInput
+                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                        placeholder={ type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...' }
+                        onChangeText={setUrl}
+                    />
+                )
+            }
 
-            {/*/!* ISBN *!/*/}
-            {/*{*/}
-            {/*    type === 'book' && (*/}
-            {/*        <TextInput*/}
-            {/*            className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"*/}
-            {/*            placeholder="ISBN"*/}
-            {/*            onChangeText={setIsbn}*/}
-            {/*        />*/}
-            {/*    )*/}
-            {/*}*/}
-            {/*{*/}
-            {/*    type !== 'video' ? <ImagePicker state={[image, setImage]} /> : <View className="flex-1" />*/}
-            {/*}*/}
+            {/* ISBN */}
+            {
+                type === 'book' && (
+                    <TextInput
+                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                        placeholder="ISBN"
+                        onChangeText={setIsbn}
+                    />
+                )
+            }
+            {
+                type !== 'video' ? <ImagePicker state={[image, setImage]} /> : <View className="flex-1" />
+            }
 
-            {/*<View className="w-full bg-white">*/}
-            {/*    <Pressable*/}
-            {/*        className="w-full h-14 items-center justify-center border-t border-neutral-300"*/}
-            {/*        onPress={() => handleSubmit()}*/}
-            {/*    >*/}
-            {/*        <Ionicons name="return-up-forward" size={36} color="#3daad3"/>*/}
-            {/*    </Pressable>*/}
-            {/*</View>*/}
+            <View className="w-full bg-white">
+                <Pressable
+                    className="w-full h-14 items-center justify-center border-t border-neutral-300"
+                    onPress={() => handleSubmit()}
+                >
+                    <Ionicons name="return-up-forward" size={36} color="#3daad3"/>
+                </Pressable>
+            </View>
 
         </SafeAreaView>
     );
