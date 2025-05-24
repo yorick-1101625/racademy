@@ -42,6 +42,7 @@ class SourceService:
 
         current_user = User.query.get(current_user_id)
         sources = query.all()
+
         # Add user, number of comments, number of likes
         result = []
         for source in sources:

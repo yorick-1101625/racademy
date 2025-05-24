@@ -116,7 +116,7 @@ def generate_dummy_data():
     ]
 
     posts = []
-    for i in range(20):
+    for i in range(30):
         post = Post(
             content=random.choice(sample_post_texts),
             created_at=datetime.now(),
@@ -140,7 +140,7 @@ def generate_dummy_data():
     db.session.commit()
 
     sources = []
-    for i in range(10):
+    for i in range(70):
         source = Source(
             type=random.choice(['video', 'article', 'book']),
             title=f"Bron {i}",

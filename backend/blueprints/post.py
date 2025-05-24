@@ -13,10 +13,15 @@ def get_posts():
     try:
         search_term = request.args.get('search')
         sort_by = request.args.get('sort')
+        offset = request.args.get('offset')
+        limit = request.args.get('limit')
+
         posts = PostService.get_all_posts(
             current_user_id=get_jwt_identity(),
             search_term=search_term,
-            sort_by=sort_by
+            sort_by=sort_by,
+            offset=offset,
+            limit=limit
         )
         return jsonify({
             "success": True,

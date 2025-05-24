@@ -1,12 +1,18 @@
 import {SafeAreaView} from 'react-native'
-import SourceList from "@/features/feed/components/source/SourceList";
+import InfiniteScrollList from "@/components/InfiniteScrollList";
+import Source from "@/features/feed/components/source/Source";
 
 function Sources() {
 
     return (
         <SafeAreaView className="flex-1 relative">
 
-            <SourceList />
+            <InfiniteScrollList
+                renderItem={({item}) => <Source source={item}/>}
+                url="/api/source"
+                params="sort=recent"
+                noResultsMessage="Geen bronnen gevonden..."
+            />
 
         </SafeAreaView>
     );

@@ -1,12 +1,18 @@
 import {SafeAreaView} from 'react-native';
-import PostList from "@/features/feed/components/post/PostList";
+import InfiniteScrollList from "@/components/InfiniteScrollList";
+import Post from "@/features/feed/components/post/Post";
 
 function Posts() {
-    return (
 
+    return (
         <SafeAreaView className="flex-1">
 
-            <PostList/>
+            <InfiniteScrollList
+                renderItem={({item}) => <Post post={item}/>}
+                url="/api/post"
+                params="sort=recent"
+                noResultsMessage="Geen posts gevonden..."
+            />
 
         </SafeAreaView>
     );

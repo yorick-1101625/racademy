@@ -40,7 +40,7 @@ function Post({post}) {
 
             {/* Content */}
             <Link href={`/posts/${post.id}`}>
-                <PostContent title={post.title} content={post.content}/>
+                <PostContent content={post.content}/>
             </Link>
 
             <View className="flex-row justify-between">

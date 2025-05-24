@@ -6,6 +6,10 @@ import NoResults from "@/features/search/components/NoResults";
 import UserList from "@/features/search/components/user/UserList";
 import {Ionicons} from "@expo/vector-icons";
 import BottomModal from "@/components/BottomModal";
+import InfiniteScrollList from "@/components/InfiniteScrollList";
+import Post from "@/features/feed/components/post/Post";
+import Source from "@/features/feed/components/source/Source";
+import User from "@/features/search/components/user/User";
 
 const FILTERS = ["Posts", "Sources", "Users"];
 
@@ -18,7 +22,9 @@ const Search = () => {
     const [filterModalVisible, setFilterModalVisible] = useState(false);
 
     const endpoint = filter === "Posts" ? "post" : filter === "Sources" ? "source" : "user";
-    const url = `/api/${endpoint}?search=${encodeURIComponent(query)}&sort=${sortBy}`;
+    // const url = `/api/${endpoint}?search=${encodeURIComponent(query)}&sort=${sortBy}`;
+    const url = `/api/${endpoint}`;
+    const params = `search=${encodeURIComponent(query)}&sort=${sortBy}`;
     const showResults = query.trim().length > 0;
 
     useEffect(() => {
@@ -95,13 +101,35 @@ const Search = () => {
                         <ActivityIndicator size="large" color="#3daad3"/>
                     </View>
                 ) : showResults ? (
-                    filter === "Posts" ? (
-                        <PostList url={url}/>
+                    filter === "Posts" ? ( // FIXME: crash when switching filter
+                        <InfiniteScrollList
+                            url={url}
+                            params={params}
+                            noResultsMessage={`Niets gevonden volgens je zoekopdracht.`}
+                            renderItem={
+                                ({item}) => <Post post={item} />
+                            }
+                        />
                     ) : filter === "Sources" ? (
-                        <SourceList url={url}/>
+                        <InfiniteScrollList
+                            url={url}
+                            params={params}
+                            noResultsMessage={`Niets gevonden volgens je zoekopdracht.`}
+                            renderItem={
+                                ({item}) => <Source source={item} />
+                            }
+                        />
                     ) : (
-                        <UserList url={url}/>
+                        <InfiniteScrollList
+                            url={url}
+                            params={params}
+                            noResultsMessage={`Niets gevonden volgens je zoekopdracht.`}
+                            renderItem={
+                                ({item}) => <User user={item} />
+                            }
+                        />
                     )
+
                 ) : (
                     <NoResults/>
                 )}
