@@ -92,7 +92,7 @@ const Search = () => {
             <View className="flex-1">
                 {isTyping ? (
                     <View className="flex-1 justify-center items-center">
-                        <ActivityIndicator size="large"/>
+                        <ActivityIndicator size="large" color="#3daad3"/>
                     </View>
                 ) : showResults ? (
                     filter === "Posts" ? (

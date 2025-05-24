@@ -11,6 +11,7 @@ import { Link } from 'expo-router';
 import useFetch from '../hooks/useFetch';
 import {BASE_URL} from "@/utils/url";
 import Error from "@/components/Error";
+import React from "react";
 
 export default function AdminDashboard() {
   const { width } = useWindowDimensions();
@@ -21,7 +22,9 @@ export default function AdminDashboard() {
   if (isPending) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator color="#3daad3" />
+        <View className="flex-1 justify-center items-center">
+            <ActivityIndicator size="large" color="#3daad3"/>
+        </View>;
         <Text>Loading users...</Text>
       </View>
     );
