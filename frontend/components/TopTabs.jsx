@@ -1,7 +1,6 @@
-import {Pressable, Text, View} from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 function TopTabs({ tabs, state }) {
-
     /*
     * Usage:
     * <TopTabs
@@ -13,24 +12,18 @@ function TopTabs({ tabs, state }) {
     const [_state, _setState] = state;
 
     return (
-        <View className="justify-around flex-row h-12 pt-0.5 shadow-sm shadow-gray-200 items-end">
-            {
-                tabs.map((tab) => (
-                     <Pressable
-                         key={tab.value}
-                         className="flex-1 justify-end h-full"
-                         onPress={() => _setState(tab.value)}
-                     >
-                         <View className="px-6">
-                            <Text
-                                className={`flex justify-center text-[1rem] text-gray text-center transition-all duration-75 h-9 box-border ${_state === tab.value && 'border-b-2 border-rac'}`}
-                            >
-                                {tab.label}
-                            </Text>
-                         </View>
-                    </Pressable>
-                ))
-            }
+        <View className="flex-row mt-4 mb-4">
+            {tabs.map((tab) => (
+                <Pressable
+                    key={tab.value}
+                    onPress={() => _setState(tab.value)}
+                    className={`px-3 py-2 rounded-md mr-2 ${_state === tab.value ? "bg-rac" : "bg-gray-200"}`}
+                >
+                    <Text className={_state === tab.value ? "text-white" : "text-black"}>
+                        {tab.label}
+                    </Text>
+                </Pressable>
+            ))}
         </View>
     );
 }

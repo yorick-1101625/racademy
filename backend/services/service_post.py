@@ -26,9 +26,7 @@ class PostService:
         # Joining twice on same model does not work? So have to use alias
         user = aliased(User)
 
-        if sort_by == 'recent':
-            query = query.order_by(Post.created_at.desc())
-        elif sort_by == 'likes':
+        if sort_by == 'likes':
             query = (
                 query.outerjoin(Post.users_liked.of_type(user))  # Outerjoin to show posts with 0 likes in results
                 .group_by(Post.id)
@@ -36,6 +34,8 @@ class PostService:
                     db.func.count(user.id).desc(),
                     Post.created_at.desc()
             ))
+        else:
+            query = query.order_by(Post.created_at.desc())
 
         query = query.offset(offset).limit(limit)
 

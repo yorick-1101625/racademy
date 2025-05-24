@@ -4,7 +4,7 @@ import {UserProvider} from "@/contexts/UserContext";
 import {Image} from "react-native";
 import Logo from "@/assets/logo.png"
 import CurrentUserProfilePicture from "@/components/CurrentUserProfilePicture";
-import {Feather, Ionicons} from "@expo/vector-icons";
+import {Ionicons} from "@expo/vector-icons";
 
 function RootLayout() {
 

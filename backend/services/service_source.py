@@ -28,9 +28,7 @@ class SourceService:
                 )
             )
 
-        if sort_by == 'recent':
-            query = query.order_by(Source.created_at.desc())
-        elif sort_by == 'rating':
+        if sort_by == 'rating':
             query = (
                 query.outerjoin(Source.ratings)
                 .group_by(Source.id)
@@ -38,6 +36,9 @@ class SourceService:
                     db.func.avg(Rating.rating).desc(), # Calculate average rating for a source
                     Source.created_at.desc()
                 ))
+        else:
+            query = query.order_by(Source.created_at.desc())
+
         query = query.offset(offset).limit(limit)
 
         current_user = User.query.get(current_user_id)

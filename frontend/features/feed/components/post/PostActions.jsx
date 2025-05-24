@@ -27,9 +27,9 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
 
     return (
         <View className="">
-            <View className="flex-row justify-between mt-4 px-2 w-52">
+            <View className="flex-row justify-start mt-4 w-52">
                 <Pressable
-                    className="flex-row items-center"
+                    className="flex-row items-center mr-8"
                 >
                     <Ionicons name="chatbubble-outline" size={19} color="gray"/>
                     <Text className="ml-1 text-sm text-gray-600">
@@ -39,7 +39,7 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
 
                 <Pressable
                     onPress={handleLike}
-                    className="flex-row items-center"
+                    className="flex-row items-center mr-8"
                 >
                     <Ionicons
                         name={isLiked ? "heart" : "heart-outline"}
@@ -53,7 +53,7 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
 
                 <Pressable
                     onPress={handleBookmark}
-                    className="flex-row items-center"
+                    className="flex-row items-center mr-8"
                 >
                     <Ionicons
                         name={isBookmarked ? "bookmark" : "bookmark-outline"}

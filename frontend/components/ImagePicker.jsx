@@ -34,11 +34,12 @@ export default function ImagePicker({ state, className = "" }) {
                 >
                     <Image source={{ uri: image.uri }} className="w-full h-full" resizeMode="contain"/>
                 </Pressable>
-            :   <Pressable
+            :
+                <Pressable
                     onPress={pickImage}
-                    className="flex-1 justify-center items-center"
+                    className="flex-1 justify-center items-center rounded-lg border-2 border-dashed border-gray-300 p-8"
                 >
-                    <Ionicons name="images" size={36} color="#3daad3" />
+                    <Ionicons name="images-outline" size={48} color="#3daad3" />
                 </Pressable>
             }
 
