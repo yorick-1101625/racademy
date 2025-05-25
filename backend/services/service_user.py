@@ -1,3 +1,6 @@
+import os
+import uuid
+import base64
 from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -24,7 +27,6 @@ class UserService:
             )
 
         query = query.offset(offset).limit(limit)
-
         users = query.all()
         users = [user.to_dict() for user in users]
         for user in users:
@@ -39,24 +41,20 @@ class UserService:
             user.pop("password", None)
         return user if user else None
 
-    # TODO: Implement register instead of create_user
     @staticmethod
     def create_user(data):
         try:
-            # Check if email contains @hr.nl
             email = data.get("email").lower()
             if not is_hr_mail(email):
                 return Exception("Must provide a valid email address")
-            # Check if email already exists
+
             if User.query.filter_by(email=email).one_or_none() is not None:
                 return Exception("Email already exists")
 
             if not data.get("password"):
                 return Exception("Must provide a valid password")
 
-            # Make username the student-number inside the email
             username = email.split('@')[0]
-
             hashed_password = generate_password_hash(data.get("password"))
 
             new_user = User(
@@ -81,7 +79,6 @@ class UserService:
 
         if not user:
             return Exception("User does not exist")
-
         if not check_password_hash(user.password, password):
             return Exception("Invalid password")
 
@@ -93,6 +90,26 @@ class UserService:
         if not user:
             return None
         try:
+
+            image_data = data.get('image')
+            if image_data and 'base64' in image_data and 'mime_type' in image_data:
+                base64_str = image_data['base64']
+                mime_type = image_data['mime_type']
+                ext = 'jpg' if mime_type == 'image/jpeg' else 'png' if mime_type == 'image/png' else 'jpg'
+
+                image_bytes = base64.b64decode(base64_str)
+                filename = f"{uuid.uuid4()}.{ext}"
+                project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+                save_dir = os.path.join(project_root, 'static', 'user_images', 'profile_pictures')
+
+                os.makedirs(save_dir, exist_ok=True)
+
+                file_path = os.path.join(save_dir, filename)
+                with open(file_path, 'wb') as f:
+                    f.write(image_bytes)
+
+                user.profile_picture = f"/static/user_images/profile_pictures/{filename}"
+
             user.email = data.get('email', user.email)
             user.username = data.get('username', user.username)
             user.study = data.get('study', user.study)
