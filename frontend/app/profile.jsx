@@ -1,37 +1,51 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, Image, ActivityIndicator, ScrollView, Pressable } from 'react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import useFetch from '../hooks/useFetch';
-import useUser from "@/hooks/useUser";
-import {BASE_URL} from "@/utils/url";
-import Error from "@/components/Error";
+import useUser from '../hooks/useUser';
+import { BASE_URL } from '../utils/url';
+import Error from '../components/Error';
+import Post from '../features/feed/components/post/Post';
+import Source from '../features/feed/components/source/Source';
+import TopTabs from '../components/TopTabs';
 
 export default function Profile() {
-  const { user } = useUser;
-  const { data: users, isPending, error } = useFetch('/api/user/');
-  const { data: posts } = useFetch('/api/post');
+  const { user } = useUser();
+  const { id: userIdParam } = useLocalSearchParams();
+  const userId = userIdParam || (user ? user.id : null);
+  const router = useRouter();
+
+  const { data: currentUser, isPending, error } = useFetch(userId ? `/api/user/${userId}` : null);
+  const { data: posts } = useFetch(userId ? `/api/post?user_id=${userId}` : null);
+  const { data: sources } = useFetch(userId ? `/api/source?user_id=${userId}` : null);
   const [activeTab, setActiveTab] = useState('favorieten');
 
-  if (!user) return <Text className="text-center mt-10">Niet ingelogd.</Text>;
-  if (isPending) return <View className="flex-1 justify-center items-center">
-                            <ActivityIndicator size="large" color="#3daad3"/>
-                        </View>;
+  if (!userId) return <Text className="text-center mt-10">Geen gebruiker geselecteerd.</Text>;
+  if (isPending) return <ActivityIndicator className="mt-10" color="#3daad3" />;
   if (error) return <Error />;
 
-  const currentUser = users?.find(u => u.id === user.id);
-  const userPosts = posts?.filter(p => p.user_id === user.id) || [];
+  const userPosts = posts || [];
+  const userSources = sources || [];
 
-  if (!currentUser) return <Error title="Gebruiker niet gevonden." message=""/>;
+  if (!currentUser) return <Text className="text-center mt-10">Gebruiker niet gevonden.</Text>;
+
+  const tabs = [
+    { value: 'favorieten', label: 'Favorieten' },
+    { value: 'likes', label: 'Likes' },
+    { value: 'bronnen', label: 'Bronnen' },
+    { value: 'posts', label: 'Posts' },
+  ];
 
   return (
     <ScrollView className="p-6">
-      {/* Bewerken knop */}
       <View className="items-end mb-2">
-        <Pressable onPress={() => {}}>
-          <Text className="text-blue-500 font-medium">Bewerk profiel</Text>
-        </Pressable>
+        {user && user.id === currentUser.id && (
+          <Pressable onPress={() => router.push('/profile/edit')}>
+            <Text className="text-blue-500 font-medium">Bewerk profiel</Text>
+          </Pressable>
+        )}
       </View>
 
-      {/* Gebruikersinfo */}
       <View className="items-center mb-6">
         <Image
           source={{ uri: `${BASE_URL}${currentUser.profile_picture}` }}
@@ -39,23 +53,11 @@ export default function Profile() {
         />
         <Text className="text-xl font-bold">{currentUser.username || 'Naam onbekend'}</Text>
         <Text className="text-gray-600 text-sm">{currentUser.study || 'Studie onbekend'}</Text>
-        <Text className="text-sm mt-1">{userPosts.length} posts</Text>
+        <Text className="text-sm mt-1">{userPosts.length} posts | {userSources.length} bronnen</Text>
       </View>
 
-      {/* Tabs */}
-      <View className="flex-row justify-around mt-4">
-        {['favorieten', 'likes', 'bronnen', 'posts'].map(tab => (
-          <Text
-            key={tab}
-            onPress={() => setActiveTab(tab)}
-            className={`font-semibold capitalize ${activeTab === tab ? 'text-blue-600' : 'text-gray-500'}`}
-          >
-            {tab}
-          </Text>
-        ))}
-      </View>
+      <TopTabs tabs={tabs} state={[activeTab, setActiveTab]} />
 
-      {/* Tab Content */}
       <View className="mt-6">
         {activeTab === 'favorieten' && (
           <Text className="text-center text-gray-400">[Favorieten komen hier]</Text>
@@ -64,15 +66,21 @@ export default function Profile() {
           <Text className="text-center text-gray-400">[Likes komen hier]</Text>
         )}
         {activeTab === 'bronnen' && (
-          <Text className="text-center text-gray-400">[Bronnen komen hier]</Text>
+          <>
+            {userSources.length > 0 ? (
+              userSources.map(source => (
+                <Source key={source.id} source={source} />
+              ))
+            ) : (
+              <Text className="text-center text-gray-400">Geen bronnen gevonden</Text>
+            )}
+          </>
         )}
         {activeTab === 'posts' && (
           <>
             {userPosts.length > 0 ? (
               userPosts.map(post => (
-                <Text key={post.id} className="text-center mb-2">
-                  {post.title}
-                </Text>
+                <Post key={post.id} post={post} />
               ))
             ) : (
               <Text className="text-center text-gray-400">Geen posts gevonden</Text>
