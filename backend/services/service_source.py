@@ -33,7 +33,7 @@ class SourceService:
                 query.outerjoin(Source.ratings)
                 .group_by(Source.id)
                 .order_by(
-                    db.func.avg(Rating.rating).desc(), # Calculate average rating for a source
+                    db.func.avg(Rating.rating).desc(),  # Calculate average rating for a source
                     Source.created_at.desc()
                 ))
         else:
@@ -53,6 +53,10 @@ class SourceService:
             result.append(source_dict)
 
         return result
+
+    @staticmethod
+    def get_source_by_id(source_id):
+        return Source.query.get(source_id)
 
     @staticmethod
     def create_source(data, current_user_id):
@@ -114,3 +118,18 @@ class SourceService:
             print(f"Error creating post: {e}")
             db.session.rollback()
             return None
+
+
+    @staticmethod
+    def delete_source(source_id):
+        source = Source.query.get(source_id)
+        if not source:
+            return False
+        try:
+            db.session.delete(source)
+            db.session.commit()
+            return True
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            print(f"Error deleting source: {e}")
+            return False

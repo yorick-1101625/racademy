@@ -50,6 +50,8 @@ function Source({source}) {
                 rating={averageRating}
                 handleBookmark={handleBookmark}
                 isBookmarked={isBookmarked}
+                sourceUserId={source.user.id}
+                sourceId={source.id}
             />
 
         </View>
