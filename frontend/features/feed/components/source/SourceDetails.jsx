@@ -33,7 +33,7 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
     }
 
     const totalRatings = ratings.slice() || [];
-    (userRating) && totalRatings.push(userRating);
+    (userRating && !currentRating) && totalRatings.push(userRating);
     const averageRating = calculateAverageRating(totalRatings);
 
     return (
