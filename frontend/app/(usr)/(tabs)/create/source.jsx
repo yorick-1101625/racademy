@@ -12,6 +12,7 @@ import truncate from "@/features/feed/utils/truncate";
 import FocusableImage from "@/components/FocusableImage";
 import MultilineTextInput from "@/components/MultilineTextInput";
 import {router} from "expo-router";
+import Error from "@/components/Error";
 
 const SOURCE_TYPES = [
     {value: 'video', label: 'Video'},
@@ -27,8 +28,6 @@ const DIFFICULTIES = [
 ]
 
 function CreateSource() {
-
-    const { user } = useUser();
 
     // Form States
     const [type, setType] = useState('video');
@@ -119,76 +118,73 @@ function CreateSource() {
     }
 
     return (
-        <SafeAreaView className="flex-1 h-screen  bg-white">
-            <View className="flex-1" />
-                <ScrollView contentContainerClassName="p-4">
-                    <TopTabs tabs={SOURCE_TYPES} state={[type, setType]} />
+        <SafeAreaView className="flex-1 h-screen bg-white">
+            <ScrollView contentContainerClassName="p-4">
+                <TopTabs tabs={SOURCE_TYPES} state={[type, setType]} />
 
-                    <TextInput
-                        autoFocus={true}
-                        className="border-b border-neutral-200 bg-white px-4 py-3 placeholder:text-neutral-500 outline-none"
-                        placeholder="Titel"
-                        onChangeText={setTitle}
-                    />
+                <TextInput
+                    className="border-b border-neutral-200 bg-white px-4 py-3 placeholder:text-neutral-500 outline-none"
+                    placeholder="Titel"
+                    onChangeText={setTitle}
+                />
 
-                    <TextInput
-                        className="border-b border-neutral-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                        placeholder="Vak"
-                        onChangeText={setSchoolSubject}
-                    />
+                <TextInput
+                    className="border-b border-neutral-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                    placeholder="Vak"
+                    onChangeText={setSchoolSubject}
+                />
 
-                    <TextInput
-                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                        placeholder="Onderwerp"
-                        onChangeText={setSubject}
-                    />
+                <TextInput
+                    className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                    placeholder="Onderwerp"
+                    onChangeText={setSubject}
+                />
 
-                    <TextInput
-                        className="h-32 border-b bg-white border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                        placeholder="Beschrijving" multiline={true}
-                        onChangeText={setDescription}
-                    />
+                <TextInput
+                    className="h-32 border-b bg-white border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                    placeholder="Beschrijving" multiline={true}
+                    onChangeText={setDescription}
+                />
 
-                    <View className="flex-row mt-4 mb-4">
-                        <TopTabs tabs={DIFFICULTIES} state={[difficulty, setDifficulty]} />
-                    </View>
+                <View className="flex-row mt-4 mb-4">
+                    <TopTabs tabs={DIFFICULTIES} state={[difficulty, setDifficulty]} />
+                </View>
 
-                    {/* URL */}
-                    {
-                        type !== 'book' && (
-                            <TextInput
-                                className="border-b border-neutral-200 px-4 py-3 mb-4 placeholder:text-neutral-600 outline-none"
-                                placeholder={type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...'}
-                                onChangeText={setUrl}
-                            />
-                        )
-                    }
+                {/* URL */}
+                {
+                    type !== 'book' && (
+                        <TextInput
+                            className="border-b border-neutral-200 px-4 py-3 mb-4 placeholder:text-neutral-600 outline-none"
+                            placeholder={type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...'}
+                            onChangeText={setUrl}
+                        />
+                    )
+                }
 
-                    {/* ISBN */}
-                    {
-                        type === 'book' && (
-                            <TextInput
-                                className="border-b border-neutral-200 px-4 py-3 mb-4 placeholder:text-neutral-600 outline-none"
-                                placeholder="ISBN"
-                                onChangeText={setIsbn}
-                            />
-                        )
-                    }
-                    {
-                        type !== 'video' ? <ImagePicker state={[image, setImage]}/> : <View className="flex-1"/>
-                    }
+                {/* ISBN */}
+                {
+                    type === 'book' && (
+                        <TextInput
+                            className="border-b border-neutral-200 px-4 py-3 mb-4 placeholder:text-neutral-600 outline-none"
+                            placeholder="ISBN"
+                            onChangeText={setIsbn}
+                        />
+                    )
+                }
+                {
+                    type !== 'video' ? <ImagePicker state={[image, setImage]}/> : <View className="flex-1"/>
+                }
 
-                    <View className="w-full bg-white">
-                        <Pressable
-                            className="w-full h-14 items-center justify-center"
-                            onPress={() => handleSubmit()}
-                        >
-                            <Ionicons name="return-up-forward" size={36} color="#3daad3"/>
-                        </Pressable>
-                    </View>
+                <View className="w-full bg-white">
+                    <Pressable
+                        className="w-full h-14 items-center justify-center"
+                        onPress={() => handleSubmit()}
+                    >
+                        <Ionicons name="return-up-forward" size={36} color="#3daad3"/>
+                    </Pressable>
+                </View>
 
-                </ScrollView>
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }

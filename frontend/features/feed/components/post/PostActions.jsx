@@ -130,7 +130,7 @@ function PostActions({
                     </Pressable>
                 </View>
             </BottomModal>
-        </>
+        </View>
     );
 }
 
