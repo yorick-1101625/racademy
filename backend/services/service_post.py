@@ -9,7 +9,7 @@ from backend.database.db import db
 class PostService:
 
     @staticmethod
-    def get_all_posts(current_user_id, search_term=None, sort_by='recent', offset=0, limit=None):
+    def get_all_posts(current_user_id, search_term=None, user_id=None, sort_by='recent', offset=0, limit=None):
         query = db.session.query(Post).join(Post.user)
 
         if search_term:
@@ -23,17 +23,20 @@ class PostService:
                 )
             )
 
-        # Joining twice on same model does not work? So have to use alias
-        user = aliased(User)
+        if user_id:
+            query = query.filter(Post.user_id == user_id)
+
+        user_alias = aliased(User)
 
         if sort_by == 'likes':
             query = (
-                query.outerjoin(Post.users_liked.of_type(user))  # Outerjoin to show posts with 0 likes in results
+                query.outerjoin(Post.users_liked.of_type(user_alias))
                 .group_by(Post.id)
                 .order_by(
-                    db.func.count(user.id).desc(),
+                    db.func.count(user_alias.id).desc(),
                     Post.created_at.desc()
-            ))
+                )
+            )
         else:
             query = query.order_by(Post.created_at.desc())
 
@@ -41,7 +44,6 @@ class PostService:
 
         current_user = User.query.get(current_user_id)
         posts = query.all()
-        # Add user, number of comments, number of likes, liked by current user
         result = []
         for post in posts:
             post_dict = post.to_dict()
