@@ -46,6 +46,7 @@ function SourceContent({title, image, type, url, description}) {
                         onPress={() => Linking.openURL(url)}
                     >
                         <View className="p-3">
+                            <Text className="text-gray-500 text-xs">{url}</Text>
                             <Text className="text-black font-medium mt-1" numberOfLines={2}>
                                 {title}
                             </Text>

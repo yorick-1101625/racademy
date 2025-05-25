@@ -1,4 +1,4 @@
-import {Image, Pressable, SafeAreaView, Text, TextInput, View} from 'react-native';
+import {Image, Linking, Pressable, SafeAreaView, Text, TextInput, View} from 'react-native';
 import {useState} from "react";
 import TopTabs from "@/components/TopTabs";
 import ImagePicker from "@/components/ImagePicker";
@@ -92,86 +92,6 @@ function CreateSource() {
 
             <TopTabs tabs={SOURCE_TYPES} state={[type, setType]} />
 
-            <View className="w-full p-4 border-b border-gray-200">
-                <ContentAuthor profilePicture={user['profile_picture']} username={user.username} email={user.email} userId={user.id}/>
-
-                <View className="px-2">
-                {
-                    type === "video" && (
-                        <>
-                            <TextInput
-                                className="font-semibold text-lg placeholder:text-neutral-500 placeholder:font-normal px-1"
-                                placeholder="Titel"
-                                onChangeText={setTitle}
-                            />
-                            <TextInput
-                                className="placeholder:text-neutral-500 p-1"
-                                placeholder="https://www.youtube.com/..."
-                            />
-                            {
-                                url &&
-                                <View className="relative min-h-40 max-h-96 max-w-2xl aspect-video z-50">
-                                    <iframe
-                                        width="100%"
-                                        height="100%"
-                                        src={`https://www.youtube.com/embed/${url.split('v=')[1]}`}
-                                        title={title}
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen={true}
-                                        className="absolute top-0 left-0 bottom-0 right-0 rounded-md"
-                                    />
-                                </View>
-                            }
-                            <TextInput
-                                className="placeholder:text-gray-500 text-s mt-2 h-auto p-1"
-                                placeholder="Bescrijving"
-                                multiline={true}
-                                numberOfLines={0}
-                            />
-                            {/*TODO*/}
-                            <MultilineTextInput />
-                        </>
-                    )
-                }
-
-                {
-                    type === "link" && (
-                        <View className="max-w-2xl border border-gray-200 rounded-md overflow-hidden">
-                            <View className="p-3">
-                                <TextInput className="font-medium mt-1 placeholder:text-neutral-500" placeholder="Titel" />
-                                <TextInput className="text-gray-500 text-xs" placeholder="URL"/>
-                                {
-                                    image &&
-                                    <View className="mt-2">
-                                        <Image
-                                            className="w-full h-20 rounded"
-                                            source={image}
-                                            resizeMode="cover"
-                                        />
-                                    </View>
-                                }
-                                <TextInput className="text-gray-500 text-s mt-2" placeholder="Beschrijving" />
-                            </View>
-                        </View>
-                    )
-                }
-
-                {
-                    type === "book" && (
-                        <>
-                            <TextInput placeholder="Titel"/>
-                            <ImagePicker className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl border border-gray-200 rounded-md" state={[image, setImage]} />
-                            {/*<FocusableImage*/}
-                            {/*    className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl border border-gray-200 rounded-md"*/}
-                            {/*    source={{ uri: `${BASE_URL}${image}`}}*/}
-                            {/*    resizeMode="contain"*/}
-                            {/*/>*/}
-                        </>
-                    )
-                }
-                </View>
-            </View>
-
             {/* Titel */}
             <TextInput
                 className="border-b border-neutral-200 bg-white px-4 py-3 placeholder:text-neutral-600 outline-none"
@@ -238,8 +158,6 @@ function CreateSource() {
             {
                 type !== 'video' ? <ImagePicker state={[image, setImage]} /> : <View className="flex-1" />
             }
-
-            <View className="flex-1" />
 
             <View className="w-full bg-white">
                 <Pressable

@@ -75,18 +75,16 @@ class SourceService:
             if not data.get('subject'):         return Exception('Must provide subject.')
             if not data.get('difficulty'):      return Exception('Must provide difficulty.')
 
-            if data.get('type') == 'book' and data.get('isbn') is None:
-                return Exception('Must provide ISBN when type is book')
-
-            if data.get('type') != 'book' and data.get('url') is None:
-                return Exception('Must provide URL')
-
-            if data.get('type') == 'book' and data.get('image') is None:
-                return Exception('Must provide image when type is book')
-
-
-            if data.get('type') == 'book' and not is_isbn(data.get('isbn')):
-                return Exception('Invalid ISBN')
+            if data.get('type') == 'book':
+                if not data.get('isbn'):
+                    return Exception('Must provide ISBN when type is book')
+                if not is_isbn(data.get('isbn')):
+                    return Exception('Invalid ISBN')
+                if data.get('image') is None:
+                    return Exception('Must provide image when type is book')
+            else:
+                if not data.get('url'):
+                    return Exception('Must provide URL')
 
             new_source = Source(
                 type=data.get('type'),
