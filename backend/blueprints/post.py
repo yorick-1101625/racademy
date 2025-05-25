@@ -111,7 +111,7 @@ def update_post(post_id):
 def delete_post(post_id):
     try:
         post = PostService.get_post_by_id(post_id)
-        if post.user.id != get_jwt_identity():  # And user not admin
+        if post.user.id != int(get_jwt_identity()):  # And user not admin
             return {
                 "success": False,
                 "message": "You are not authorized to delete this post"

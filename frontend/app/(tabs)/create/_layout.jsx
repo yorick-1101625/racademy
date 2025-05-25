@@ -11,7 +11,8 @@ function TabsLayout() {
         <>
             <MaterialTopTabs id="1" screenOptions={{
                     tabBarLabelStyle: { textTransform: 'capitalize', fontSize: 16 },
-                    tabBarIndicatorStyle: { backgroundColor: '#3daad3' }
+                    tabBarIndicatorStyle: { backgroundColor: '#3daad3' },
+                    tabBarStyle: { zIndex: 99 }
                 }}
             >
                 <MaterialTopTabs.Screen name="post" />

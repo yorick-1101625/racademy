@@ -21,9 +21,10 @@ function SourceContent({title, image, type, url, description}) {
     return (
         <View className="px-2">
             {
+                // Aspect ratio for 16:9 video
                 type === "video" && (
                     <>
-                        <View className="relative min-h-40 max-h-96 max-w-2xl aspect-video z-50">  {/* Aspect ratio for 16:9 video */}
+                        <View className="relative min-h-40 max-h-96 max-w-2xl aspect-video z-50">
                             <YoutubePlayer
                                 height={playerHeight}
                                 width={playerWidth}

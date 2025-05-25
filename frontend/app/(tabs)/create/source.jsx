@@ -1,4 +1,4 @@
-import {Image, Linking, Pressable, SafeAreaView, Text, TextInput, View} from 'react-native';
+import {Pressable, SafeAreaView, ScrollView, Text, TextInput, View} from 'react-native';
 import {useState} from "react";
 import TopTabs from "@/components/TopTabs";
 import ImagePicker from "@/components/ImagePicker";
@@ -6,30 +6,29 @@ import {Ionicons} from "@expo/vector-icons";
 import fatty from "@/utils/fatty";
 import {showError, showSuccess} from "@/utils/toast";
 import {isISBN} from "@/utils/validators";
-import ContentAuthor from "@/features/feed/components/ContentAuthor";
 import useUser from "@/hooks/useUser";
 import CreateSourceContent from "@/features/create/source/CreateSourceContent";
 import truncate from "@/features/feed/utils/truncate";
 import FocusableImage from "@/components/FocusableImage";
-import {BASE_URL} from "@/utils/url";
 import MultilineTextInput from "@/components/MultilineTextInput";
+import {router} from "expo-router";
 
 const SOURCE_TYPES = [
-    {value: 'video',    label: 'Video'},
-    {value: 'book',     label: 'Boek'},
-    {value: 'link',  label: 'Link'}
+    {value: 'video', label: 'Video'},
+    {value: 'book', label: 'Boek'},
+    {value: 'link', label: 'Link'}
 ]
 
 const DIFFICULTIES = [
-    {value: 'easy',     label: 'Beginner'},
-    {value: 'medium',   label: 'Gemiddeld'},
-    {value: 'hard',     label: 'Gevorderd'},
-    {value: 'expert',   label: 'Professional'}
+    {value: 'easy', label: 'Beginner'},
+    {value: 'medium', label: 'Gemiddeld'},
+    {value: 'hard', label: 'Gevorderd'},
+    {value: 'expert', label: 'Professional'}
 ]
 
 function CreateSource() {
 
-    const { user } = useUser();
+    const {user} = useUser();
 
     // Form States
     const [type, setType] = useState('video');
@@ -44,24 +43,58 @@ function CreateSource() {
 
     function handleSubmit() {
         // Validation
-        if (!title) {showError('Titel is verplicht.'); return;}
-        if (!schoolSubject) {showError('Vak is verplicht.'); return;}
-        if (!subject) {showError('Onderwerp is verplicht.'); return;}
-        if (!description) {showError('Beschrijving is verplicht.'); return;}
-        if (!difficulty) {showError('Moeilijkheid is verplicht.'); return;}
-        if (!type) {showError('Brontype is verplicht.'); return;}
-        if (type !== 'book' && !url) {showError('URL is verplicht.'); return;}
-        if (type === 'book' && !isbn) {showError('ISBN is verplicht'); return;}
-        if (type === 'book' && !isISBN(isbn)) {showError('ISBN is niet geldig.'); return;}
-        if (type === 'book' && !image) {showError('Foto is verplicht bij boeken.'); return;}
-        if (image && image.type !== 'image') {showError('Bestand moet een foto zijn.'); return;}
-        if (type === 'video' && url.slice(0, 23) !== 'https://www.youtube.com') {
-            showError('URL moet op https://www.youtube.com/.... lijken'); return;
+        if (!title) {
+            showError('Titel is verplicht.');
+            return;
         }
-        const imageData = ( image ? {
+        if (!schoolSubject) {
+            showError('Vak is verplicht.');
+            return;
+        }
+        if (!subject) {
+            showError('Onderwerp is verplicht.');
+            return;
+        }
+        if (!description) {
+            showError('Beschrijving is verplicht.');
+            return;
+        }
+        if (!difficulty) {
+            showError('Moeilijkheid is verplicht.');
+            return;
+        }
+        if (!type) {
+            showError('Brontype is verplicht.');
+            return;
+        }
+        if (type !== 'book' && !url) {
+            showError('URL is verplicht.');
+            return;
+        }
+        if (type === 'book' && !isbn) {
+            showError('ISBN is verplicht');
+            return;
+        }
+        if (type === 'book' && !isISBN(isbn)) {
+            showError('ISBN is niet geldig.');
+            return;
+        }
+        if (type === 'book' && !image) {
+            showError('Foto is verplicht bij boeken.');
+            return;
+        }
+        if (image && image.type !== 'image') {
+            showError('Bestand moet een foto zijn.');
+            return;
+        }
+        if (type === 'video' && url.slice(0, 23) !== 'https://www.youtube.com') {
+            showError('URL moet op https://www.youtube.com/.... lijken');
+            return;
+        }
+        const imageData = (image ? {
             base64: image.base64,
             'mime_type': image.mimeType,
-        } : null );
+        } : null);
 
         fatty('/api/source/', 'POST', {
             'school_subject': schoolSubject,
@@ -77,8 +110,7 @@ function CreateSource() {
             .then(data => {
                 if (data.success) {
                     showSuccess('Bron succesvol aangemaakt!');
-                }
-                else {
+                } else {
                     console.error(data.message);
                     showError('Er is iets misgegaan.');
                 }
@@ -86,88 +118,88 @@ function CreateSource() {
     }
 
 
-
     return (
-        <SafeAreaView className="flex-1 h-screen relative bg-white">
+        <SafeAreaView className="flex-1 bg-white">
+            <View className="flex-1">
+                <ScrollView contentContainerClassName="p-4">
 
-            <TopTabs tabs={SOURCE_TYPES} state={[type, setType]} />
+                    <TopTabs tabs={SOURCE_TYPES} state={[type, setType]}/>
 
-            {/* Titel */}
-            <TextInput
-                className="border-b border-neutral-200 bg-white px-4 py-3 placeholder:text-neutral-600 outline-none"
-                placeholder="Titel"
-                onChangeText={setTitle}
-            />
-            <View className="flex-row bg-white">
-                <TextInput
-                    className="w-1/2 border-b border-r border-neutral-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                    placeholder="Vak"
-                    onChangeText={setSchoolSubject}
-                />
-                <TextInput
-                    className="w-1/2 border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                    placeholder="Onderwerp"
-                    onChangeText={setSubject}
-                />
-            </View>
+                    <TextInput
+                        autoFocus={true}
+                        className="border-b border-neutral-200 bg-white px-4 py-3 placeholder:text-neutral-500 outline-none"
+                        placeholder="Titel"
+                        onChangeText={setTitle}
+                    />
 
-            <TextInput
-                className="h-32 border-b bg-white border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                placeholder="Beschrijving" multiline={true}
-                onChangeText={setDescription}
-            />
+                    <TextInput
+                        className="border-b border-neutral-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                        placeholder="Vak"
+                        onChangeText={setSchoolSubject}
+                    />
 
-            {/* Difficulty */}
-            <View className="flex-row h-14 border-b bg-white border-neutral-200">
-                {
-                    DIFFICULTIES.map(item => (
+                    <TextInput
+                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                        placeholder="Onderwerp"
+                        onChangeText={setSubject}
+                    />
+
+                    <TextInput
+                        className="h-32 border-b bg-white border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                        placeholder="Beschrijving" multiline={true}
+                        onChangeText={setDescription}
+                    />
+
+                    <View className="flex-row mt-4 mb-4">
+                        {DIFFICULTIES.map((item) => (
+                            <Pressable
+                                key={item.value}
+                                onPress={() => setDifficulty(item.value)}
+                                className={`px-3 py-2 rounded-md mr-2 ${difficulty === item.value ? "bg-rac" : "bg-gray-200"}`}
+                            >
+                                <Text className={difficulty === item.value ? "text-white" : "text-black"}>
+                                    {item.label}
+                                </Text>
+                            </Pressable>
+                        ))}
+                    </View>
+
+                    {/* URL */}
+                    {
+                        type !== 'book' && (
+                            <TextInput
+                                className="border-b border-neutral-200 px-4 py-3 mb-4 placeholder:text-neutral-600 outline-none"
+                                placeholder={type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...'}
+                                onChangeText={setUrl}
+                            />
+                        )
+                    }
+
+                    {/* ISBN */}
+                    {
+                        type === 'book' && (
+                            <TextInput
+                                className="border-b border-neutral-200 px-4 py-3 mb-4 placeholder:text-neutral-600 outline-none"
+                                placeholder="ISBN"
+                                onChangeText={setIsbn}
+                            />
+                        )
+                    }
+                    {
+                        type !== 'video' ? <ImagePicker state={[image, setImage]}/> : <View className="flex-1"/>
+                    }
+
+                    <View className="w-full bg-white">
                         <Pressable
-                            className={`flex-1 justify-center items-center transition-colors duration-75 ${difficulty === item.value && 'bg-rac rounded-md'}`}
-                            onPress={() => setDifficulty(item.value)}
-                            key={item.value}
+                            className="w-full h-14 items-center justify-center"
+                            onPress={() => handleSubmit()}
                         >
-                            <Text className={`text-[0.9rem] transition-colors duration-75 ${difficulty === item.value ? 'text-white' : 'text-gray'} `}>{item.label}</Text>
+                            <Ionicons name="return-up-forward" size={36} color="#3daad3"/>
                         </Pressable>
-                    ))
-                }
+                    </View>
+
+                </ScrollView>
             </View>
-
-
-
-            {/* URL */}
-            {
-                type !== 'book' && (
-                    <TextInput
-                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                        placeholder={ type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...' }
-                        onChangeText={setUrl}
-                    />
-                )
-            }
-
-            {/* ISBN */}
-            {
-                type === 'book' && (
-                    <TextInput
-                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
-                        placeholder="ISBN"
-                        onChangeText={setIsbn}
-                    />
-                )
-            }
-            {
-                type !== 'video' ? <ImagePicker state={[image, setImage]} /> : <View className="flex-1" />
-            }
-
-            <View className="w-full bg-white">
-                <Pressable
-                    className="w-full h-14 items-center justify-center border-t border-neutral-300"
-                    onPress={() => handleSubmit()}
-                >
-                    <Ionicons name="return-up-forward" size={36} color="#3daad3"/>
-                </Pressable>
-            </View>
-
         </SafeAreaView>
     );
 }

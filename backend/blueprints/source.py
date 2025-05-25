@@ -55,3 +55,34 @@ def create_source():
             "success": False,
             "message": "An unexpected error occurred."
         }, 500
+
+
+@api_source.route("/<source_id>", methods=["DELETE"])
+def delete_source(source_id):
+    try:
+        source = SourceService.get_source_by_id(source_id)
+        if source.user.id != int(get_jwt_identity()):  # And user not admin
+            return {
+                "success": False,
+                "message": "You are not authorized to delete this source"
+            }, 401
+
+        deleted_source = SourceService.delete_source(source_id)
+        if deleted_source:
+            return {
+                "success": True,
+                "data": deleted_source
+            }, 200
+        else:
+            return {
+                "success": False,
+                "message": f"Source with ID {source_id} not found or already deleted."
+            }, 404
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[delete_source] Unexpected error: {e}")
+        return {
+            "success": False,
+            "message": "An unexpected error occurred."
+        }, 500
