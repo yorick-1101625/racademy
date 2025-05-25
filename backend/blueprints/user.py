@@ -79,7 +79,7 @@ def register_user():
 
 
 @api_user.route("/", methods=["PATCH"])
-def update_post():
+def update_user():
     data = request.get_json()
     try:
         user_id = get_jwt_identity()
@@ -107,6 +107,7 @@ def update_post():
 @api_user.route("/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     try:
+        # If user not blocked...
         if user_id != get_jwt_identity(): # And not admin
             return {
                 "success": False,

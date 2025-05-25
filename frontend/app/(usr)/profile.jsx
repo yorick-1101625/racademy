@@ -58,6 +58,7 @@ export default function Profile() {
 
       <TopTabs tabs={tabs} state={[activeTab, setActiveTab]} />
 
+      {/* Tab Content */}
       <View className="mt-6">
         {activeTab === 'favorieten' && (
           <Text className="text-center text-gray-400">[Favorieten komen hier]</Text>

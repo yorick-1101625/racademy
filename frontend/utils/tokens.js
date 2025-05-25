@@ -1,16 +1,15 @@
-import fatty from "@/utils/fatty";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {BASE_URL} from "@/utils/url";
 
 export async function refreshToken() {
     try {
         // const data = await fatty('/api/auth/refresh', 'POST', undefined, true);
-        const accessToken = await AsyncStorage.getItem('access');
+        const refreshToken = await AsyncStorage.getItem('refresh');
         const data = await fetch(`${BASE_URL}/api/auth/refresh`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`,
+                'Authorization': `Bearer ${refreshToken}`,
             }
         }).then(res => res.json());
 

@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Image } from 'react-native';
 import { Link } from 'expo-router';
-import useFetch from '../hooks/useFetch';
+import useFetch from '../../hooks/useFetch';
 import {BASE_URL} from "@/utils/url";
 import Error from "@/components/Error";
 import React from "react";

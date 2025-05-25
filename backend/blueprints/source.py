@@ -13,11 +13,16 @@ def get_sources():
         search_term = request.args.get('search')
         sort_by = request.args.get('sort')
         user_id = request.args.get('user_id')
+        offset = request.args.get('offset')
+        limit = request.args.get('limit')
+
         sources = SourceService.get_all_sources(
             current_user_id=get_jwt_identity(),
             search_term=search_term,
-            user_id=user_id,
-            sort_by=sort_by
+            sort_by=sort_by,
+            offset=offset,
+            limit=limit,
+            user_id=user_id
         )
 
         return {

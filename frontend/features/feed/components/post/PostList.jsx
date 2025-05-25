@@ -5,7 +5,7 @@ import NoResults from "@/features/search/components/NoResults";
 import Error from "@/components/Error"
 import React from "react";
 
-function PostList({url = `/api/post/`}) {
+function PostList({url = `/api/post?sort=recent`}) {
 
     const {data: posts, isPending, error} = useFetch(url);
 
