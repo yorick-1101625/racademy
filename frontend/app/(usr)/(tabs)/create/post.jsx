@@ -90,7 +90,7 @@ function CreatePost() {
                 />
                 <Pressable
                     onPress={() => setIsModalVisible(true)}
-                    className="bg-white px-4"
+                    className="bg-white px-4 py-2"
                 >
                     {
                         linkedSource

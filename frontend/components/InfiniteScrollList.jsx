@@ -12,14 +12,15 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
     const [error, setError] = useState(null);
     const [listEnded, setListEnded] = useState(false);
 
-    url = `${url}?${params}&offset=${currentOffset}&limit=10`;
+    const limit = 10;
+    url = `${url}?${params}&offset=${currentOffset}&limit=${limit}`;
 
     useEffect(() => {
-        if (currentOffset === 0) {
-            setCurrentOffset('0'); // TODO: find fix?
+        if (currentOffset !== 0) {
+            setCurrentOffset(0); // Clear offset when params such as queries change
         }
         else {
-            setCurrentOffset(0); // Clear offset when params such as queries change
+            getData();
         }
     }, [params]);
 
@@ -28,18 +29,18 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
     }, [currentOffset]);
 
     function getData() {
-        console.log('fetch', currentOffset)
+        setIsPending(true);
         fatty(url)
             .then(data => {
                 if (data.success) {
-                    if (currentOffset === 0 || currentOffset === '0') {
+                    if (currentOffset === 0) {
                         setData(data.data);
                     }
                     else {
                         setData(d => [...d, ...data.data]);
                     }
 
-                    if (data.data.length === 0) {
+                    if (data.data.length < limit) {
                         setListEnded(true);
                     }
                     else {
@@ -50,20 +51,15 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
                     setError(data.message);
                 }
             })
-            .catch(err => {
-                setError(err);
-            })
-            .finally(() => {
-                setIsPending(false);
-            });
+            .catch(err => setError(err))
+            .finally(() => setIsPending(false));
     }
 
     function handleItemLoading() {
-        setCurrentOffset(c => parseInt(c) + 10); //TODO: find fix?
-
+        setCurrentOffset(c => c + 10);
     }
 
-    if (isPending) return (
+    if (isPending && (!data || data.length === 0)) return (
         <View className="flex-1 justify-center items-center">
             <ActivityIndicator size="large" color="#3daad3"/>
         </View>
@@ -72,7 +68,8 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
     if (error) return <Error />;
 
     if (!data || data.length === 0) return <NoResults message={noResultsMessage}/>
-    console.log(data)
+
+
     return (
         data &&
         <FlatList
@@ -80,7 +77,7 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
             data={data}
             keyExtractor={item => item.id.toString()}
             renderItem={renderItem}
-            ListFooterComponent={listEnded ? <></> : <ActivityIndicator className="my-5" size="large" color="#3daad3" />}
+            ListFooterComponent={listEnded ? <></> : <ActivityIndicator className="py-3" size="large" color="#3daad3" />}
             onEndReached={handleItemLoading}
             onEndReachedThreshold={0}
         />

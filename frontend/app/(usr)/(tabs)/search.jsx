@@ -82,6 +82,7 @@ const Search = () => {
                                 key={item}
                                 onPress={() => {
                                     setFilter(item);
+                                    setQuery("");
                                 }}
                                 className={`px-3 py-2 rounded-md mr-2 ${isActive ? "bg-rac" : "bg-gray-200"}`}
                             >
@@ -101,11 +102,12 @@ const Search = () => {
                         <ActivityIndicator size="large" color="#3daad3"/>
                     </View>
                 ) : showResults ? (
-                    filter === "Posts" ? ( // FIXME: crash when switching filter
+
+                    filter === "Posts" ? (
                         <InfiniteScrollList
                             url={url}
                             params={params}
-                            noResultsMessage={`Niets gevonden volgens je zoekopdracht.`}
+                            noResultsMessage={`Geen posts gevonden volgens je zoekopdracht.`}
                             renderItem={
                                 ({item}) => <Post post={item} />
                             }
@@ -114,7 +116,7 @@ const Search = () => {
                         <InfiniteScrollList
                             url={url}
                             params={params}
-                            noResultsMessage={`Niets gevonden volgens je zoekopdracht.`}
+                            noResultsMessage={`Geen bronnen gevonden volgens je zoekopdracht.`}
                             renderItem={
                                 ({item}) => <Source source={item} />
                             }
@@ -123,7 +125,7 @@ const Search = () => {
                         <InfiniteScrollList
                             url={url}
                             params={params}
-                            noResultsMessage={`Niets gevonden volgens je zoekopdracht.`}
+                            noResultsMessage={`Geen gebruikers gevonden volgens je zoekopdracht.`}
                             renderItem={
                                 ({item}) => <User user={item} />
                             }
