@@ -55,9 +55,24 @@ function PostActions({
 
     return (
         <View className="items-end">
-            <View className="flex-row justify-between mt-4 px-2 w-52">
+            <View className="flex-row justify-end mt-4 px-2">
+                {
+                        postUserId === userId
+                    ?   <Pressable
+                            onPress={handleDelete}
+                            className="flex-row items-center"
+                        >
+                            <Ionicons
+                                name="trash-outline" size={19} color="gray"
+                                onPress={() => setModalVisible(true)}
+                            />
+                        </Pressable>
+
+                    : null
+                }
+
                 <Pressable
-                    className="flex-row items-center"
+                    className="flex-row items-center ml-8"
                 >
                     <Ionicons name="chatbubble-outline" size={19} color="gray"/>
                     <Text className="ml-1 text-sm text-gray-600">
@@ -67,7 +82,7 @@ function PostActions({
 
                 <Pressable
                     onPress={handleLike}
-                    className="flex-row items-center"
+                    className="flex-row items-center ml-8"
                 >
                     <Ionicons
                         name={isLiked ? "heart" : "heart-outline"}
@@ -81,27 +96,13 @@ function PostActions({
 
                 <Pressable
                     onPress={handleBookmark}
-                    className="flex-row items-center"
+                    className="flex-row items-center ml-8"
                 >
                     <Ionicons
                         name={isBookmarked ? "bookmark" : "bookmark-outline"}
                         size={19}
                         color={isBookmarked ? "#3daad3" : "gray"}
                     />
-                </Pressable>
-
-                <Pressable
-                    onPress={handleDelete}
-                    className="flex-row items-center mr-8"
-                >
-                    {
-                        postUserId === userId
-                            ?   <Ionicons
-                                    name="trash-outline" size={19} color="gray"
-                                    onPress={() => setModalVisible(true)}
-                                />
-                            : null
-                    }
                 </Pressable>
             </View>
 

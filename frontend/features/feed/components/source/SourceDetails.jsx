@@ -63,13 +63,17 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
                     <Text className="text-xs text-gray-500">{schoolSubject}: {subject}</Text>
                 </View>
 
-                <View className="flex-row items-center justify-between mt-2 pr-2 w-32">
+                <View className="flex-row items-center justify-end mt-2 pr-2">
                     {
-                        sourceUserId === user.id ?
-                            <Ionicons name="trash-outline" size={19} color="gray" onPress={() => setModalVisible(true)}/> : null
+                        sourceUserId === user.id
+                            ?   <Ionicons
+                                    name="trash-outline" size={19} color="gray"
+                                    onPress={() => setDeleteModalVisible(true)}
+                                />
+                            :   null
                     }
                     <Pressable
-                        className="flex-row items-center"
+                        className="flex-row items-center ml-8"
                         onPress={() => setRatingModalVisible(true)}
                     >
                         <Ionicons name={userRating ? 'star' : 'star-outline'} size={19} color={ userRating ? '#ebc553' : 'gray'}/>
@@ -78,7 +82,7 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
 
                     <Pressable
                         onPress={handleBookmark}
-                        className="flex-row items-center"
+                        className="flex-row items-center ml-8"
                     >
                         <Ionicons
                             name={isBookmarked ? "bookmark" : "bookmark-outline"}

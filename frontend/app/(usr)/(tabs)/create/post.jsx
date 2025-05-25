@@ -7,7 +7,7 @@ import {
     View
 } from 'react-native';
 import MultilineTextInput from "@/components/MultilineTextInput";
-import {useState} from "react";
+import React, {useState} from "react";
 import {showError, showSuccess} from "@/utils/toast";
 import {Ionicons} from "@expo/vector-icons";
 import BottomModal from "@/components/BottomModal";
@@ -117,7 +117,7 @@ function CreatePost() {
                     <TextInput
                         placeholder="Bron zoeken..."
                         autoFocus
-                        className="mt-12 p-4 bg-gray-200 rounded-full placeholder:text-gray-600"
+                        className="mt-12 border border-gray-300 focus:border-rac outline-none px-4 py-3 rounded-lg placeholder:text-gray-600"
                         onChangeText={setQuery}
                     />
 
