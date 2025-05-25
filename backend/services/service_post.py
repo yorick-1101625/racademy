@@ -57,8 +57,7 @@ class PostService:
 
     @staticmethod
     def get_post_by_id(post_id):
-        post = Post.query.get(post_id)
-        return post.to_dict() if post else None
+        return Post.query.get(post_id)
 
     @staticmethod
     def create_post(data):
