@@ -1,12 +1,22 @@
 import {useRef, useState} from "react";
 import {Pressable, Text, View} from 'react-native';
 
-import {Feather, Ionicons} from "@expo/vector-icons";
+import {Ionicons} from "@expo/vector-icons";
 
 import fatty from "@/utils/fatty";
-import AntDesign from "@expo/vector-icons/AntDesign";
+import {showError, showSuccess} from "@/utils/toast";
+import BottomModal from "@/components/BottomModal";
+import useUser from "@/hooks/useUser";
 
-function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postId, isBookmarked, handleBookmark}) {
+function PostActions({
+    numberOfComments,
+    numberOfLikes,
+    likedByCurrentUser,
+    postId,
+    isBookmarked,
+    handleBookmark,
+    postUserId
+}) {
 
     const [isLiked, setIsLiked] = useState(likedByCurrentUser);
     const numberOfLikesRef = useRef(numberOfLikes);
@@ -21,6 +31,24 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
 
                     setIsLiked(i => !i);
                 }
+            });
+    }
+
+    const {user} = useUser();
+    const userId = user.id;
+
+    const [modalVisible, setModalVisible] = useState(false);
+
+    function handleDelete() {
+
+        fatty(`/api/post/${postId}`, 'DELETE', {id: postId})
+            .then(data => {
+                if (data.success) {
+                    showSuccess("Post is verwijderd")
+                } else if (!data.success) {
+                    showError("Er ging iets mis")
+                }
+                setModalVisible(false);
             });
     }
 
@@ -61,8 +89,48 @@ function PostActions({numberOfComments, numberOfLikes, likedByCurrentUser, postI
                         color={isBookmarked ? "#3daad3" : "gray"}
                     />
                 </Pressable>
+
+                <Pressable
+                    onPress={handleDelete}
+                    className="flex-row items-center mr-8"
+                >
+                    {
+                        postUserId === userId
+                            ?   <Ionicons
+                                    name="trash-outline" size={19} color="gray"
+                                    onPress={() => setModalVisible(true)}
+                                />
+                            : null
+                    }
+                </Pressable>
             </View>
-        </View>
+
+            <BottomModal state={[modalVisible, setModalVisible]}>
+                <View className="items-center mb-4">
+                    <Ionicons name="trash-bin" size={64} color="#EF4444"/>
+                </View>
+
+                <Text className="text-lg font-semibold mb-6 text-center text-black">
+                    Weet je zeker dat je deze post wilt verwijderen?
+                </Text>
+
+                <View className="flex-row justify-between space-x-3">
+                    <Pressable
+                        onPress={() => setModalVisible(false)}
+                        className="flex-1 py-3 bg-gray-200 rounded-md"
+                    >
+                        <Text className="text-center text-black font-semibold">Annuleren</Text>
+                    </Pressable>
+
+                    <Pressable
+                        onPress={handleDelete}
+                        className="flex-1 py-3 bg-red-600 rounded-md"
+                    >
+                        <Text className="text-center text-white font-semibold">Verwijderen</Text>
+                    </Pressable>
+                </View>
+            </BottomModal>
+        </>
     );
 }
 

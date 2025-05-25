@@ -51,6 +51,7 @@ function Source({source}) {
                 handleBookmark={handleBookmark}
                 isBookmarked={isBookmarked}
                 currentRating={source['current_rating']}
+                sourceUserId={source.user.id}
             />
 
         </View>

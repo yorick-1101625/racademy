@@ -70,8 +70,8 @@ class Post(BaseModel):
     # post >- user
     user_id         = db.Column(db.ForeignKey('user.id'), nullable=False)
     user            = db.relationship('User', back_populates='created_posts')
-    # post -< comments
-    comments        = db.relationship('Comment', back_populates='post')
+    # post -< comments                                                  Delete all comments when post gets deleted
+    comments        = db.relationship('Comment', back_populates='post', cascade='all, delete-orphan', passive_deletes=True)
     # posts >-< users
     users_bookmarked  = db.relationship('User', secondary='user_bookmarked_post', back_populates='bookmarked_posts')
     users_liked     = db.relationship('User', secondary='user_liked_post', back_populates='liked_posts')
@@ -94,7 +94,8 @@ class Comment(BaseModel):
     user_id         = db.Column(db.ForeignKey('user.id'), nullable=False)
     user            = db.relationship('User', back_populates='comments')
     # comment >- post
-    post_id         = db.Column(db.ForeignKey('post.id'), nullable=False)
+    # post_id         = db.Column(db.ForeignKey('post.id'), nullable=False, ondelete='CASCADE')
+    post_id         = db.Column(db.Integer,db.ForeignKey('post.id', ondelete='CASCADE'),nullable=False)
     post            = db.relationship('Post', back_populates='comments')
 
     def __repr__(self):

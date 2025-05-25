@@ -19,8 +19,9 @@ function SourceContent({title, image, type, url, description}) {
             {
                 type === "video" &&
                     <>
-                        <View
-                            className="relative min-h-40 max-h-96 max-w-2xl aspect-video z-50 rounded-md overflow-hidden">
+                        <View className="
+                            relative min-h-40 max-h-96 max-w-2xl aspect-video z-50 rounded-md overflow-hidden
+                        ">
                             <YoutubePlayer
                                 height="100%"
                                 width="100%"
@@ -34,10 +35,8 @@ function SourceContent({title, image, type, url, description}) {
                         </View>
                          {/*<Text className="font-semibold text-md text-neutral-900">{ title }</Text>*/}
                         <Text className="text-gray-500 text-s mt-2">{ truncate(description, 110) }</Text>
-
                     </>
             }
-
 
             {
                 type === "article" && (
@@ -76,7 +75,6 @@ function SourceContent({title, image, type, url, description}) {
                             resizeMode="contain"
                         />
                         <Text className="text-gray-500 text-s mt-2">{ truncate(description, 110) }</Text>
-
                     </>
                 )
             }

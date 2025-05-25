@@ -52,6 +52,7 @@ function Post({post}) {
                     numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']}
                     likedByCurrentUser={post['liked_by_current_user']} postId={post.id}
                     handleBookmark={handleBookmark} isBookmarked={isBookmarked}
+                    postUserId={post.user.id}
                 />
             </View>
         </View>

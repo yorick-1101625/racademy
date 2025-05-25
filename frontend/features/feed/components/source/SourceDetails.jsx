@@ -7,16 +7,20 @@ import BottomModal from "@/components/BottomModal";
 import {useState} from "react";
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
 import fatty from "@/utils/fatty";
-import {showError} from "@/utils/toast";
+import {showError, showSuccess} from "@/utils/toast";
+import useUser from "@/hooks/useUser";
 
-function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, isBookmarked, handleBookmark, currentRating}) {
+function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, isBookmarked, handleBookmark, currentRating, sourceUserId}) {
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const {user} = useUser();
+
+    const [ratingModalVisible, setRatingModalVisible] = useState(false);
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [userRating, setUserRating] = useState(currentRating);
     const [selectedRating, setSelectedRating] = useState(currentRating);
 
     function handleRating(value) {
-        console.log(value)
+
         fatty('/api/user/', "PATCH", {
                 "rated_source": sourceId,
                 "rating": value
@@ -36,6 +40,21 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
     (userRating && !currentRating) && totalRatings.push(userRating);
     const averageRating = calculateAverageRating(totalRatings);
 
+
+    function handleDelete() {
+
+        fatty(`/api/source/${sourceId}`, 'DELETE', {id: sourceId})
+            .then(data => {
+                if (data.success) {
+                    showSuccess("Bron is verwijderd")
+                } else if (!data.success) {
+                    showError("Er ging iets mis")
+                }
+                setDeleteModalVisible(false);
+
+            });
+    }
+
     return (
         <>
             <View className="flex-row justify-between">
@@ -45,9 +64,13 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
                 </View>
 
                 <View className="flex-row items-center justify-between mt-2 pr-2 w-32">
+                    {
+                        sourceUserId === user.id ?
+                            <Ionicons name="trash-outline" size={19} color="gray" onPress={() => setModalVisible(true)}/> : null
+                    }
                     <Pressable
                         className="flex-row items-center"
-                        onPress={() => setIsModalVisible(true)}
+                        onPress={() => setRatingModalVisible(true)}
                     >
                         <Ionicons name={userRating ? 'star' : 'star-outline'} size={19} color={ userRating ? '#ebc553' : 'gray'}/>
                         <Text className="ml-1">{isNaN(averageRating) ? '-' : formatRating(averageRating)}</Text>
@@ -66,7 +89,8 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
                 </View>
             </View>
 
-            <BottomModal state={[isModalVisible, setIsModalVisible]}>
+            {/* Rating Modal */}
+            <BottomModal state={[ratingModalVisible, setRatingModalVisible]}>
                 <View className="flex-row p-5 mb-5 justify-center">
                 {
                     [10,20,30,40,50].map(i => (
@@ -96,10 +120,38 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
                         className="flex-1 py-3 bg-rac rounded-md"
                         onPress={() => {
                             handleRating(selectedRating); // Create rating
-                            setIsModalVisible(false);
+                            setRatingModalVisible(false);
                         }}
                     >
                         <Text className="text-center text-white font-semibold">Toepassen</Text>
+                    </Pressable>
+                </View>
+            </BottomModal>
+
+
+             {/* Delete Modal */}
+             <BottomModal state={[deleteModalVisible, setDeleteModalVisible]}>
+                <View className="items-center mb-4">
+                    <Ionicons name="trash-bin" size={64} color="#EF4444"/>
+                </View>
+
+                <Text className="text-lg font-semibold mb-6 text-center text-black">
+                    Weet je zeker dat je deze bron wilt verwijderen?
+                </Text>
+
+                <View className="flex-row justify-between space-x-3">
+                    <Pressable
+                        onPress={() => setDeleteModalVisible(false)}
+                        className="flex-1 py-3 bg-gray-200 rounded-md"
+                    >
+                        <Text className="text-center text-black font-semibold">Annuleren</Text>
+                    </Pressable>
+
+                    <Pressable
+                        onPress={handleDelete}
+                        className="flex-1 py-3 bg-red-600 rounded-md"
+                    >
+                        <Text className="text-center text-white font-semibold">Verwijderen</Text>
                     </Pressable>
                 </View>
             </BottomModal>

@@ -28,16 +28,17 @@ class SourceService:
                 )
             )
 
-        if sort_by == 'recent':
-            query = query.order_by(Source.created_at.desc())
-        elif sort_by == 'rating':
+        if sort_by == 'rating':
             query = (
                 query.outerjoin(Source.ratings)
                 .group_by(Source.id)
                 .order_by(
-                    db.func.avg(Rating.rating).desc(), # Calculate average rating for a source
+                    db.func.avg(Rating.rating).desc(),  # Calculate average rating for a source
                     Source.created_at.desc()
                 ))
+        else:
+            query = query.order_by(Source.created_at.desc())
+
         query = query.offset(offset).limit(limit)
 
         current_user = User.query.get(current_user_id)
@@ -61,8 +62,11 @@ class SourceService:
             source_dict['current_rating'] = current_rating
             result.append(source_dict)
 
-
         return result
+
+    @staticmethod
+    def get_source_by_id(source_id):
+        return Source.query.get(source_id)
 
     @staticmethod
     def create_source(data, current_user_id):
@@ -123,3 +127,18 @@ class SourceService:
             print(f"Error creating source: {e}")
             db.session.rollback()
             return Exception('Error creating source')
+
+
+    @staticmethod
+    def delete_source(source_id):
+        source = Source.query.get(source_id)
+        if not source:
+            return Exception("Source does not exist")
+        try:
+            db.session.delete(source)
+            db.session.commit()
+            return True
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            print(f"Error deleting source: {e}")
+            return Exception("Error deleting source")
