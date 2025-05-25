@@ -13,10 +13,15 @@ def get_posts():
     try:
         search_term = request.args.get('search')
         sort_by = request.args.get('sort')
+        offset = request.args.get('offset')
+        limit = request.args.get('limit')
+
         posts = PostService.get_all_posts(
             current_user_id=get_jwt_identity(),
             search_term=search_term,
-            sort_by=sort_by
+            sort_by=sort_by,
+            offset=offset,
+            limit=limit
         )
         return jsonify({
             "success": True,
@@ -60,11 +65,18 @@ def get_post(post_id):
 def create_post():
     data = request.get_json()
     try:
-        post = PostService.create_post(data)
-        return jsonify({
-            "success": True,
-            "data": post
-        }), 201
+        result = PostService.create_post(data, current_user_id=get_jwt_identity())
+        if type(result) == Exception:
+            error = str(result)
+            return {
+                "success": False,
+                "message": error
+            }, 400
+        else:
+            return {
+                "success": True,
+                "data": result
+            }, 201
     except HTTPException as e:
         raise e
     except Exception as e:

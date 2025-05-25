@@ -7,9 +7,7 @@ import PostActions from "./PostActions";
 import ContentAuthor from "../ContentAuthor";
 import {Link} from "expo-router";
 import fatty from "@/utils/fatty";
-
-
-const backendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
+import {showError} from "@/utils/toast";
 
 function Post({post}) {
 
@@ -22,6 +20,10 @@ function Post({post}) {
                 if (data.success) {
                     setIsBookmarked(i => !i);
                 }
+                else {
+                    console.error(data.message)
+                    showError("Kon niet toevoegen aan favorieten");
+                }
             })
     }
 
@@ -29,27 +31,30 @@ function Post({post}) {
         <View className="w-full bg-white p-4 border-t border-gray-200">
 
             {/* Header */}
-            <ContentAuthor profilePicture={post.user['profile_picture']}
-                           username={post.user.username}
-                           email={post.user.email}
-                           userId={post.user.id}
+            <ContentAuthor
+                profilePicture={post.user['profile_picture']}
+                username={post.user.username}
+                email={post.user.email}
+                userId={post.user.id}
             />
 
             {/* Content */}
             <Link href={`/posts/${post.id}`}>
-                <PostContent title={post.title} content={post.content}/>
+                <PostContent content={post.content}/>
             </Link>
 
-            {/* Timestamp */}
-            <PostDetails createdAt={post['created_at']} tags={post.tags}/>
+            <View className="flex-row justify-between">
+                {/* Timestamp */}
+                <PostDetails createdAt={post['created_at']} tags={post.tags}/>
 
-            {/* Interaction buttons */}
-            <PostActions numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']}
-                         likedByCurrentUser={post['liked_by_current_user']} postId={post.id}
-                         handleBookmark={handleBookmark} isBookmarked={isBookmarked}
-                         postUserId={post.user.id}
-            />
-
+                {/* Interaction buttons */}
+                <PostActions
+                    numberOfComments={post['number_of_comments']} numberOfLikes={post['number_of_likes']}
+                    likedByCurrentUser={post['liked_by_current_user']} postId={post.id}
+                    handleBookmark={handleBookmark} isBookmarked={isBookmarked}
+                    postUserId={post.user.id}
+                />
+            </View>
         </View>
     );
 }

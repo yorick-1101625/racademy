@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, ActivityIndicator, ScrollView, Pressable } from 'react-native';
-import useFetch from '../hooks/useFetch';
+import useFetch from '../../hooks/useFetch';
 import useUser from "@/hooks/useUser";
 import {BASE_URL} from "@/utils/url";
 import Error from "@/components/Error";

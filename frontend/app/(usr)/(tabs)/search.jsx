@@ -1,11 +1,15 @@
 import React, {useEffect, useState} from "react";
-import {View, TextInput, Text, Pressable, ActivityIndicator, Modal} from "react-native";
+import {View, TextInput, Text, Pressable, ActivityIndicator, Modal, SafeAreaView} from "react-native";
 import PostList from "@/features/feed/components/post/PostList";
 import SourceList from "@/features/feed/components/source/SourceList";
 import NoResults from "@/features/search/components/NoResults";
 import UserList from "@/features/search/components/user/UserList";
 import {Ionicons} from "@expo/vector-icons";
 import BottomModal from "@/components/BottomModal";
+import InfiniteScrollList from "@/components/InfiniteScrollList";
+import Post from "@/features/feed/components/post/Post";
+import Source from "@/features/feed/components/source/Source";
+import User from "@/features/search/components/user/User";
 
 const FILTERS = ["Posts", "Sources", "Users"];
 
@@ -18,7 +22,9 @@ const Search = () => {
     const [filterModalVisible, setFilterModalVisible] = useState(false);
 
     const endpoint = filter === "Posts" ? "post" : filter === "Sources" ? "source" : "user";
-    const url = `/api/${endpoint}?search=${encodeURIComponent(query)}&sort=${sortBy}`;
+    // const url = `/api/${endpoint}?search=${encodeURIComponent(query)}&sort=${sortBy}`;
+    const url = `/api/${endpoint}`;
+    const params = `search=${encodeURIComponent(query)}&sort=${sortBy}`;
     const showResults = query.trim().length > 0;
 
     useEffect(() => {
@@ -50,7 +56,7 @@ const Search = () => {
     }
 
     return (
-        <View className="flex-1 bg-gray-100">
+        <SafeAreaView className="flex-1 bg-gray-100">
             <View className="bg-white px-4 pt-4 pb-0">
                 <View className="relative mb-3">
                     <TextInput
@@ -58,7 +64,7 @@ const Search = () => {
                         placeholder="Zoeken..."
                         value={query}
                         onChangeText={setQuery}
-                        className="border border-gray-300 rounded-lg px-4 py-2 bg-gray-50 pr-10"
+                        className="outline-none focus:border-rac border border-gray-300 rounded-lg px-4 py-2 bg-gray-50 pr-10"
                     />
                     <Pressable
                         onPress={() => setFilterModalVisible(true)}
@@ -76,6 +82,7 @@ const Search = () => {
                                 key={item}
                                 onPress={() => {
                                     setFilter(item);
+                                    setQuery("");
                                 }}
                                 className={`px-3 py-2 rounded-md mr-2 ${isActive ? "bg-rac" : "bg-gray-200"}`}
                             >
@@ -95,13 +102,36 @@ const Search = () => {
                         <ActivityIndicator size="large" color="#3daad3"/>
                     </View>
                 ) : showResults ? (
+
                     filter === "Posts" ? (
-                        <PostList url={url}/>
+                        <InfiniteScrollList
+                            url={url}
+                            params={params}
+                            noResultsMessage={`Geen posts gevonden volgens je zoekopdracht.`}
+                            renderItem={
+                                ({item}) => <Post post={item} />
+                            }
+                        />
                     ) : filter === "Sources" ? (
-                        <SourceList url={url}/>
+                        <InfiniteScrollList
+                            url={url}
+                            params={params}
+                            noResultsMessage={`Geen bronnen gevonden volgens je zoekopdracht.`}
+                            renderItem={
+                                ({item}) => <Source source={item} />
+                            }
+                        />
                     ) : (
-                        <UserList url={url}/>
+                        <InfiniteScrollList
+                            url={url}
+                            params={params}
+                            noResultsMessage={`Geen gebruikers gevonden volgens je zoekopdracht.`}
+                            renderItem={
+                                ({item}) => <User user={item} />
+                            }
+                        />
                     )
+
                 ) : (
                     <NoResults/>
                 )}
@@ -130,7 +160,7 @@ const Search = () => {
                     <Text className="text-white text-center font-semibold">Toepassen</Text>
                 </Pressable>
             </BottomModal>
-        </View>
+        </SafeAreaView>
     );
 };
 

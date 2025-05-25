@@ -1,22 +1,22 @@
-import {useContext, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import {Pressable, Text, View} from 'react-native';
 
 import {Ionicons} from "@expo/vector-icons";
 
 import fatty from "@/utils/fatty";
-import {UserContext} from "@/contexts/UserContext";
 import {showError, showSuccess} from "@/utils/toast";
 import BottomModal from "@/components/BottomModal";
+import useUser from "@/hooks/useUser";
 
 function PostActions({
-                         numberOfComments,
-                         numberOfLikes,
-                         likedByCurrentUser,
-                         postId,
-                         isBookmarked,
-                         handleBookmark,
-                         postUserId
-                     }) {
+    numberOfComments,
+    numberOfLikes,
+    likedByCurrentUser,
+    postId,
+    isBookmarked,
+    handleBookmark,
+    postUserId
+}) {
 
     const [isLiked, setIsLiked] = useState(likedByCurrentUser);
     const numberOfLikesRef = useRef(numberOfLikes);
@@ -34,11 +34,10 @@ function PostActions({
             });
     }
 
-    const {user} = useContext(UserContext);
+    const {user} = useUser();
     const userId = user.id;
 
     const [modalVisible, setModalVisible] = useState(false);
-
 
     function handleDelete() {
 
@@ -55,54 +54,56 @@ function PostActions({
 
 
     return (
-        <>
-            <View className="">
-                <View className="flex-row justify-start mt-4 w-52">
-                    <Pressable
-                        className="flex-row items-center mr-8"
-                    >
-                        <Ionicons name="chatbubble-outline" size={19} color="gray"/>
-                        <Text className="ml-1 text-sm text-gray-600">
-                            {numberOfComments}
-                        </Text>
-                    </Pressable>
+        <View className="items-end">
+            <View className="flex-row justify-end mt-4 px-2">
+                {
+                        postUserId === userId
+                    ?   <Pressable
+                            onPress={handleDelete}
+                            className="flex-row items-center"
+                        >
+                            <Ionicons
+                                name="trash-outline" size={19} color="gray"
+                                onPress={() => setModalVisible(true)}
+                            />
+                        </Pressable>
 
-                    <Pressable
-                        onPress={handleLike}
-                        className="flex-row items-center mr-8"
-                    >
-                        <Ionicons
-                            name={isLiked ? "heart" : "heart-outline"}
-                            size={19}
-                            color={isLiked ? "red" : "gray"}
-                        />
-                        <Text className="ml-1 text-sm text-gray-600">
-                            {numberOfLikesRef.current}
-                        </Text>
-                    </Pressable>
+                    : null
+                }
 
-                    <Pressable
-                        onPress={handleBookmark}
-                        className="flex-row items-center mr-8"
-                    >
-                        <Ionicons
-                            name={isBookmarked ? "bookmark" : "bookmark-outline"}
-                            size={19}
-                            color={isBookmarked ? "#3daad3" : "gray"}
-                        />
-                    </Pressable>
+                <Pressable
+                    className="flex-row items-center ml-8"
+                >
+                    <Ionicons name="chatbubble-outline" size={19} color="gray"/>
+                    <Text className="ml-1 text-sm text-gray-600">
+                        {numberOfComments}
+                    </Text>
+                </Pressable>
 
-                    <Pressable
-                        onPress={handleDelete}
-                        className="flex-row items-center mr-8"
-                    >
-                        {
-                            postUserId === userId ?
-                                <Ionicons name="trash-outline" size={19} color="gray"
-                                          onPress={() => setModalVisible(true)}/> : null
-                        }
-                    </Pressable>
-                </View>
+                <Pressable
+                    onPress={handleLike}
+                    className="flex-row items-center ml-8"
+                >
+                    <Ionicons
+                        name={isLiked ? "heart" : "heart-outline"}
+                        size={19}
+                        color={isLiked ? "red" : "gray"}
+                    />
+                    <Text className="ml-1 text-sm text-gray-600">
+                        {numberOfLikesRef.current}
+                    </Text>
+                </Pressable>
+
+                <Pressable
+                    onPress={handleBookmark}
+                    className="flex-row items-center ml-8"
+                >
+                    <Ionicons
+                        name={isBookmarked ? "bookmark" : "bookmark-outline"}
+                        size={19}
+                        color={isBookmarked ? "#3daad3" : "gray"}
+                    />
+                </Pressable>
             </View>
 
             <BottomModal state={[modalVisible, setModalVisible]}>
@@ -130,7 +131,7 @@ function PostActions({
                     </Pressable>
                 </View>
             </BottomModal>
-        </>
+        </View>
     );
 }
 

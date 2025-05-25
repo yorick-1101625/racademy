@@ -2,7 +2,7 @@ import base64
 import os
 from uuid import uuid4
 
-from sqlalchemy import asc, desc, or_
+from sqlalchemy import asc, desc, or_, and_
 from sqlalchemy.exc import SQLAlchemyError
 from flask import current_app
 
@@ -43,13 +43,23 @@ class SourceService:
 
         current_user = User.query.get(current_user_id)
         sources = query.all()
+
         # Add user, number of comments, number of likes
         result = []
         for source in sources:
+            current_rating = Rating.query.filter(
+                and_(Rating.user_id == current_user_id, Rating.source_id == source.id)
+            ).one_or_none()
+            if current_rating:
+                current_rating = current_rating.rating
+
+            user = source.user.to_dict()
+            user.pop('password')
             source_dict = source.to_dict()
-            source_dict['user'] = source.user.to_dict()
+            source_dict['user'] = user
             source_dict['ratings'] = [rating.to_dict()['rating'] for rating in source.ratings]
             source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
+            source_dict['current_rating'] = current_rating
             result.append(source_dict)
 
         return result
@@ -80,7 +90,6 @@ class SourceService:
                 if not data.get('url'):
                     return Exception('Must provide URL')
 
-            current_user = User.query.get(current_user_id)
             new_source = Source(
                 type=data.get('type'),
                 title=data.get('title'),
@@ -88,7 +97,7 @@ class SourceService:
                 school_subject=data.get('school_subject'),
                 subject=data.get('subject'),
                 difficulty=data.get('difficulty'),
-                user=current_user,
+                user_id=current_user_id,
                 url=data.get('url'),
                 isbn=data.get('isbn'),
                 image=None
@@ -112,19 +121,19 @@ class SourceService:
             return new_source.to_dict()
         except SQLAlchemyError as e:
             db.session.rollback()
-            print(f"Error creating post: {e}")
-            return None
+            print(f"Error creating source: {e}")
+            return Exception('Error creating source')
         except Exception as e:
-            print(f"Error creating post: {e}")
+            print(f"Error creating source: {e}")
             db.session.rollback()
-            return None
+            return Exception('Error creating source')
 
 
     @staticmethod
     def delete_source(source_id):
         source = Source.query.get(source_id)
         if not source:
-            return False
+            return Exception("Source does not exist")
         try:
             db.session.delete(source)
             db.session.commit()
@@ -132,4 +141,4 @@ class SourceService:
         except SQLAlchemyError as e:
             db.session.rollback()
             print(f"Error deleting source: {e}")
-            return False
+            return Exception("Error deleting source")

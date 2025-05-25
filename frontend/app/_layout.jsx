@@ -1,4 +1,4 @@
-import {Link, Stack} from 'expo-router';
+import {Link, Slot, Stack} from 'expo-router';
 import Toast from "react-native-toast-message";
 import {UserProvider} from "@/contexts/UserContext";
 import {Image} from "react-native";
@@ -11,44 +11,7 @@ function RootLayout() {
     return (
         <>
             <UserProvider>
-                <Stack screenOptions={{
-                    headerShadowVisible: false,
-                    headerTitleAlign: 'center',
-                }}>
-                    <Stack.Screen
-                        name="index"
-                        options={{
-                            headerShown: false,
-                        }}
-                    />
-                    <Stack.Screen
-                        name="(tabs)"
-                        options={{
-                            headerLeftContainerStyle: {paddingLeft: 20},
-                            headerLeft: () => (
-                                <Link href="/profile">
-                                    <CurrentUserProfilePicture className="w-9 h-9 rounded-full" />
-                                </Link>
-                            ),
-
-                            headerTitle: () => (
-                                <Image
-                                    source={Logo}
-                                    resizeMode="contain"
-                                    style={{width: 64, height: 64}}
-                                    alt="logo"
-                                />
-                            ),
-
-                            headerRightContainerStyle: {paddingRight: 20},
-                            headerRight: () => (
-                                <Link href="/settings">
-                                    <Ionicons name="settings-outline" size={26} className="text-rac" />
-                                </Link>
-                            )
-                        }}
-                    />
-                </Stack>
+                <Slot/>
             </UserProvider>
             <Toast />
         </>
