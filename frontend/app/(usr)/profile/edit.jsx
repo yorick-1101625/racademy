@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, Image, ActivityIndicator, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import useUser from '../../hooks/useUser';
-import { BASE_URL } from '../../utils/url';
-import fatty from '../../utils/fatty';
-import ImagePicker from '../../components/ImagePicker';
-import { showSuccess, showError } from '../../utils/toast';
+import useUser from '../../../hooks/useUser';
+import { BASE_URL } from '../../../utils/url';
+import fatty from '../../../utils/fatty';
+import ImagePicker from '../../../components/ImagePicker';
+import { showSuccess, showError } from '../../../utils/toast';
 
 export default function EditProfile() {
   const { user, setUser } = useUser();

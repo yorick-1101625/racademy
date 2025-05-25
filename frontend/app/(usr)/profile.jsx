@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { View, Text, Image, ActivityIndicator, ScrollView, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import useFetch from '../hooks/useFetch';
-import useUser from '../hooks/useUser';
-import { BASE_URL } from '../utils/url';
-import Error from '../components/Error';
-import Post from '../features/feed/components/post/Post';
-import Source from '../features/feed/components/source/Source';
-import TopTabs from '../components/TopTabs';
+import useFetch from '../../hooks/useFetch';
+import useUser from '../../hooks/useUser';
+import { BASE_URL } from '../../utils/url';
+import Error from '../../components/Error';
+import Post from '../../features/feed/components/post/Post';
+import Source from '../../features/feed/components/source/Source';
+import TopTabs from '../../components/TopTabs';
 
 export default function Profile() {
   const { user } = useUser();
