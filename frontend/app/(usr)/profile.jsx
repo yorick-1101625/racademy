@@ -18,6 +18,8 @@ export default function Profile() {
   const { data: currentUser, isPending, error } = useFetch(userId ? `/api/user/${userId}` : null);
   const { data: posts } = useFetch(userId ? `/api/post?user_id=${userId}` : null);
   const { data: sources } = useFetch(userId ? `/api/source?user_id=${userId}` : null);
+  const { data: likedPosts } = useFetch(userId ? `/api/user/${userId}/liked-posts` : null);
+  const { data: bookmarkedPosts } = useFetch(userId ? `/api/user/${userId}/bookmarked-posts` : null);
   const [activeTab, setActiveTab] = useState('favorieten');
 
   if (!userId) return <Text className="text-center mt-10">Geen gebruiker geselecteerd.</Text>;
@@ -61,10 +63,26 @@ export default function Profile() {
       {/* Tab Content */}
       <View className="mt-6">
         {activeTab === 'favorieten' && (
-          <Text className="text-center text-gray-400">[Favorieten komen hier]</Text>
+          <>
+            {bookmarkedPosts && bookmarkedPosts.length > 0 ? (
+              bookmarkedPosts.map(post => (
+                <Post key={post.id} post={post} />
+              ))
+            ) : (
+              <Text className="text-center text-gray-400">Geen favorieten gevonden</Text>
+            )}
+          </>
         )}
         {activeTab === 'likes' && (
-          <Text className="text-center text-gray-400">[Likes komen hier]</Text>
+          <>
+            {likedPosts && likedPosts.length > 0 ? (
+              likedPosts.map(post => (
+                <Post key={post.id} post={post} />
+              ))
+            ) : (
+              <Text className="text-center text-gray-400">Geen likes gevonden</Text>
+            )}
+          </>
         )}
         {activeTab === 'bronnen' && (
           <>
