@@ -17,9 +17,9 @@ function TopTabs({ tabs, state }) {
                 <Pressable
                     key={tab.value}
                     onPress={() => _setState(tab.value)}
-                    className={`px-3 py-2 rounded-md mr-2 ${_state === tab.value ? "bg-rac" : "bg-gray-200"}`}
+                    className={`text-base px-3 py-2 rounded-md mr-2 ${_state === tab.value ? "bg-rac" : "bg-neutral-100"}`}
                 >
-                    <Text className={_state === tab.value ? "text-white" : "text-black"}>
+                    <Text className={_state === tab.value ? "text-white" : "text-neutral-700"}>
                         {tab.label}
                     </Text>
                 </Pressable>

@@ -117,25 +117,25 @@ function CreateSource() {
                     <TopTabs tabs={SOURCE_TYPES} state={[type, setType]}/>
 
                     <TextInput
-                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
+                        className="text-sm border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
                         placeholder="Titel"
                         onChangeText={setTitle}
                     />
 
                     <TextInput
-                        className="border-b border-neutral-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                        className="text-sm border-b border-gray-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
                         placeholder="Vak"
                         onChangeText={setSchoolSubject}
                     />
 
                     <TextInput
-                        className="border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                        className="text-sm border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
                         placeholder="Onderwerp"
                         onChangeText={setSubject}
                     />
 
                     <TextInput
-                        className="h-32 border-b border-neutral-200 px-4 py-3 placeholder:text-neutral-600 outline-none"
+                        className="text-sm h-32 border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
                         placeholder="Beschrijving" multiline={true}
                         onChangeText={setDescription}
                     />
@@ -148,7 +148,7 @@ function CreateSource() {
                     {
                         type !== 'book' && (
                             <TextInput
-                                className="border-b border-neutral-200 px-4 py-3 mb-4 placeholder:text-neutral-600 outline-none"
+                                className="text-sm border-b border-gray-200 px-4 py-3 mb-4 placeholder:text-neutral-500 outline-none"
                                 placeholder={type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...'}
                                 onChangeText={setUrl}
                             />
@@ -159,7 +159,7 @@ function CreateSource() {
                     {
                         type === 'book' && (
                             <TextInput
-                                className="border-b border-neutral-200 px-4 py-3 mb-4 placeholder:text-neutral-600 outline-none"
+                                className="text-sm border-b border-gray-200 px-4 py-3 mb-4 placeholder:text-neutral-500 outline-none"
                                 placeholder="ISBN"
                                 onChangeText={setIsbn}
                             />
