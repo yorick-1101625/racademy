@@ -63,7 +63,7 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
                     <Text className="text-xs text-gray-500">{schoolSubject}: {subject}</Text>
                 </View>
 
-                <View className="flex-row items-center justify-end mt-2 pr-2">
+                <View className="flex-row items-center justify-end mt-5">
                     {
                         sourceUserId === user.id
                             ?   <Ionicons

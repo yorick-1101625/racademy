@@ -16,11 +16,11 @@ function Settings() {
 
     return (
         <>
-            <View className="flex-1 bg-white">
-                <View className="mt-4">
+            <View className="flex-1">
+                <View className="bg-white pt-4">
                     <Pressable
                         onPress={() => setModalVisible(true)}
-                        className="flex-row items-center px-4 py-4 border-b border-gray-100"
+                        className="flex-row items-center px-4 py-4 border-b border-t border-gray-100"
                     >
                         <MaterialIcons name="logout" size={21.5} color="black"/>
                         <Text className="ml-3 text-base text-black">Logout</Text>

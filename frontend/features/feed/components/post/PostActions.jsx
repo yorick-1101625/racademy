@@ -55,7 +55,7 @@ function PostActions({
 
     return (
         <View className="items-end">
-            <View className="flex-row justify-end mt-4 px-2">
+            <View className="flex-row justify-end mt-6 pl-2">
                 {
                         postUserId === userId
                     ?   <Pressable

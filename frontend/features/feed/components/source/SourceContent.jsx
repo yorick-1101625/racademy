@@ -15,7 +15,7 @@ function SourceContent({title, image, type, url, description}) {
 
 
     return (
-        <View className="px-2">
+        <View>
             {
                 type === "video" &&
                     <>
@@ -68,9 +68,9 @@ function SourceContent({title, image, type, url, description}) {
             {
                 type === "book" && (
                     <>
-                        <Text classname="text-black font-medium mt-1">{title}</Text>
+                        <Text className="text-black font-medium mt-1">{title}</Text>
                         <Image
-                            className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl border border-gray-200 rounded-md"
+                            className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl"
                             source={{ uri: `${BASE_URL}${image}`}}
                             resizeMode="contain"
                         />
