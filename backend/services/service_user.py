@@ -31,12 +31,50 @@ class UserService:
         return users
 
     @staticmethod
+    def get_liked_posts(user_id, current_user_id=None):
+        user = User.query.get(user_id)
+        if not user:
+            return []
+        liked_posts = user.liked_posts
+        liked_posts_dicts = []
+        for post in liked_posts:
+            post_dict = post.to_dict()
+            post_dict['user'] = {
+                'id': post.user.id,
+                'username': post.user.username,
+                'profile_picture': post.user.profile_picture
+            }
+            post_dict['liked_by_current_user'] = current_user_id in [u.id for u in post.users_liked]
+            post_dict['bookmarked_by_current_user'] = current_user_id in [u.id for u in post.users_bookmarked]
+            liked_posts_dicts.append(post_dict)
+        return liked_posts_dicts
+
+    @staticmethod
     def get_user_by_id(user_id):
         user = User.query.get(user_id)
         if user:
             user = user.to_dict()
             user.pop("password", None)
         return user if user else None
+
+    @staticmethod
+    def get_bookmarked_posts(user_id, current_user_id=None):
+        user = User.query.get(user_id)
+        if not user:
+            return []
+        bookmarked_posts = user.bookmarked_posts
+        bookmarked_posts_dicts = []
+        for post in bookmarked_posts:
+            post_dict = post.to_dict()
+            post_dict['user'] = {
+                'id': post.user.id,
+                'username': post.user.username,
+                'profile_picture': post.user.profile_picture
+            }
+            post_dict['liked_by_current_user'] = current_user_id in [u.id for u in post.users_liked]
+            post_dict['bookmarked_by_current_user'] = current_user_id in [u.id for u in post.users_bookmarked]
+            bookmarked_posts_dicts.append(post_dict)
+        return bookmarked_posts_dicts
 
     # TODO: Implement register instead of create_user
     @staticmethod
