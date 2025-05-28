@@ -1,5 +1,5 @@
-import {KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, TextInput, View} from 'react-native';
-import {useState} from "react";
+import {Image, KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, TextInput, View} from 'react-native';
+import {useEffect, useState} from "react";
 import TopTabs from "@/components/TopTabs";
 import ImagePicker from "@/components/ImagePicker";
 import {Ionicons} from "@expo/vector-icons";
@@ -7,6 +7,9 @@ import fatty from "@/utils/fatty";
 import {showError, showSuccess} from "@/utils/toast";
 import {isISBN} from "@/utils/validators";
 import useUser from "@/hooks/useUser";
+import {useLocalSearchParams} from "expo-router";
+import {Text} from 'react-native';
+import {BASE_URL} from "@/utils/url";
 
 const SOURCE_TYPES = [
     {value: 'video', label: 'Video'},
@@ -22,17 +25,45 @@ const DIFFICULTIES = [
 ]
 
 function CreateSource() {
+    // Editing States
+    const { id } = useLocalSearchParams();
+    const {user} = useUser();
+    const [isEditing, setIsEditing] = useState(false);
+
+    useEffect(() => {
+         if (id) {
+            fatty(`/api/source/${id}`)
+                .then(data => {
+                    data = data?.data;
+                    if (user.id === data?.user.id) {
+                        setIsEditing(true);
+
+                        // set the states
+                        setType(data.type);
+                        setTitle(data.title);
+                        setSchoolSubject(data['school_subject']);
+                        setSubject(data.subject);
+                        setDescription(data.description);
+                        setDifficulty(data.difficulty);
+                        setUrl(data.url);
+                        setIsbn(data.isbn);
+                        setImage({uri: `${BASE_URL}${data.image}`});
+                    }
+                });
+        }
+    }, []);
+
 
     // Form States
-    const [type, setType] = useState('video');
-    const [title, setTitle] = useState(null);
-    const [schoolSubject, setSchoolSubject] = useState(null);
-    const [subject, setSubject] = useState(null);
-    const [description, setDescription] = useState(null);
-    const [difficulty, setDifficulty] = useState('easy');
-    const [url, setUrl] = useState(null);
-    const [isbn, setIsbn] = useState(null);
-    const [image, setImage] = useState(null);
+    const [type, setType] = useState("video");
+    const [title, setTitle] = useState("");
+    const [schoolSubject, setSchoolSubject] = useState("");
+    const [subject, setSubject] = useState("");
+    const [description, setDescription] = useState("");
+    const [difficulty, setDifficulty] = useState("easy");
+    const [url, setUrl] = useState("");
+    const [isbn, setIsbn] = useState("");
+    const [image, setImage] = useState("");
 
     function handleSubmit() {
         // Validation
@@ -110,9 +141,24 @@ function CreateSource() {
             });
     }
 
+
+    function handleEdit() {
+
+    }
+
     return (
         <>
             <SafeAreaView className="flex-1">
+                {
+                    isEditing &&
+                    <View className="h-10 bg-green-200 items-center justify-center flex-row">
+                        <Text>Je bent aan het bewerken.</Text>
+                        <Pressable className="absolute right-5">
+                            {/* Clear states */}
+                            <Ionicons name="close-circle-outline" size={20} />
+                        </Pressable>
+                    </View>
+                }
                 <ScrollView contentContainerClassName="bg-white p-4">
                     <TopTabs tabs={SOURCE_TYPES} state={[type, setType]}/>
 
@@ -120,24 +166,28 @@ function CreateSource() {
                         className="text-sm border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
                         placeholder="Titel"
                         onChangeText={setTitle}
+                        value={title}
                     />
 
                     <TextInput
                         className="text-sm border-b border-gray-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
                         placeholder="Vak"
                         onChangeText={setSchoolSubject}
+                        value={subject}
                     />
 
                     <TextInput
                         className="text-sm border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
                         placeholder="Onderwerp"
                         onChangeText={setSubject}
+                        value={schoolSubject}
                     />
 
                     <TextInput
                         className="text-sm h-32 border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
                         placeholder="Beschrijving" multiline={true}
                         onChangeText={setDescription}
+                        value={description}
                     />
 
                     <View className="flex-row mt-4 mb-4">
@@ -151,6 +201,7 @@ function CreateSource() {
                                 className="text-sm border-b border-gray-200 px-4 py-3 mb-4 placeholder:text-neutral-500 outline-none"
                                 placeholder={type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...'}
                                 onChangeText={setUrl}
+                                value={url}
                             />
                         )
                     }
@@ -162,10 +213,12 @@ function CreateSource() {
                                 className="text-sm border-b border-gray-200 px-4 py-3 mb-4 placeholder:text-neutral-500 outline-none"
                                 placeholder="ISBN"
                                 onChangeText={setIsbn}
+                                value={isbn}
                             />
                         )
                     }
                     {
+
                         type !== 'video' ? <ImagePicker state={[image, setImage]}/> : <View className="flex-1"/>
                     }
                 </ScrollView>
@@ -173,13 +226,12 @@ function CreateSource() {
 
             <KeyboardAvoidingView className="absolute bottom-4 right-4">
                 <Pressable
-                    onPress={handleSubmit}
-                    className="bg-rac p-3 rounded-full active:opacity-80 z-10"
+                    onPress={() => isEditing ? handleEdit() : handleSubmit()}
+                    className="bg-rac w-14 h-14 items-center justify-center rounded-full active:opacity-80 z-10"
                 >
                     <Ionicons name="return-up-forward" size={24} color="white"/>
                 </Pressable>
             </KeyboardAvoidingView>
-
         </>
     );
 }

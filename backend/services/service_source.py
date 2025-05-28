@@ -65,8 +65,27 @@ class SourceService:
         return result
 
     @staticmethod
-    def get_source_by_id(source_id):
-        return Source.query.get(source_id)
+    def get_source_by_id(source_id, current_user_id):
+        source = Source.query.get(source_id)
+        current_user = User.query.get(current_user_id)
+        if not source:
+            raise Exception("Source not found")
+
+        current_rating = Rating.query.filter(
+            and_(Rating.user_id == current_user_id, Rating.source_id == source.id)
+        ).one_or_none()
+        if current_rating:
+            current_rating = current_rating.rating
+
+        user = source.user.to_dict()
+        user.pop('password')
+        source_dict = source.to_dict()
+        source_dict['user'] = user
+        source_dict['ratings'] = [rating.to_dict()['rating'] for rating in source.ratings]
+        source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
+        source_dict['current_rating'] = current_rating
+        return source_dict
+
 
     @staticmethod
     def create_source(data, current_user_id):
@@ -135,6 +154,8 @@ class SourceService:
         if not source:
             return Exception("Source does not exist")
         try:
+            for rating in source.ratings:
+                db.session.delete(rating)
             db.session.delete(source)
             db.session.commit()
             return True

@@ -153,12 +153,12 @@ def generate_dummy_data():
     sources = []
     for i in range(70):
         source = Source(
-            type=random.choice(['video', 'article', 'book']),
+            type=random.choice(['video', 'link', 'book']),
             title=f"Bron {i}",
             description=f"Beschrijving voor bron {i}",
             school_subject=random.choice(['Werkplaats', 'Programming Essentials']),
             subject=random.choice(['Programmeren', 'Python', 'Javascript']),
-            difficulty=random.choice(['makkelijk', 'gemiddeld', 'moeilijk']),
+            difficulty=random.choice(['easy', 'medium', 'hard', 'expert']),
             user=random.choice(users)
         )
         if source.type == 'video':
