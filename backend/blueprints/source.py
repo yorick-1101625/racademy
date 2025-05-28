@@ -110,3 +110,35 @@ def delete_source(source_id):
             "success": False,
             "message": "An unexpected error occurred."
         }, 500
+
+
+@api_source.route("/<source_id>", methods=["PATCH"])
+def edit_source(source_id):
+    try:
+        source = SourceService.get_source_by_id(source_id, current_user_id=get_jwt_identity())
+        if source['user']['id'] != int(get_jwt_identity()):  # And user not admin
+            return {
+                "success": False,
+                "message": "You are not authorized to edit this source"
+            }, 401
+
+        data = request.get_json()
+        edited_source = SourceService.edit_source(data, source_id)
+        if edited_source:
+            return {
+                "success": True,
+                "data": edited_source
+            }, 200
+        else:
+            return {
+                "success": False,
+                "message": f"Source with ID {source_id} not found."
+            }, 404
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[edit_source] Unexpected error: {e}")
+        return {
+            "success": False,
+            "message": "An unexpected error occurred."
+        }, 500

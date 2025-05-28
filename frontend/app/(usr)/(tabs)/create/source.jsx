@@ -1,4 +1,4 @@
-import {Image, KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, TextInput, View} from 'react-native';
+import {KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, TextInput, View} from 'react-native';
 import {useEffect, useState} from "react";
 import TopTabs from "@/components/TopTabs";
 import ImagePicker from "@/components/ImagePicker";
@@ -7,7 +7,7 @@ import fatty from "@/utils/fatty";
 import {showError, showSuccess} from "@/utils/toast";
 import {isISBN} from "@/utils/validators";
 import useUser from "@/hooks/useUser";
-import {useLocalSearchParams} from "expo-router";
+import {useLocalSearchParams, useRouter} from "expo-router";
 import {Text} from 'react-native';
 import {BASE_URL} from "@/utils/url";
 
@@ -29,12 +29,14 @@ function CreateSource() {
     const { id } = useLocalSearchParams();
     const {user} = useUser();
     const [isEditing, setIsEditing] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
          if (id) {
             fatty(`/api/source/${id}`)
                 .then(data => {
                     data = data?.data;
+                    console.log("userID", user.id, "AuthorID:", data.user.id)
                     if (user.id === data?.user.id) {
                         setIsEditing(true);
 
@@ -51,7 +53,7 @@ function CreateSource() {
                     }
                 });
         }
-    }, []);
+    }, [id]);
 
 
     // Form States
@@ -63,7 +65,7 @@ function CreateSource() {
     const [difficulty, setDifficulty] = useState("easy");
     const [url, setUrl] = useState("");
     const [isbn, setIsbn] = useState("");
-    const [image, setImage] = useState("");
+    const [image, setImage] = useState(null);
 
     function handleSubmit() {
         // Validation
@@ -122,9 +124,9 @@ function CreateSource() {
 
         fatty('/api/source/', 'POST', {
             'school_subject': schoolSubject,
-            type: type,
             image: imageData,
             description,
+            type: type,
             difficulty,
             subject,
             title,
@@ -134,6 +136,7 @@ function CreateSource() {
             .then(data => {
                 if (data.success) {
                     showSuccess('Bron succesvol aangemaakt!');
+                    router.push(`/sources/${data.data.id}`);
                 } else {
                     console.error(data.message);
                     showError('Er is iets misgegaan.');
@@ -141,21 +144,111 @@ function CreateSource() {
             });
     }
 
-
     function handleEdit() {
+        // Validation
+        if (!(title?.trim())) {
+            showError('Titel is verplicht.');
+            return;
+        }
+        if (!(schoolSubject?.trim())) {
+            showError('Vak is verplicht.');
+            return;
+        }
+        if (!(subject?.trim())) {
+            showError('Onderwerp is verplicht.');
+            return;
+        }
+        if (!(description?.trim())) {
+            showError('Beschrijving is verplicht.');
+            return;
+        }
+        if (!(difficulty?.trim())) {
+            showError('Moeilijkheid is verplicht.');
+            return;
+        }
+        if (!(type?.trim())) {
+            showError('Brontype is verplicht.');
+            return;
+        }
+        if (type !== 'book' && !(url?.trim())) {
+            showError('URL is verplicht.');
+            return;
+        }
+        if (type === 'book' && !(isbn?.trim())) {
+            showError('ISBN is verplicht');
+            return;
+        }
+        if (type === 'book' && !isISBN(isbn)) {
+            showError('ISBN is niet geldig.');
+            return;
+        }
+        if (type === 'book' && !image) {
+            showError('Foto is verplicht bij boeken.');
+            return;
+        }
+        if (type === 'video' && url.slice(0, 23) !== 'https://www.youtube.com') {
+            showError('URL moet op https://www.youtube.com/.... lijken');
+            return;
+        }
+        let imageData;
+        if (image.base64) {
+            imageData = {
+                base64: image.base64,
+                'mime_type': image.mimeType,
+            };
+        }
+        else {
+            imageData = image?.uri.replace(BASE_URL, "");
+        }
 
+        fatty(`/api/source/${id}`, 'PATCH', {
+            'school_subject': schoolSubject,
+            image: imageData,
+            description,
+            type: type,
+            difficulty,
+            subject,
+            title,
+            isbn,
+            url
+        })
+            .then(data => {
+                if (data.success) {
+                    showSuccess('Bron succesvol Bijgewerkt!');
+                    router.push(`/sources/${id}`);
+                } else {
+                    console.error(data.message);
+                    showError('Er is iets misgegaan.');
+                }
+            });
     }
 
     return (
         <>
             <SafeAreaView className="flex-1">
                 {
-                    isEditing &&
-                    <View className="h-10 bg-green-200 items-center justify-center flex-row">
-                        <Text>Je bent aan het bewerken.</Text>
-                        <Pressable className="absolute right-5">
-                            {/* Clear states */}
-                            <Ionicons name="close-circle-outline" size={20} />
+                    isEditing && // Editing indicator
+                    <View className="p-3 bg-rac items-center justify-center flex-row ">
+                        <Text className="text-base text-white">Je bent aan het bewerken</Text>
+                        <Pressable
+                            className="absolute right-5"
+                            onPress={() => {
+                                router.replace("/create/source?");
+                                setIsEditing(false);
+
+                                // Clear states
+                                setType("video");
+                                setTitle("");
+                                setSchoolSubject("");
+                                setSubject("");
+                                setDescription("");
+                                setDifficulty("easy");
+                                setUrl("");
+                                setIsbn("");
+                                setImage(null);
+                            }}
+                        >
+                            <Ionicons name="close-circle-outline" size={22} color="white"/>
                         </Pressable>
                     </View>
                 }
@@ -173,14 +266,14 @@ function CreateSource() {
                         className="text-sm border-b border-gray-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
                         placeholder="Vak"
                         onChangeText={setSchoolSubject}
-                        value={subject}
+                        value={schoolSubject}
                     />
 
                     <TextInput
                         className="text-sm border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
                         placeholder="Onderwerp"
                         onChangeText={setSubject}
-                        value={schoolSubject}
+                        value={subject}
                     />
 
                     <TextInput

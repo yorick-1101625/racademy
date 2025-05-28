@@ -43,7 +43,9 @@ function SourceContent({title, image, type, url, description}) {
                 type === "article" && (
                     <Pressable
                         className="max-w-2xl border border-gray-200 rounded-md overflow-hidden"
-                        onPress={() => Linking.openURL(url)}
+                        onPress={() => {
+                            Linking.canOpenURL(url).then(canOpen => canOpen && Linking.openURL(url));
+                        }}
                     >
                         <View className="p-3">
                             <Text className="text-black font-medium" numberOfLines={2}>

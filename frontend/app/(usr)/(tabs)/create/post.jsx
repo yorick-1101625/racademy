@@ -18,7 +18,7 @@ import fatty from "@/utils/fatty";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import ContentAuthor from "@/features/feed/components/ContentAuthor";
 import useUser from "@/hooks/useUser";
-import {Link} from "expo-router";
+import {Link, useRouter} from "expo-router";
 import {BASE_URL} from "@/utils/url";
 
 function CreatePost() {
@@ -30,6 +30,7 @@ function CreatePost() {
     const [query, setQuery] = useState("");
     const [selectedSource, setSelectedSource] = useState(null);
     const [linkedSource, setLinkedSource] = useState(null);
+    const router = useRouter();
 
     const {user} = useUser();
 
@@ -75,6 +76,7 @@ function CreatePost() {
             .then(data => {
                 if (data.success) {
                     showSuccess("Post succesvol aangemaakt.");
+                    router.push(`/posts/${data.data.id}`);
                 } else {
                     console.error(data.message);
                     showError("Er ging iets fout.");
