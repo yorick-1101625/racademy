@@ -62,6 +62,25 @@ def create_source():
         }, 500
 
 
+@api_source.route("/<source_id>", methods=["GET"],  strict_slashes=False)
+@cross_origin()
+def get_source(source_id):
+    try:
+        source = SourceService.get_source_by_id(source_id, current_user_id=get_jwt_identity())
+        return {
+            "success": True,
+            "data": source
+        }, 200
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[get_sources] Unexpected error: {e}")
+        return {
+            "success": False,
+            "message": "An unexpected error occurred."
+        }, 500
+
+
 @api_source.route("/<source_id>", methods=["DELETE"])
 def delete_source(source_id):
     try:

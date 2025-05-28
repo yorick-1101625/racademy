@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import {Image, Pressable, View} from 'react-native';
+import {Image, Modal, Pressable, View} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 
 export default function FocusableImage({ source, className="", resizeMode }) {
@@ -16,7 +16,7 @@ export default function FocusableImage({ source, className="", resizeMode }) {
 
             {
                 focus && (
-                    <View className="absolute top-0 bottom-0 left-0 right-0 bg-white z-10">
+                    <Modal className="absolute top-0 bottom-0 left-0 right-0 bg-white z-10">
                         <Pressable
                             onPress={() => setFocus(false)}
                             className="flex-1"
@@ -26,7 +26,7 @@ export default function FocusableImage({ source, className="", resizeMode }) {
                                 resizeMode="contain"
                             />
                         </Pressable>
-                    </View>
+                    </Modal>
                 )
             }
         </>

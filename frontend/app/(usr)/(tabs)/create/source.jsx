@@ -174,7 +174,7 @@ function CreateSource() {
             <KeyboardAvoidingView className="absolute bottom-4 right-4">
                 <Pressable
                     onPress={handleSubmit}
-                    className="bg-rac p-3 rounded-full active:opacity-80 z-10"
+                    className="bg-rac w-14 h-14 items-center justify-center rounded-full active:opacity-80 z-10"
                 >
                     <Ionicons name="return-up-forward" size={24} color="white"/>
                 </Pressable>

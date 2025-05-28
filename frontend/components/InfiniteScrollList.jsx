@@ -16,6 +16,7 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
     url = `${url}?${params}&offset=${currentOffset}&limit=${limit}`;
 
     useEffect(() => {
+        setListEnded(false);
         if (currentOffset !== 0) {
             setCurrentOffset(0); // Clear offset when params such as queries change
         }
@@ -29,6 +30,9 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
     }, [currentOffset]);
 
     function getData() {
+        if (listEnded) {
+            return;
+        }
         setIsPending(true);
         fatty(url)
             .then(data => {

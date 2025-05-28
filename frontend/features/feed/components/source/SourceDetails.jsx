@@ -37,7 +37,12 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
     }
 
     const totalRatings = ratings.slice() || [];
-    (userRating && !currentRating) && totalRatings.push(userRating);
+    if (currentRating) {
+        const i = totalRatings.indexOf(currentRating);
+        totalRatings.splice(i, 1);
+    }
+
+    userRating && totalRatings.push(userRating);
     const averageRating = calculateAverageRating(totalRatings);
 
 
@@ -77,7 +82,7 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
                         onPress={() => setRatingModalVisible(true)}
                     >
                         <Ionicons name={userRating ? 'star' : 'star-outline'} size={19} color={ userRating ? '#ebc553' : 'gray'}/>
-                        <Text className="ml-1">{isNaN(averageRating) ? '-' : formatRating(averageRating)}</Text>
+                        <Text className="ml-1">{formatRating(averageRating)}</Text>
                     </Pressable>
 
                     <Pressable

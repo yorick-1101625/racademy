@@ -4,6 +4,7 @@ import {BASE_URL} from "@/utils/url";
 import truncate from "@/features/feed/utils/truncate";
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {useMemo} from "react";
+import FocusableImage from "@/components/FocusableImage";
 
 function SourceContent({title, image, type, url, description}) {
 
@@ -69,7 +70,7 @@ function SourceContent({title, image, type, url, description}) {
                 type === "book" && (
                     <>
                         <Text className="text-black font-medium mt-1">{title}</Text>
-                        <Image
+                        <FocusableImage
                             className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl"
                             source={{ uri: `${BASE_URL}${image}`}}
                             resizeMode="contain"
