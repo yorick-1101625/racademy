@@ -74,7 +74,7 @@ def get_source(source_id):
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(f"[get_sources] Unexpected error: {e}")
+        print(f"[get_source] Unexpected error: {e}")
         return {
             "success": False,
             "message": "An unexpected error occurred."
@@ -84,8 +84,8 @@ def get_source(source_id):
 @api_source.route("/<source_id>", methods=["DELETE"])
 def delete_source(source_id):
     try:
-        source = SourceService.get_source_by_id(source_id)
-        if source.user.id != int(get_jwt_identity()):  # And user not admin
+        source = SourceService.get_source_by_id(source_id, current_user_id=get_jwt_identity())
+        if source['user']['id'] != int(get_jwt_identity()):  # And user not admin
             return {
                 "success": False,
                 "message": "You are not authorized to delete this source"

@@ -1,13 +1,16 @@
-import {ActivityIndicator, Text, View} from 'react-native';
+import {ActivityIndicator, Pressable, Text, View} from 'react-native';
 import {useLocalSearchParams} from "expo-router";
 import useFetch from "@/hooks/useFetch";
 import Source from "@/features/feed/components/source/Source";
 import Error from "@/components/Error";
+import useUser from "@/hooks/useUser";
+import {useState} from "react";
+import {Feather, Ionicons} from "@expo/vector-icons";
+import Kebab from "@/components/Kebab";
 
 
 
 function SourceDetails() {
-
     const { id } = useLocalSearchParams();
 
     const {data: source, isPending, error} = useFetch(`/api/source/${id}`);
@@ -22,10 +25,8 @@ function SourceDetails() {
         <Error />
     );
 
-    return(
-        <View>
-            <Source source={source}/>
-        </View>
+    return (
+        <Source source={source}/>
     );
 }
 

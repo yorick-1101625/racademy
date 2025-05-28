@@ -68,6 +68,8 @@ class SourceService:
     def get_source_by_id(source_id, current_user_id):
         source = Source.query.get(source_id)
         current_user = User.query.get(current_user_id)
+        if not source:
+            raise Exception("Source not found")
 
         current_rating = Rating.query.filter(
             and_(Rating.user_id == current_user_id, Rating.source_id == source.id)
@@ -83,6 +85,7 @@ class SourceService:
         source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
         source_dict['current_rating'] = current_rating
         return source_dict
+
 
     @staticmethod
     def create_source(data, current_user_id):
