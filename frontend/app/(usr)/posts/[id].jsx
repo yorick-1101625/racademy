@@ -4,7 +4,8 @@ import useFetch from "@/hooks/useFetch";
 import Error from "@/components/Error";
 import Post from "@/features/feed/components/post/Post";
 import {useLayoutEffect} from "react";
-import Comment from "@/features/feed/components/comment/Comment";
+import CommentCreate from "@/features/feed/components/comment/CommentCreate";
+import CommentList from "@/features/feed/components/comment/CommentList";
 
 
 function PostDetails() {
@@ -34,7 +35,8 @@ function PostDetails() {
     return (
         <>
             <Post post={post}/>
-            <Comment post_id={id}/>
+            <CommentList post_id={id}/>
+            <CommentCreate post_id={id}/>
         </>
     );
 }

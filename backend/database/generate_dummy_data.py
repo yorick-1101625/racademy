@@ -126,6 +126,27 @@ def generate_dummy_data():
     De eerste week was chaotisch. Routes werkten niet, ik kreeg rare CORS-fouten, en m’n React-componenten herlaadden constant zonder reden. Maar iedere keer als ik een bug oploste, voelde het als een mini-overwinning."""
     ]
 
+    sample_comment_texts = [
+        "Haha, dat gevoel als alles ineens werkt... pure magie 😄",
+        "Knap dat je alles zelf hebt uitgezocht zonder tutorials. Dat is echt de beste manier om te leren.",
+        "Ik herken dat gevoel van spaghetti-code tijdens het refactoren. Je leert zoveel van je oude fouten!",
+        "Eerste pull request is altijd spannend. Goed gedaan! 💪",
+        "Dat moment wanneer je begrijpt hoe het werkt… zo'n opluchting!",
+        "Zonlicht tijdens het coderen? Wat is dat? 😅",
+        "Ik blijf het lastig vinden om frontend en backend mooi te laten samenwerken. Props dat jij het combineert!",
+        "Wat een herkenbare post. Ik leer ook elke dag nog bij. Programmeerreis ftw! 🧭",
+        "Clean Code zou eigenlijk verplichte kost moeten zijn voor elke dev.",
+        "Even een random vraag: gebruik je TypeScript in je React-projecten?",
+        "Heb je tips om Flask routes schoon te houden bij grotere projecten?",
+        "Ik zit nu ook midden in een project from scratch. Leuk en frustrerend tegelijk 😂",
+        "Gebruik je dark mode in je IDE? Vraag voor een vriend.",
+        "Dat eerste gevoel van 'wow, ik snap het' blijft magisch. Gefeliciteerd met je vooruitgang!",
+        "Soms voelt debuggen als een escape room zonder hints. Maar oh wat is het lekker als je eruit komt.",
+        "Ik ben benieuwd of je achteraf dingen anders zou aanpakken. Reflecties zijn altijd interessant!",
+        "Dit soort updates motiveren echt. Thanks voor het delen en succes met de volgende stap!"
+    ]
+
+
     posts = []
     for i in range(30):
         post = Post(
@@ -142,7 +163,7 @@ def generate_dummy_data():
     comments = []
     for i in range(30):
         comment = Comment(
-            content=f"Dit is een comment {i}.",
+            content=random.choice(sample_comment_texts),
             user=random.choice(users),
             post=random.choice(posts)
         )
@@ -153,7 +174,7 @@ def generate_dummy_data():
     sources = []
     for i in range(70):
         source = Source(
-            type=random.choice(['video', 'link', 'book']),
+            type=random.choice(['video', 'article', 'book']),
             title=f"Bron {i}",
             description=f"Beschrijving voor bron {i}",
             school_subject=random.choice(['Werkplaats', 'Programming Essentials']),

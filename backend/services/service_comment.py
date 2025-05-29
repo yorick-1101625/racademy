@@ -1,9 +1,27 @@
 from sqlalchemy.exc import SQLAlchemyError
 from backend.database.db import db
-from backend.models.models import Comment
+from backend.models.models import Comment, Post
 
 
 class CommentService:
+
+    @staticmethod
+    def get_all_comments(post_id):
+        post = Post.query.get(post_id)
+        if not post:
+            raise ValueError(f"Post with id {post_id} not found.")
+
+        query = db.session.query(Comment).join(Comment.user).filter(Comment.post_id == post_id)
+        query = query.order_by(Comment.created_at.desc())
+        comments = query.all()
+
+        result = []
+        for comment in comments:
+            comment_dict = comment.to_dict()
+            comment_dict['user'] = comment.user.to_dict()
+            result.append(comment_dict)
+
+        return result
 
     @staticmethod
     def create_comment(data, current_user_id):
