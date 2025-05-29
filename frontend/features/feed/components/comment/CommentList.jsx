@@ -18,7 +18,7 @@ function CommentList({ post_id }) {
     if (error) return <Error />;
 
     if (!comments || comments.length === 0) {
-        return <NoResults message="Geen comments." />;
+        return <NoResults title="" message="" />;
     }
 
     return (
