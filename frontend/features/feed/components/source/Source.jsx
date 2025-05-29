@@ -80,15 +80,15 @@ function Source({source}) {
                             <Link href={`/create/source?id=${source.id}`}
                                 className="flex-row rounded-md p-3 items-center hover:bg-blue-50 box-border transition-colors"
                             >
-                                <Feather name="edit-2" color="#3daad3" size={18} />
-                                <Text className="ml-3 text-rac tetx-base">Bewerken</Text>
+                                {/*<Feather name="edit-2" color="#3daad3" size={18} />*/}
+                                <Text className="ml-3 text-gray-800 text-base">Bewerken</Text>
                             </Link>
                             <Pressable
                                 className="flex-row rounded-md p-3 items-center hover:bg-red-100 box-border transition-colors"
                                 onPress={() => setDeleteModalVisible(true)}
                             >
-                                <Ionicons name="trash-bin" color="red" size={18} />
-                                <Text className="ml-3 text-red-600 tetx-base">Verwijderen</Text>
+                                {/*<Ionicons name="trash-bin" color="red" size={18} />*/}
+                                <Text className="ml-3 text-gray-800 text-base">Verwijderen</Text>
                             </Pressable>
                         </Kebab>
                     :   null
