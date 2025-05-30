@@ -54,9 +54,14 @@ def get_bookmarked_posts(user_id):
     try:
         current_user_id = get_jwt_identity()
         bookmarked_posts = UserService.get_bookmarked_posts(user_id, current_user_id)
+        bookmarked_sources = UserService.get_bookmarked_sources(user_id)
+        combined = {
+            "posts": bookmarked_posts,
+            "sources": bookmarked_sources
+        }
         return jsonify({
             "success": True,
-            "data": bookmarked_posts
+            "data": combined
         }), 200
     except HTTPException as e:
         raise e

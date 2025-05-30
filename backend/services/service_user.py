@@ -32,20 +32,35 @@ class UserService:
 
     @staticmethod
     def get_liked_posts(user_id, current_user_id=None):
-        user = User.query.get(user_id)
-        if not user:
-            return []
-        liked_posts = user.liked_posts
+        from backend.models.models import UserLikedPost
+        from sqlalchemy.orm import joinedload
+        posts = (
+            db.session.query(Post)
+            .options(
+                joinedload(Post.comments),
+                joinedload(Post.users_liked),
+                joinedload(Post.users_bookmarked),
+            )
+            .join(UserLikedPost, Post.id == UserLikedPost.post_id)
+            .filter(UserLikedPost.user_id == user_id)
+            .all()
+        )
         liked_posts_dicts = []
-        for post in liked_posts:
+        current_user = None
+        if current_user_id:
+            current_user = User.query.get(current_user_id)
+        for post in posts:
             post_dict = post.to_dict()
+            post_dict['comments'] = [comment.to_dict() for comment in post.comments]
             post_dict['user'] = {
                 'id': post.user.id,
                 'username': post.user.username,
                 'profile_picture': post.user.profile_picture
             }
-            post_dict['liked_by_current_user'] = current_user_id in [u.id for u in post.users_liked]
-            post_dict['bookmarked_by_current_user'] = current_user_id in [u.id for u in post.users_bookmarked]
+            post_dict['number_of_comments'] = len(post.comments)
+            post_dict['number_of_likes'] = len(post.users_liked)
+            post_dict['liked_by_current_user'] = post in current_user.liked_posts if current_user else False
+            post_dict['bookmarked_by_current_user'] = post in current_user.bookmarked_posts if current_user else False
             liked_posts_dicts.append(post_dict)
         return liked_posts_dicts
 
@@ -59,20 +74,35 @@ class UserService:
 
     @staticmethod
     def get_bookmarked_posts(user_id, current_user_id=None):
-        user = User.query.get(user_id)
-        if not user:
-            return []
-        bookmarked_posts = user.bookmarked_posts
+        from backend.models.models import UserBookmarkedPost
+        from sqlalchemy.orm import joinedload
+        posts = (
+            db.session.query(Post)
+            .options(
+                joinedload(Post.comments),
+                joinedload(Post.users_liked),
+                joinedload(Post.users_bookmarked),
+            )
+            .join(UserBookmarkedPost, Post.id == UserBookmarkedPost.post_id)
+            .filter(UserBookmarkedPost.user_id == user_id)
+            .all()
+        )
         bookmarked_posts_dicts = []
-        for post in bookmarked_posts:
+        current_user = None
+        if current_user_id:
+            current_user = User.query.get(current_user_id)
+        for post in posts:
             post_dict = post.to_dict()
+            post_dict['comments'] = [comment.to_dict() for comment in post.comments]
             post_dict['user'] = {
                 'id': post.user.id,
                 'username': post.user.username,
                 'profile_picture': post.user.profile_picture
             }
-            post_dict['liked_by_current_user'] = current_user_id in [u.id for u in post.users_liked]
-            post_dict['bookmarked_by_current_user'] = current_user_id in [u.id for u in post.users_bookmarked]
+            post_dict['number_of_comments'] = len(post.comments)
+            post_dict['number_of_likes'] = len(post.users_liked)
+            post_dict['liked_by_current_user'] = post in current_user.liked_posts if current_user else False
+            post_dict['bookmarked_by_current_user'] = post in current_user.bookmarked_posts if current_user else False
             bookmarked_posts_dicts.append(post_dict)
         return bookmarked_posts_dicts
 
