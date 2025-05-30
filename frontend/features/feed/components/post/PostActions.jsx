@@ -34,8 +34,8 @@ function PostActions({
     }
 
     return (
-        <View className="items-end">
-            <View className="flex-row justify-end mt-6 pl-2">
+        <>
+            <View className="flex-row justify-end pl-2">
 
                 <Pressable
                     className="flex-row items-center ml-8"
@@ -71,7 +71,7 @@ function PostActions({
                     />
                 </Pressable>
             </View>
-        </View>
+        </>
     );
 }
 

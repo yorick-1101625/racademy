@@ -1,10 +1,10 @@
-import {Text, Image, View, Pressable} from 'react-native';
-import {Linking} from 'react-native';
+import {Text, Image, View} from 'react-native';
 import {BASE_URL} from "@/utils/url";
 import truncate from "@/features/feed/utils/truncate";
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {useMemo} from "react";
 import FocusableImage from "@/components/FocusableImage";
+import {Link} from "expo-router";
 
 function SourceContent({title, image, type, url, description}) {
 
@@ -41,11 +41,9 @@ function SourceContent({title, image, type, url, description}) {
 
             {
                 type === "article" && (
-                    <Pressable
+                    <Link
+                        href={url}
                         className="max-w-2xl border border-gray-200 rounded-md overflow-hidden"
-                        onPress={() => {
-                            Linking.canOpenURL(url).then(canOpen => canOpen && Linking.openURL(url));
-                        }}
                     >
                         <View className="p-3">
                             <Text className="text-black font-medium" numberOfLines={2}>
@@ -64,7 +62,7 @@ function SourceContent({title, image, type, url, description}) {
                             }
                             <Text className="text-gray-500 text-s mt-2">{ truncate(description, 110) }</Text>
                         </View>
-                    </Pressable>
+                    </Link>
                 )
             }
 

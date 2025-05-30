@@ -111,7 +111,7 @@ function CreatePost() {
                             </View>
                             <MultilineTextInput
                                 placeholder="Wat wil je zeggen..."
-                                className="w-full min-h-24 text-base py-1 placeholder:text-gray-400 outline-none"
+                                className="w-full min-h-32 text-base py-1 placeholder:text-gray-400 outline-none"
                                 onChangeText={setContent}
                             />
                         </View>

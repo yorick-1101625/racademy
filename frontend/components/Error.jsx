@@ -1,7 +1,7 @@
 import {Text, View} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 
-function Error({ title = "Er is iets misgegaan.", message = "Probeer het later opnieuw." }){
+function Error({ title = "Er is iets misgegaan.", message = "Probeer het later opnieuw.", children }){
     return (
         <View className="flex-1 items-center justify-center">
             <Ionicons name="warning-outline" color="orange" size={64} />
@@ -11,6 +11,7 @@ function Error({ title = "Er is iets misgegaan.", message = "Probeer het later o
             <Text className="text-gray-500 text-center px-6 mb-4">
                 {message}
             </Text>
+            { children }
         </View>
     );
 }
