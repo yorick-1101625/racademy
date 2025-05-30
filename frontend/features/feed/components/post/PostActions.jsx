@@ -14,8 +14,7 @@ function PostActions({
     likedByCurrentUser,
     postId,
     isBookmarked,
-    handleBookmark,
-    postUserId
+    handleBookmark
 }) {
 
     const [isLiked, setIsLiked] = useState(likedByCurrentUser);
@@ -34,42 +33,9 @@ function PostActions({
             });
     }
 
-    const {user} = useUser();
-    const userId = user.id;
-
-    const [modalVisible, setModalVisible] = useState(false);
-
-    function handleDelete() {
-
-        fatty(`/api/post/${postId}`, 'DELETE', {id: postId})
-            .then(data => {
-                if (data.success) {
-                    showSuccess("Post is verwijderd")
-                } else if (!data.success) {
-                    showError("Er ging iets mis")
-                }
-                setModalVisible(false);
-            });
-    }
-
-
     return (
         <View className="items-end">
             <View className="flex-row justify-end mt-6 pl-2">
-                {
-                        postUserId === userId
-                    ?   <Pressable
-                            onPress={handleDelete}
-                            className="flex-row items-center"
-                        >
-                            <Ionicons
-                                name="trash-outline" size={19} color="gray"
-                                onPress={() => setModalVisible(true)}
-                            />
-                        </Pressable>
-
-                    : null
-                }
 
                 <Pressable
                     className="flex-row items-center ml-8"
@@ -105,32 +71,6 @@ function PostActions({
                     />
                 </Pressable>
             </View>
-
-            <BottomModal state={[modalVisible, setModalVisible]}>
-                <View className="items-center mb-4">
-                    <Ionicons name="trash-bin" size={64} color="#EF4444"/>
-                </View>
-
-                <Text className="text-lg font-semibold mb-6 text-center text-black">
-                    Weet je zeker dat je deze post wilt verwijderen?
-                </Text>
-
-                <View className="flex-row justify-between space-x-3">
-                    <Pressable
-                        onPress={() => setModalVisible(false)}
-                        className="flex-1 py-3 bg-gray-200 rounded-md"
-                    >
-                        <Text className="text-center text-black font-semibold">Annuleren</Text>
-                    </Pressable>
-
-                    <Pressable
-                        onPress={handleDelete}
-                        className="flex-1 py-3 bg-red-600 rounded-md"
-                    >
-                        <Text className="text-center text-white font-semibold">Verwijderen</Text>
-                    </Pressable>
-                </View>
-            </BottomModal>
         </View>
     );
 }
