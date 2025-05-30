@@ -1,3 +1,4 @@
+
 from sqlalchemy import asc, desc, or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import aliased
@@ -32,7 +33,7 @@ class PostService:
                 .order_by(
                     db.func.count(user.id).desc(),
                     Post.created_at.desc()
-            ))
+                ))
         else:
             query = query.order_by(Post.created_at.desc())
 
@@ -55,8 +56,22 @@ class PostService:
         return result
 
     @staticmethod
-    def get_post_by_id(post_id):
-        return Post.query.get(post_id)
+    def get_post_by_id(post_id, current_user_id):
+        post = Post.query.get(post_id)
+        current_user = User.query.get(current_user_id)
+        if not post:
+            raise Exception("Source not found")
+
+        user = post.user.to_dict()
+        user.pop('password')
+        post_dict = post.to_dict()
+        post_dict['user'] = user
+        post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
+        post_dict['number_of_likes'] = len(post.users_liked)
+        post_dict['number_of_comments'] = len(post.comments)
+        post_dict['liked_by_current_user'] = post in current_user.liked_posts
+        post_dict['bookmarked_by_current_user'] = post in current_user.bookmarked_posts
+        return post_dict
 
     @staticmethod
     def create_post(data, current_user_id):

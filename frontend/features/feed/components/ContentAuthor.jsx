@@ -15,7 +15,7 @@ function ContentAuthor({profilePicture, username, userId, email}) {
                     <Text className="text-base font-bold text-gray-800">
                         {username}
                     </Text>
-                    <Text className="text-gray-500 text-[0.85rem]">{email}</Text>
+                    <Text className="text-gray-500 text-xs">{email}</Text>
                 </View>
             </Link>
         </View>
