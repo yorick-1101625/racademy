@@ -119,7 +119,15 @@ class UserService:
             .all()
         )
 
-        return [source.to_dict() for source in sources]
+        current_user = User.query.get(user_id)
+        result = []
+
+        for source in sources:
+            source_dict = source.to_dict()
+            source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
+            result.append(source_dict)
+
+        return result
 
     # TODO: Implement register instead of create_user
     @staticmethod
