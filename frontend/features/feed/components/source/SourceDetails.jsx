@@ -7,15 +7,12 @@ import BottomModal from "@/components/BottomModal";
 import {useState} from "react";
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
 import fatty from "@/utils/fatty";
-import {showError, showSuccess} from "@/utils/toast";
-import useUser from "@/hooks/useUser";
+import {showError} from "@/utils/toast";
+import {Link} from "expo-router";
 
-function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, isBookmarked, handleBookmark, currentRating, sourceUserId}) {
-
-    const {user} = useUser();
+function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, isBookmarked, handleBookmark, currentRating}) {
 
     const [ratingModalVisible, setRatingModalVisible] = useState(false);
-    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const [userRating, setUserRating] = useState(currentRating);
     const [selectedRating, setSelectedRating] = useState(currentRating);
 
@@ -37,47 +34,29 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
     }
 
     const totalRatings = ratings.slice() || [];
-    (userRating && !currentRating) && totalRatings.push(userRating);
-    const averageRating = calculateAverageRating(totalRatings);
-
-
-    function handleDelete() {
-
-        fatty(`/api/source/${sourceId}`, 'DELETE', {id: sourceId})
-            .then(data => {
-                if (data.success) {
-                    showSuccess("Bron is verwijderd")
-                } else if (!data.success) {
-                    showError("Er ging iets mis")
-                }
-                setDeleteModalVisible(false);
-
-            });
+    if (currentRating) {
+        const i = totalRatings.indexOf(currentRating);
+        totalRatings.splice(i, 1);
     }
+
+    userRating && totalRatings.push(userRating);
+    const averageRating = calculateAverageRating(totalRatings);
 
     return (
         <>
             <View className="flex-row justify-between">
-                <View>
+                <Link href={`/sources/${sourceId}`} className="flex flex-col flex-1">
                     <Text className="text-xs text-gray-500 mt-2">{calculateTimeFromToday(createdAt)}</Text>
                     <Text className="text-xs text-gray-500">{schoolSubject}: {subject}</Text>
-                </View>
+                </Link>
 
-                <View className="flex-row items-center justify-end mt-2 pr-2">
-                    {
-                        sourceUserId === user.id
-                            ?   <Ionicons
-                                    name="trash-outline" size={19} color="gray"
-                                    onPress={() => setDeleteModalVisible(true)}
-                                />
-                            :   null
-                    }
+                <View className="flex-row items-center right-0 justify-end mt-5">
                     <Pressable
                         className="flex-row items-center ml-8"
                         onPress={() => setRatingModalVisible(true)}
                     >
                         <Ionicons name={userRating ? 'star' : 'star-outline'} size={19} color={ userRating ? '#ebc553' : 'gray'}/>
-                        <Text className="ml-1">{isNaN(averageRating) ? '-' : formatRating(averageRating)}</Text>
+                        <Text className="ml-1">{formatRating(averageRating)}</Text>
                     </Pressable>
 
                     <Pressable
@@ -128,34 +107,6 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
                         }}
                     >
                         <Text className="text-center text-white font-semibold">Toepassen</Text>
-                    </Pressable>
-                </View>
-            </BottomModal>
-
-
-             {/* Delete Modal */}
-             <BottomModal state={[deleteModalVisible, setDeleteModalVisible]}>
-                <View className="items-center mb-4">
-                    <Ionicons name="trash-bin" size={64} color="#EF4444"/>
-                </View>
-
-                <Text className="text-lg font-semibold mb-6 text-center text-black">
-                    Weet je zeker dat je deze bron wilt verwijderen?
-                </Text>
-
-                <View className="flex-row justify-between space-x-3">
-                    <Pressable
-                        onPress={() => setDeleteModalVisible(false)}
-                        className="flex-1 py-3 bg-gray-200 rounded-md"
-                    >
-                        <Text className="text-center text-black font-semibold">Annuleren</Text>
-                    </Pressable>
-
-                    <Pressable
-                        onPress={handleDelete}
-                        className="flex-1 py-3 bg-red-600 rounded-md"
-                    >
-                        <Text className="text-center text-white font-semibold">Verwijderen</Text>
                     </Pressable>
                 </View>
             </BottomModal>

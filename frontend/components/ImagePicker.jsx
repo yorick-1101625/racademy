@@ -1,5 +1,5 @@
 import {useState} from 'react';
-import {Image, Pressable, View} from 'react-native';
+import {Image, Modal, Pressable, View} from 'react-native';
 import {launchImageLibraryAsync} from "expo-image-picker";
 import {Ionicons} from "@expo/vector-icons";
 
@@ -19,7 +19,6 @@ export default function ImagePicker({state, className = ""}) {
         if (!result.canceled) {
             const data = result.assets[0]
             data['base64'] = data.uri.split(',')[1]
-            console.log(result)
             setImage(data);
         }
     };
@@ -48,7 +47,7 @@ export default function ImagePicker({state, className = ""}) {
 
             {
                 focus && image && (
-                    <View className="absolute top-0 bottom-0 left-0 right-0 bg-white z-10">
+                    <Modal className="absolute top-0 bottom-0 left-0 right-0 bg-white z-10">
                         <View
                             className="absolute bottom-0 right-0 z-20 bg-white border border-gray-200 rounded-t-md flex-row">
                             {/* Clear image */}
@@ -86,7 +85,7 @@ export default function ImagePicker({state, className = ""}) {
                                 resizeMode="contain"
                             />
                         </Pressable>
-                    </View>
+                    </Modal>
                 )
             }
         </>

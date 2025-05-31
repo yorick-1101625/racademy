@@ -42,7 +42,7 @@ def get_posts():
 @api_post.route("/<post_id>", methods=["GET"])
 def get_post(post_id):
     try:
-        post = PostService.get_post_by_id(post_id)
+        post = PostService.get_post_by_id(post_id, current_user_id=get_jwt_identity())
         if post:
             return jsonify({
                 "success": True,
@@ -124,8 +124,9 @@ def update_post(post_id):
 @api_post.route("/<post_id>", methods=["DELETE"])
 def delete_post(post_id):
     try:
-        post = PostService.get_post_by_id(post_id)
-        if post.user.id != int(get_jwt_identity()):  # And user not admin
+        current_user_id = int(get_jwt_identity())
+        post = PostService.get_post_by_id(post_id, current_user_id)
+        if post["user"]["id"] != current_user_id:  # And user not admin
             return {
                 "success": False,
                 "message": "You are not authorized to delete this post"
