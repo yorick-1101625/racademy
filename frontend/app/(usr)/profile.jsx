@@ -19,8 +19,11 @@ export default function Profile() {
   const { data: posts } = useFetch(userId ? `/api/post?user_id=${userId}` : null);
   const { data: sources } = useFetch(userId ? `/api/source?user_id=${userId}` : null);
   const { data: likedPosts } = useFetch(userId ? `/api/user/${userId}/liked-posts` : null);
-  const { data: bookmarkedPosts } = useFetch(userId ? `/api/user/${userId}/bookmarked-posts` : null);
+  const { data: bookmarkedPostsRaw } = useFetch(userId ? `/api/user/${userId}/bookmarked-posts` : null);
   const [activeTab, setActiveTab] = useState('favorieten');
+
+  const bookmarkedPostList = bookmarkedPostsRaw?.posts || [];
+  const bookmarkedSourceList = bookmarkedPostsRaw?.sources || [];
 
   if (!userId) return <Text className="text-center mt-10">Geen gebruiker geselecteerd.</Text>;
   if (isPending) return <ActivityIndicator className="mt-10" color="#3daad3" />;
@@ -64,10 +67,15 @@ export default function Profile() {
       <View className="mt-6">
         {activeTab === 'favorieten' && (
           <>
-            {bookmarkedPosts && bookmarkedPosts.length > 0 ? (
-              bookmarkedPosts.map(post => (
-                <Post key={post.id} post={post} />
-              ))
+            {bookmarkedPostList.length > 0 || bookmarkedSourceList.length > 0 ? (
+              <>
+                {bookmarkedPostList.map(post => (
+                  <Post key={`bm-post-${post.id}`} post={post} />
+                ))}
+                {bookmarkedSourceList.map(source => (
+                  <Source key={`bm-source-${source.id}`} source={source} />
+                ))}
+              </>
             ) : (
               <Text className="text-center text-gray-400">Geen favorieten gevonden</Text>
             )}

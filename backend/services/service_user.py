@@ -106,6 +106,21 @@ class UserService:
             bookmarked_posts_dicts.append(post_dict)
         return bookmarked_posts_dicts
 
+    @staticmethod
+    def get_bookmarked_sources(user_id):
+        from backend.models.models import Source, UserBookmarkedSource
+        from sqlalchemy.orm import joinedload
+
+        sources = (
+            db.session.query(Source)
+            .options(joinedload(Source.user))  # essentieel voor .user in to_dict()
+            .join(UserBookmarkedSource, Source.id == UserBookmarkedSource.source_id)
+            .filter(UserBookmarkedSource.user_id == user_id)
+            .all()
+        )
+
+        return [source.to_dict() for source in sources]
+
     # TODO: Implement register instead of create_user
     @staticmethod
     def create_user(data):

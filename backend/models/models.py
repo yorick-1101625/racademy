@@ -125,6 +125,16 @@ class Source(BaseModel):
     def __repr__(self):
         return f"<Source(id={self.id}, type='{self.type}', title='{self.title}')>"
 
+    def to_dict(self):
+        base = super().to_dict()
+        base['user'] = {
+            'id': self.user.id,
+            'username': self.user.username,
+            'profile_picture': self.user.profile_picture
+        } if self.user else None
+        base['ratings'] = [r.to_dict()['rating'] for r in self.ratings] if self.ratings else []
+        return base
+
 
 class Rating(BaseModel):
     rating          = db.Column(db.Integer, nullable=False)
@@ -149,4 +159,3 @@ class Tag(BaseModel):
 
     def __repr__(self):
         return f"<Tag(id={self.id}, name='{self.name}')>"
-
