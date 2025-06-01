@@ -76,7 +76,12 @@ function CreatePost() {
             .then(data => {
                 if (data.success) {
                     showSuccess("Post succesvol aangemaakt.");
-                    router.push(`/posts/${data.data.id}`);
+
+                    // Push to post detail page
+                    // router.push(`/posts/${data.data.id}`);
+
+                    // Push to post feed
+                    router.push(`/posts/`);
                 } else {
                     console.error(data.message);
                     showError("Er ging iets fout.");

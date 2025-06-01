@@ -29,7 +29,7 @@ function CommentCreate(post_id) {
                 if (data.success) {
                     showSuccess("Comment toegevoegd.");
                 } else {
-                    console.error(data.message);
+                    // console.error(data.message);
                     showError("Er ging iets fout.");
                 }
             })

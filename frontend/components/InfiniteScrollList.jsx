@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import fatty from "@/utils/fatty";
 import Error from "@/components/Error";
 
-function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is niks gevonden.", url, params="" }) {
+function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is niks gevonden.", url, params="", refresh }) {
 
     const [currentOffset, setCurrentOffset] = useState(0);
     const [data, setData] = useState([]);
@@ -28,6 +28,12 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
     useEffect(() => {
         getData();
     }, [currentOffset]);
+
+    useEffect(() => {
+        setCurrentOffset(0);
+        setListEnded(false);
+        getData();
+      }, [refresh]);
 
     function getData() {
         if (listEnded) {
