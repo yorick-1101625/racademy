@@ -14,8 +14,8 @@ function Kebab({ children }) {
             >
                 {
                     isVisible
-                        ?   <Ionicons name="ellipsis-horizontal" color="gray" size={19} />
-                        :   <Ionicons name="ellipsis-vertical" color="gray" size={19} />
+                        ?   <Ionicons name="ellipsis-vertical" color="gray" size={19} />
+                        :   <Ionicons name="ellipsis-horizontal" color="gray" size={19} />
                 }
             </Pressable>
 

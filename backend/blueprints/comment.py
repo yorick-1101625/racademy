@@ -26,6 +26,7 @@ def get_comments(post_id):
             "message": "An unexpected error occurred."
         }), 500
 
+
 @api_comment.route("/", methods=["POST"])
 def create_comment():
     data = request.get_json()
@@ -51,3 +52,34 @@ def create_comment():
             "message": "An unexpected error occurred."
         }), 500
 
+
+@api_comment.route("/<comment_id>", methods=["DELETE"])
+def delete_comment(comment_id):
+    try:
+        current_user_id = int(get_jwt_identity())
+        comment = CommentService.get_comment_by_id(comment_id)
+        if comment["user"]["id"] != current_user_id:  # And user not admin
+            return {
+                "success": False,
+                "message": "You are not authorized to delete this comment"
+            }, 401
+
+        deleted_comment = CommentService.delete_comment(comment_id)
+        if deleted_comment:
+            return jsonify({
+                "success": True,
+                "data": deleted_comment
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "message": f"Comment with ID {comment_id} not found or already deleted."
+            }), 404
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[delete_comment] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500

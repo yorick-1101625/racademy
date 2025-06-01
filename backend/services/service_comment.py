@@ -1,6 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
 from backend.database.db import db
-from backend.models.models import Comment, Post
+from backend.models.models import Comment, Post, User
 
 
 class CommentService:
@@ -24,6 +24,18 @@ class CommentService:
         return result
 
     @staticmethod
+    def get_comment_by_id(comment_id):
+        comment = Comment.query.get(comment_id)
+        if not comment:
+            raise Exception("Comment not found")
+
+        user = comment.user.to_dict()
+        user.pop('password')
+        comment_dict = comment.to_dict()
+        comment_dict['user'] = user
+        return comment_dict
+
+    @staticmethod
     def create_comment(data, current_user_id):
         try:
             if not data.get('content'): return Exception("Must provide content")
@@ -41,3 +53,16 @@ class CommentService:
             db.session.rollback()
             print(f"Error creating comment: {e}")
             return Exception(f"Error creating comment: {e}")
+
+    @staticmethod
+    def delete_comment(comment_id):
+        try:
+            comment = Comment.query.get(comment_id)
+            db.session.delete(comment)
+            db.session.commit()
+            return True
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            print(f"Error deleting comment: {e}")
+            return False
+

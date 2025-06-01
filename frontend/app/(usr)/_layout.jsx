@@ -34,7 +34,8 @@ function _Layout() {
                         headerRightContainerStyle: {paddingRight: 20},
                         headerRight: () => (
                             <Link href="/settings">
-                                <Ionicons name="settings-outline" size={26} color="#3daad3" />
+                                {/*color property not working properly?*/}
+                                <Ionicons name="settings-outline" size={26} className="text-rac" />
                             </Link>
                         )
                     }}
