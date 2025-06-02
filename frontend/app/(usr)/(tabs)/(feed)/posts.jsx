@@ -1,16 +1,20 @@
 import {SafeAreaView} from 'react-native';
 import InfiniteScrollList from "@/components/InfiniteScrollList";
 import Post from "@/features/feed/components/post/Post";
-import {useFocusEffect} from "expo-router";
+import {router, useFocusEffect, useLocalSearchParams} from "expo-router";
 import {useCallback, useEffect, useState} from "react";
 
 function Posts() {
+    const {refresh: refreshParam} = useLocalSearchParams();
     const [refresh, setRefresh] = useState(0);
 
     useFocusEffect(
         useCallback(() => {
-            setRefresh(i => i + 1);
-        }, [])
+            if (refreshParam) {
+                setRefresh(i => i + 1);
+                router.replace('/posts');
+            }
+        }, [refreshParam])
     );
 
     // useEffect(() => {

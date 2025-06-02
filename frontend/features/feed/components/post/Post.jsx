@@ -5,7 +5,7 @@ import PostContent from "./PostContent";
 import PostDetails from "./PostDetails";
 import PostActions from "./PostActions";
 import ContentAuthor from "../ContentAuthor";
-import {Link} from "expo-router";
+import {Link, router} from "expo-router";
 import fatty from "@/utils/fatty";
 import {showError, showSuccess} from "@/utils/toast";
 import Kebab from "@/components/Kebab";
@@ -40,6 +40,7 @@ function Post({post}) {
             .then(data => {
                 if (data.success) {
                     showSuccess("Post is verwijderd")
+                    router.push('/posts?refresh=1');
                 } else if (!data.success) {
                     showError("Er ging iets mis")
                 }

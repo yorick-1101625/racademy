@@ -6,7 +6,7 @@ import SourceDetails from "./SourceDetails";
 
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
 import fatty from "@/utils/fatty";
-import {Link} from "expo-router";
+import {Link, router} from "expo-router";
 import Kebab from "@/components/Kebab";
 import {Feather, Ionicons} from "@expo/vector-icons";
 import useUser from "@/hooks/useUser";
@@ -35,6 +35,7 @@ function Source({source}) {
             .then(data => {
                 if (data.success) {
                     showSuccess("Bron is verwijderd")
+                    router.push('/sources?refresh=1');
                 } else if (!data.success) {
                     showError("Er ging iets mis")
                 }

@@ -2,15 +2,19 @@ import {SafeAreaView} from 'react-native'
 import InfiniteScrollList from "@/components/InfiniteScrollList";
 import Source from "@/features/feed/components/source/Source";
 import {useCallback, useState} from "react";
-import {useFocusEffect} from "expo-router";
+import {router, useFocusEffect, useLocalSearchParams} from "expo-router";
 
 function Sources() {
-     const [refresh, setRefresh] = useState(0);
+    const {refresh: refreshParam} = useLocalSearchParams();
+    const [refresh, setRefresh] = useState(0);
 
     useFocusEffect(
         useCallback(() => {
-            setRefresh(i => i + 1);
-        }, [])
+            if (refreshParam) {
+                setRefresh(i => i + 1);
+                router.replace('/sources');
+            }
+        }, [refreshParam])
     );
 
     return (
