@@ -4,7 +4,8 @@ import {
     TextInput,
     Text,
     KeyboardAvoidingView,
-    View
+    View,
+    Image, ScrollView
 } from 'react-native';
 import MultilineTextInput from "@/components/MultilineTextInput";
 import React, {useState} from "react";
@@ -14,6 +15,11 @@ import BottomModal from "@/components/BottomModal";
 import CompactSourceSelector from "@/features/create/post/CompactSourceSelector";
 import CompactSource from "@/features/create/post/CompactSource";
 import fatty from "@/utils/fatty";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import ContentAuthor from "@/features/feed/components/ContentAuthor";
+import useUser from "@/hooks/useUser";
+import {Link, useRouter} from "expo-router";
+import {BASE_URL} from "@/utils/url";
 
 function CreatePost() {
 
@@ -24,6 +30,9 @@ function CreatePost() {
     const [query, setQuery] = useState("");
     const [selectedSource, setSelectedSource] = useState(null);
     const [linkedSource, setLinkedSource] = useState(null);
+    const router = useRouter();
+
+    const {user} = useUser();
 
     function handleTags(value) {
         if (value.trim()) {
@@ -60,15 +69,20 @@ function CreatePost() {
             .map(tag => (tag.replace("#", "")).toLowerCase());
 
         fatty('/api/post/', 'POST', {
-            content: content,
+            content: content.trim(),
             tags: formattedTags,
             'source_id': linkedSource?.id
         })
             .then(data => {
                 if (data.success) {
                     showSuccess("Post succesvol aangemaakt.");
-                }
-                else {
+
+                    // Push to post detail page
+                    // router.push(`/posts/${data.data.id}`);
+
+                    // Push to post feed
+                    router.push(`/posts/`);
+                } else {
                     console.error(data.message);
                     showError("Er ging iets fout.");
                 }
@@ -76,39 +90,78 @@ function CreatePost() {
     }
 
     return (
-        <SafeAreaView className="flex-1 h-full relative">
-            <View className="border-b border-gray-300 w-full h-full">
-                <MultilineTextInput
-                    placeholder="Wat wil je zeggen..."
-                    className="px-4 py-3 placeholder:text-gray-600 text-lg bg-white border-b border-gray-100"
-                    onChangeText={setContent}
-                />
-                <TextInput
-                    placeholder="#..."
-                    className="px-4 py-3 placeholder:text-gray-600 bg-white border-b border-gray-200"
-                    onChangeText={handleTags}
-                />
-                <Pressable
-                    onPress={() => setIsModalVisible(true)}
-                    className="bg-white px-4 py-2"
-                >
-                    {
-                        linkedSource
-                            ?   <CompactSource username={linkedSource.user.username} title={linkedSource.title} />
-                            :   <View className="border-b border-gray-200">
-                                    <Text className="text-gray-600 py-3">Bron toevoegen</Text>
+        <SafeAreaView className="flex-1">
+            <ScrollView className="pb-72">
+
+                <View className="bg-white p-4">
+
+                    <View className="flex-row">
+                        <View className="mr-3">
+                            <Link href={`users/${user.id}`}>
+                                <Image
+                                    source={{uri: `${BASE_URL}${user.profile_picture}`}}
+                                    className="w-10 h-10 rounded-full"
+                                />
+                            </Link>
+                        </View>
+
+                        <View className="flex-1">
+                            <View className="mb-1">
+                                <Text className="text-base font-bold text-gray-900 mr-2">
+                                    {user.username}
+                                </Text>
+                                <Text className="text-gray-500 text-sm">
+                                    {user.email}
+                                </Text>
+                            </View>
+                            <MultilineTextInput
+                                placeholder="Wat wil je zeggen..."
+                                className="w-full min-h-32 px-0 py-0 text-base placeholder:text-gray-400 outline-none"
+                                onChangeText={setContent}
+                            />
+                        </View>
+                    </View>
+
+
+                    <View className="flex-row items-center border-t border-gray-200 pt-2">
+                        <TextInput
+                            placeholder="#tags"
+                            className="flex-1 text-base px-4 py-2 placeholder:text-neutral-400 outline-none"
+                            onChangeText={handleTags}
+                        />
+
+                        <Pressable
+                            onPress={() => setIsModalVisible(true)}
+                            className="flex-row items-center px-3 py-2 rounded-md bg-neutral-100 ml-2"
+                        >
+                            <AntDesign name="paperclip" size={16} color="#657786"/>
+                            <Text className="text-neutral-500 ml-1">Bron</Text>
+                        </Pressable>
+                    </View>
+
+                    {linkedSource && (
+                        <View className="mt-2 p-3 bg-neutral-50 rounded-lg border border-gray-200">
+                            <View className="items-center justify-between flex-row">
+                                <View className="flex-row">
+                                    <AntDesign name="link" size={14} color="#657786"/>
+                                    <Text className="text-sm text-neutral-500 ml-1">Gekoppelde bron:</Text>
                                 </View>
-
-                    }
-                </Pressable>
-            </View>
-
-            <KeyboardAvoidingView className="absolute right-0 bottom-0">
+                                <Pressable onPress={() => setLinkedSource(null)}>
+                                    <Ionicons name="close-circle-outline" size={22} color="#657786"/>
+                                </Pressable>
+                            </View>
+                            <Text className="font-medium mt-1 text-neutral-800">{linkedSource.title}</Text>
+                            <Text className="text-sm text-neutral-500">@{linkedSource.user.username}</Text>
+                        </View>
+                    )}
+                </View>
+            </ScrollView>
+            <KeyboardAvoidingView className="absolute bottom-4 right-4">
                 <Pressable
                     onPress={handleSubmit}
-                    className="bg-rac w-24 h-12 items-center justify-center rounded-full mb-3 mr-3"
+                    className="bg-rac w-14 h-14 items-center justify-center rounded-full active:opacity-80"
                 >
-                    <Ionicons name="return-up-forward" size={36} color="white"/>
+                    <Ionicons name="return-up-forward" size={24} color="white"/>
                 </Pressable>
             </KeyboardAvoidingView>
 
@@ -117,7 +170,7 @@ function CreatePost() {
                     <TextInput
                         placeholder="Bron zoeken..."
                         autoFocus
-                        className="mt-12 border border-gray-300 focus:border-rac outline-none px-4 py-3 rounded-lg placeholder:text-gray-600"
+                        className="mt-12 border border-gray-300 bg-gray-50 focus:border-rac outline-none px-4 py-3 rounded-lg placeholder:text-gray-600"
                         onChangeText={setQuery}
                     />
 

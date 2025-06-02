@@ -184,6 +184,15 @@ class UserService:
         if not user:
             return False
         try:
+            # Delete all content created by user
+            for post in user.created_posts:
+                db.session.delete(post)
+            for source in user.created_sources:
+                db.session.delete(source)
+            for comment in user.comments:
+                db.session.delete(comment)
+            for rating in user.created_ratings:
+                db.session.delete(rating)
             db.session.delete(user)
             db.session.commit()
             return True

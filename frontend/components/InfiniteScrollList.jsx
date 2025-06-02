@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import fatty from "@/utils/fatty";
 import Error from "@/components/Error";
 
-function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is niks gevonden.", url, params="" }) {
+function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is niks gevonden.", url, params="", refresh }) {
 
     const [currentOffset, setCurrentOffset] = useState(0);
     const [data, setData] = useState([]);
@@ -16,6 +16,7 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
     url = `${url}?${params}&offset=${currentOffset}&limit=${limit}`;
 
     useEffect(() => {
+        setListEnded(false);
         if (currentOffset !== 0) {
             setCurrentOffset(0); // Clear offset when params such as queries change
         }
@@ -28,7 +29,16 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
         getData();
     }, [currentOffset]);
 
+    useEffect(() => {
+        setCurrentOffset(0);
+        setListEnded(false);
+        getData();
+      }, [refresh]);
+
     function getData() {
+        if (listEnded) {
+            return;
+        }
         setIsPending(true);
         fatty(url)
             .then(data => {

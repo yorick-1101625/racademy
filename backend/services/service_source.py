@@ -67,8 +67,27 @@ class SourceService:
         return result
 
     @staticmethod
-    def get_source_by_id(source_id):
-        return Source.query.get(source_id)
+    def get_source_by_id(source_id, current_user_id):
+        source = Source.query.get(source_id)
+        current_user = User.query.get(current_user_id)
+        if not source:
+            raise Exception("Source not found")
+
+        current_rating = Rating.query.filter(
+            and_(Rating.user_id == current_user_id, Rating.source_id == source.id)
+        ).one_or_none()
+        if current_rating:
+            current_rating = current_rating.rating
+
+        user = source.user.to_dict()
+        user.pop('password')
+        source_dict = source.to_dict()
+        source_dict['user'] = user
+        source_dict['ratings'] = [rating.to_dict()['rating'] for rating in source.ratings]
+        source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
+        source_dict['current_rating'] = current_rating
+        return source_dict
+
 
     @staticmethod
     def create_source(data, current_user_id):
@@ -100,8 +119,9 @@ class SourceService:
                 image=None
             )
 
-            if data.get('image') and data.get('type') == 'book':
-                image = data.get('image')
+            image = data.get('image')
+            source_type = data.get('type')
+            if image and (source_type == 'book' or source_type == 'link'):
                 mime_type = image['mime_type'].split('/')
                 if mime_type[0] != 'image':
                     return Exception('Uploaded file must be an image')
@@ -127,11 +147,75 @@ class SourceService:
 
     @staticmethod
     def delete_source(source_id):
-        source = Source.query.get(source_id)
-        if not source:
-            return Exception("Source does not exist")
         try:
+            source = Source.query.get(source_id)
+
+            for rating in source.ratings:
+                db.session.delete(rating)
+
+            if source.image:
+                # Delete image
+                os.remove(str(current_app.config['ROOT_PATH']) + (source.image.replace('/', os.sep)))
+
             db.session.delete(source)
+            db.session.commit()
+            return True
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            print(f"Error deleting source: {e}")
+            return Exception("Error deleting source")
+
+
+    @staticmethod
+    def edit_source(data, source_id):
+        try:
+            # Validation
+            if not data.get('type'):            return Exception('Must provide source type.')
+            if not data.get('title'):           return Exception('Must provide title.')
+            if not data.get('description'):     return Exception('Must provide description.')
+            if not data.get('school_subject'):  return Exception('Must provide school subject.')
+            if not data.get('subject'):         return Exception('Must provide subject.')
+            if not data.get('difficulty'):      return Exception('Must provide difficulty.')
+
+            if data.get('type') == 'book':
+                if not data.get('isbn'):
+                    return Exception('Must provide ISBN when type is book')
+                if not is_isbn(data.get('isbn')):
+                    return Exception('Invalid ISBN')
+                if data.get('image') is None:
+                    return Exception('Must provide image when type is book')
+            else:
+                if not data.get('url'):
+                    return Exception('Must provide URL')
+
+            source = Source.query.get(source_id)
+            image = data.get('image')
+            source_type = data.get('type')
+            if image and (source_type == 'book' or source_type == 'link') and not image == source.image:
+                # Delete old image
+                if source.image:
+                    os.remove(str(current_app.config['ROOT_PATH']) + (source.image.replace('/', os.sep)))
+
+                mime_type = image['mime_type'].split('/')
+                if mime_type[0] != 'image':
+                    return Exception('Uploaded file must be an image')
+                file_extension = '.' + mime_type[-1]
+                image_path = current_app.config['IMAGE_UPLOAD_FOLDER'] / 'sources' / f"{uuid4()}{file_extension}"
+                with open(image_path, 'wb') as file:
+                    file.write(base64.b64decode(image['base64']))
+
+                image_path = '/' + str(image_path.relative_to(current_app.config['ROOT_PATH'])).replace(os.sep, '/')
+                source.image = image_path
+
+            source.type = data.get('type', source.type)
+            source.title = data.get('title', source.title)
+            source.description = data.get('description', source.description)
+            source.school_subject = data.get('school_subject', source.school_subject)
+            source.subject = data.get('subject', source.subject)
+            source.difficulty = data.get('difficulty', source.difficulty)
+            source.url = data.get('url', source.url)
+            source.isbn = data.get('isbn', source.isbn)
+
             db.session.commit()
             return True
         except SQLAlchemyError as e:

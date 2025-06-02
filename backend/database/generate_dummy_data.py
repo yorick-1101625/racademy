@@ -19,15 +19,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 init_db(app)
 
+
 def generate_random_isbn():
     isbn = ''.join(random.choices(string.digits, k=13))
     return isbn
+
 
 def generate_random_youtube_url():
     youtube_urls = [
         "https://www.youtube.com/watch?v=gvkqT_Uoahw",
     ]
     return random.choice(youtube_urls)
+
 
 def generate_dummy_data():
     db.drop_all()
@@ -112,8 +115,37 @@ def generate_dummy_data():
         "List comprehensions in Python... heerlijk kort en krachtig.",
         "Vandaag NativeWind uitgeprobeerd. Ziet er strak uit! 🎨",
         "Late night coderen met lo-fi op de achtergrond 🌙 #devvibes",
-        "Eerste pull request geaccepteerd! Open source is tof 🎉"
+        "Eerste pull request geaccepteerd! Open source is tof 🎉",
+        "Vandaag voor het eerst een volledige REST API opgezet met Flask én getest met Postman. Het was even puzzelen met de routes en error handling, maar uiteindelijk liep alles als een trein. Echt leuk om te zien hoe alles samenkomt. Volgende stap: JWT authenticatie toevoegen! 🔐",
+        "Ik ben al een paar dagen bezig met het refactoren van een oud project, en het is echt bizar hoeveel beter mijn code nu is dan een jaar geleden. Alles is ineens zoveel leesbaarder, modulaire functies, en minder gekke hacks. Het voelt alsof ik m’n eigen code in een andere taal lees 😅",
+        "Vandaag geprobeerd om mijn project mobile-first te maken. Niet normaal hoeveel kleine layout bugs je tegenkomt zodra je op een kleiner scherm kijkt. Maar wat een verschil als het goed werkt! Responsive design is echt een kunst op zich 📱🎨",
+        """Afgelopen maand heb ik mezelf uitgedaagd om een volledige webapplicatie from scratch te bouwen, zonder tutorials stap voor stap te volgen — gewoon zelf uitzoeken, documentatie lezen, fouten maken, en vooral: veel leren.
+
+    Ik koos Flask voor de backend, omdat ik al wat ervaring had met Python, en React voor de frontend (dat laatste bleef wel een uitdaging, vooral met state management en props-drilling). Alles lokaal opgezet met Docker, PostgreSQL als database, en uiteindelijk zelfs user authentication met JWT geïmplementeerd.
+
+    De eerste week was chaotisch. Routes werkten niet, ik kreeg rare CORS-fouten, en m’n React-componenten herlaadden constant zonder reden. Maar iedere keer als ik een bug oploste, voelde het als een mini-overwinning."""
     ]
+
+    sample_comment_texts = [
+        "Haha, dat gevoel als alles ineens werkt... pure magie 😄",
+        "Knap dat je alles zelf hebt uitgezocht zonder tutorials. Dat is echt de beste manier om te leren.",
+        "Ik herken dat gevoel van spaghetti-code tijdens het refactoren. Je leert zoveel van je oude fouten!",
+        "Eerste pull request is altijd spannend. Goed gedaan! 💪",
+        "Dat moment wanneer je begrijpt hoe het werkt… zo'n opluchting!",
+        "Zonlicht tijdens het coderen? Wat is dat? 😅",
+        "Ik blijf het lastig vinden om frontend en backend mooi te laten samenwerken. Props dat jij het combineert!",
+        "Wat een herkenbare post. Ik leer ook elke dag nog bij. Programmeerreis ftw! 🧭",
+        "Clean Code zou eigenlijk verplichte kost moeten zijn voor elke dev.",
+        "Even een random vraag: gebruik je TypeScript in je React-projecten?",
+        "Heb je tips om Flask routes schoon te houden bij grotere projecten?",
+        "Ik zit nu ook midden in een project from scratch. Leuk en frustrerend tegelijk 😂",
+        "Gebruik je dark mode in je IDE? Vraag voor een vriend.",
+        "Dat eerste gevoel van 'wow, ik snap het' blijft magisch. Gefeliciteerd met je vooruitgang!",
+        "Soms voelt debuggen als een escape room zonder hints. Maar oh wat is het lekker als je eruit komt.",
+        "Ik ben benieuwd of je achteraf dingen anders zou aanpakken. Reflecties zijn altijd interessant!",
+        "Dit soort updates motiveren echt. Thanks voor het delen en succes met de volgende stap!"
+    ]
+
 
     posts = []
     for i in range(30):
@@ -131,7 +163,7 @@ def generate_dummy_data():
     comments = []
     for i in range(30):
         comment = Comment(
-            content=f"Dit is een comment {i}.",
+            content=random.choice(sample_comment_texts),
             user=random.choice(users),
             post=random.choice(posts)
         )
@@ -147,7 +179,7 @@ def generate_dummy_data():
             description=f"Beschrijving voor bron {i}",
             school_subject=random.choice(['Werkplaats', 'Programming Essentials']),
             subject=random.choice(['Programmeren', 'Python', 'Javascript']),
-            difficulty=random.choice(['makkelijk', 'gemiddeld', 'moeilijk']),
+            difficulty=random.choice(['easy', 'medium', 'hard', 'expert']),
             user=random.choice(users)
         )
         if source.type == 'video':
@@ -188,6 +220,7 @@ def generate_dummy_data():
     print(f"{Source.query.count()} sources in DB")
     print(f"{Rating.query.count()} ratings in DB")
     print("Using DB path:", db_path)
+
 
 if __name__ == "__main__":
     os.makedirs(app.instance_path, exist_ok=True)

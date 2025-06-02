@@ -84,9 +84,9 @@ const Search = () => {
                                     setFilter(item);
                                     setQuery("");
                                 }}
-                                className={`px-3 py-2 rounded-md mr-2 ${isActive ? "bg-rac" : "bg-gray-200"}`}
+                                className={`px-3 py-2 rounded-md mr-2 ${isActive ? "bg-rac" : "bg-gray-100"}`}
                             >
-                                <Text className={isActive ? "text-white" : "text-black"}>
+                                <Text className={isActive ? "text-white" : "text-neutral-700"}>
                                     {item === "Posts" ? "Posts" : item === "Sources" ? "Bronnen" : "Gebruikers"}
                                 </Text>
                             </Pressable>
