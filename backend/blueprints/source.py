@@ -12,6 +12,7 @@ def get_sources():
     try:
         search_term = request.args.get('search')
         sort_by = request.args.get('sort')
+        user_id = request.args.get('user_id')
         offset = request.args.get('offset')
         limit = request.args.get('limit')
 
@@ -20,8 +21,10 @@ def get_sources():
             search_term=search_term,
             sort_by=sort_by,
             offset=offset,
-            limit=limit
+            limit=limit,
+            user_id=user_id
         )
+
         return {
             "success": True,
             "data": sources

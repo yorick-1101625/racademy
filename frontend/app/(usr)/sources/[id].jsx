@@ -11,14 +11,6 @@ function SourceDetails() {
 
     const {data: source, isPending, error} = useFetch(`/api/source/${id}`);
 
-    const navigation = useNavigation();
-
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerTitle: () => "",
-        });
-    }, [navigation]);
-
     if (isPending) return (
         <View className="flex-1 justify-center items-center">
             <ActivityIndicator size="large" color="#3daad3"/>

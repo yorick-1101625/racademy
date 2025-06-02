@@ -198,9 +198,7 @@ function CreateSource() {
                 'mime_type': image.mimeType,
             };
         }
-        else {
-            imageData = image?.uri.replace(BASE_URL, "");
-        }
+        console.log(imageData)
 
         fatty(`/api/source/${id}`, 'PATCH', {
             'school_subject': schoolSubject,
@@ -312,8 +310,7 @@ function CreateSource() {
                         )
                     }
                     {
-
-                        type !== 'video' ? <ImagePicker state={[image, setImage]}/> : <View className="flex-1"/>
+                        type === 'book' ? <ImagePicker state={[image, setImage]}/> : <View className="flex-1"/>
                     }
                 </ScrollView>
             </SafeAreaView>

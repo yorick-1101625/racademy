@@ -40,6 +40,31 @@ function _Layout() {
                         )
                     }}
                 />
+
+                <Stack.Screen
+                    name="posts"
+                    options={{
+                        headerTitle: () => ""
+                    }}
+                />
+                <Stack.Screen
+                    name="profile"
+                    options={{
+                        headerTitle: () => ""
+                    }}
+                />
+                <Stack.Screen
+                    name="sources"
+                    options={{
+                        headerTitle: () => ""
+                    }}
+                />
+                <Stack.Screen
+                    name="users"
+                    options={{
+                        headerTitle: () => ""
+                    }}
+                />
             </Stack>
         </UserOnly>
     );

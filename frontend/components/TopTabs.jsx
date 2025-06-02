@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import {Pressable, ScrollView, Text, View} from 'react-native';
 
 function TopTabs({ tabs, state }) {
     /*
@@ -12,7 +12,8 @@ function TopTabs({ tabs, state }) {
     const [_state, _setState] = state;
 
     return (
-        <View className="flex-row mt-4 mb-4">
+
+        <ScrollView className=" mt-4 mb-4" horizontal>
             {tabs.map((tab) => (
                 <Pressable
                     key={tab.value}
@@ -24,7 +25,7 @@ function TopTabs({ tabs, state }) {
                     </Text>
                 </Pressable>
             ))}
-        </View>
+        </ScrollView>
     );
 }
 

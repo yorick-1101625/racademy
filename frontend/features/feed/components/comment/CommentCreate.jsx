@@ -6,13 +6,14 @@ import {Ionicons} from "@expo/vector-icons";
 import {showError, showSuccess} from "@/utils/toast";
 import fatty from "@/utils/fatty";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {router} from "expo-router";
+import {useRouter} from "expo-router";
 
-function CommentCreate(post_id) {
+function CommentCreate({ postId }) {
     const {user} = useUser();
     const [comment, setComment] = useState("");
     const insets = useSafeAreaInsets();
     const isMobile = Platform.OS === 'ios' || Platform.OS === 'android';
+    const router = useRouter();
 
     function handleSubmit() {
         if (!(comment.trim())) {
@@ -22,12 +23,12 @@ function CommentCreate(post_id) {
 
         fatty('/api/comment/', 'POST', {
             content: comment.trim(),
-            post_id: post_id.post_id
+            post_id: postId
         })
             .then(data => {
                 if (data.success) {
                     showSuccess("Comment toegevoegd.");
-                    router.push(`/posts/${post_id.post_id}?refresh=1`);
+                    router.replace(`/posts/${postId}`);
                 } else {
                     // console.error(data.message);
                     showError("Er ging iets fout.");
@@ -44,11 +45,11 @@ function CommentCreate(post_id) {
                 className="w-10 h-10 rounded-full"
             />
 
-            <View className="flex-1 border border-gray-300 rounded-md px-4 py-2 justify-center ml-3">
+            <View className="flex-1 border border-gray-300 rounded-md justify-center ml-3">
                 <TextInput
                     placeholder="Wat wil je zeggen..."
                     placeholderTextColor="#888"
-                    className="text-sm text-black p-0 outline-none"
+                    className="text-sm text-black p-0 outline-none px-4 py-2"
                     multiline={false}
                     onChangeText={setComment}
                 />

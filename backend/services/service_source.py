@@ -14,7 +14,7 @@ from backend.utils.validators import is_isbn
 class SourceService:
 
     @staticmethod
-    def get_all_sources(current_user_id, search_term=None, sort_by='recent', offset=0, limit=None):
+    def get_all_sources(current_user_id, search_term=None, user_id=None, sort_by='recent', offset=0, limit=None):
         query = db.session.query(Source).join(Source.user)
 
         if search_term:
@@ -28,14 +28,18 @@ class SourceService:
                 )
             )
 
+        if user_id:
+            query = query.filter(Source.user_id == user_id)
+
         if sort_by == 'rating':
             query = (
                 query.outerjoin(Source.ratings)
                 .group_by(Source.id)
                 .order_by(
-                    db.func.avg(Rating.rating).desc(),  # Calculate average rating for a source
+                    db.func.avg(Rating.rating).desc(),
                     Source.created_at.desc()
-                ))
+                )
+            )
         else:
             query = query.order_by(Source.created_at.desc())
 
@@ -43,8 +47,6 @@ class SourceService:
 
         current_user = User.query.get(current_user_id)
         sources = query.all()
-
-        # Add user, number of comments, number of likes
         result = []
         for source in sources:
             current_rating = Rating.query.filter(
@@ -90,24 +92,19 @@ class SourceService:
     @staticmethod
     def create_source(data, current_user_id):
         try:
-            # Validation
-            if not data.get('type'):            return Exception('Must provide source type.')
-            if not data.get('title'):           return Exception('Must provide title.')
-            if not data.get('description'):     return Exception('Must provide description.')
-            if not data.get('school_subject'):  return Exception('Must provide school subject.')
-            if not data.get('subject'):         return Exception('Must provide subject.')
-            if not data.get('difficulty'):      return Exception('Must provide difficulty.')
+            if not data.get('type'): return Exception('Must provide source type.')
+            if not data.get('title'): return Exception('Must provide title.')
+            if not data.get('description'): return Exception('Must provide description.')
+            if not data.get('school_subject'): return Exception('Must provide school subject.')
+            if not data.get('subject'): return Exception('Must provide subject.')
+            if not data.get('difficulty'): return Exception('Must provide difficulty.')
 
             if data.get('type') == 'book':
-                if not data.get('isbn'):
-                    return Exception('Must provide ISBN when type is book')
-                if not is_isbn(data.get('isbn')):
-                    return Exception('Invalid ISBN')
-                if data.get('image') is None:
-                    return Exception('Must provide image when type is book')
+                if not data.get('isbn'): return Exception('Must provide ISBN when type is book')
+                if not is_isbn(data.get('isbn')): return Exception('Invalid ISBN')
+                if data.get('image') is None: return Exception('Must provide image when type is book')
             else:
-                if not data.get('url'):
-                    return Exception('Must provide URL')
+                if not data.get('url'): return Exception('Must provide URL')
 
             new_source = Source(
                 type=data.get('type'),
@@ -142,12 +139,11 @@ class SourceService:
         except SQLAlchemyError as e:
             db.session.rollback()
             print(f"Error creating source: {e}")
-            return Exception('Error creating source')
+            return None
         except Exception as e:
-            print(f"Error creating source: {e}")
             db.session.rollback()
-            return Exception('Error creating source')
-
+            print(f"Error creating source: {e}")
+            return None
 
     @staticmethod
     def delete_source(source_id):
@@ -173,32 +169,17 @@ class SourceService:
     @staticmethod
     def edit_source(data, source_id):
         try:
-            # Validation
-            if not data.get('type'):            return Exception('Must provide source type.')
-            if not data.get('title'):           return Exception('Must provide title.')
-            if not data.get('description'):     return Exception('Must provide description.')
-            if not data.get('school_subject'):  return Exception('Must provide school subject.')
-            if not data.get('subject'):         return Exception('Must provide subject.')
-            if not data.get('difficulty'):      return Exception('Must provide difficulty.')
-
-            if data.get('type') == 'book':
-                if not data.get('isbn'):
-                    return Exception('Must provide ISBN when type is book')
-                if not is_isbn(data.get('isbn')):
-                    return Exception('Invalid ISBN')
-                if data.get('image') is None:
-                    return Exception('Must provide image when type is book')
-            else:
-                if not data.get('url'):
-                    return Exception('Must provide URL')
-
             source = Source.query.get(source_id)
+            source.type = data.get('type', source.type)
+
+            # Validation
+            if source.type == 'book':
+                if data.get('isbn') and not is_isbn(data.get('isbn')):
+                    return Exception('Invalid ISBN')
+
             image = data.get('image')
-            source_type = data.get('type')
-            if image and (source_type == 'book' or source_type == 'link') and not image == source.image:
-                # Delete old image
-                if source.image:
-                    os.remove(str(current_app.config['ROOT_PATH']) + (source.image.replace('/', os.sep)))
+            if image and (source.type == 'book') and not image == source.image:
+                old_image = source.image
 
                 mime_type = image['mime_type'].split('/')
                 if mime_type[0] != 'image':
@@ -211,7 +192,10 @@ class SourceService:
                 image_path = '/' + str(image_path.relative_to(current_app.config['ROOT_PATH'])).replace(os.sep, '/')
                 source.image = image_path
 
-            source.type = data.get('type', source.type)
+                # Delete old image
+                if old_image:
+                    os.remove(str(current_app.config['ROOT_PATH']) + (source.image.replace('/', os.sep)))
+
             source.title = data.get('title', source.title)
             source.description = data.get('description', source.description)
             source.school_subject = data.get('school_subject', source.school_subject)

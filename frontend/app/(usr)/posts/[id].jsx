@@ -13,16 +13,8 @@ import Comment from "@/features/feed/components/comment/Comment";
 function PostDetails() {
     const {id} = useLocalSearchParams();
     const {data: post, isPending, error} = useFetch(`/api/post/${id}`);
-    const navigation = useNavigation();
     const {refresh: refreshParam} = useLocalSearchParams();
     const [refresh, setRefresh] = useState(0);
-
-    // Set tab title at the top of the screen
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerTitle: () => "",
-        });
-    }, [navigation]);
 
     useFocusEffect(
         useCallback(() => {
@@ -64,7 +56,7 @@ function PostDetails() {
                         />
                     </View>
 
-                    <CommentCreate post_id={id}/>
+                    <CommentCreate postId={id}/>
                 </KeyboardAvoidingView>
             </SafeAreaView>
         </>
