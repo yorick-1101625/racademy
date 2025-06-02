@@ -41,6 +41,16 @@ const Search = () => {
         return () => clearTimeout(timer);
     }, [query]);
 
+    useEffect(() => {
+        if (filter === "Posts") {
+            setSortBy("recent");
+        } else if (filter === "Sources") {
+            setSortBy("recent");
+        } else if (filter === "Users") {
+            setSortBy("asc");
+        }
+    }, [filter]);
+
     let sortOptions = [];
 
     if (filter === "Posts") {
@@ -52,6 +62,11 @@ const Search = () => {
         sortOptions = [
             {label: "Meest recent", value: "recent"},
             {label: "Hoogste rating", value: "rating"},
+        ];
+    } else if (filter === "Users") {
+        sortOptions = [
+            {label: "Alfabetisch (A-Z)", value: "asc"},
+            {label: "Alfabetisch (Z-A)", value: "desc"},
         ];
     }
 
@@ -109,7 +124,7 @@ const Search = () => {
                             params={params}
                             noResultsMessage={`Geen posts gevonden volgens je zoekopdracht.`}
                             renderItem={
-                                ({item}) => <Post post={item} />
+                                ({item}) => <Post post={item}/>
                             }
                         />
                     ) : filter === "Sources" ? (
@@ -118,7 +133,7 @@ const Search = () => {
                             params={params}
                             noResultsMessage={`Geen bronnen gevonden volgens je zoekopdracht.`}
                             renderItem={
-                                ({item}) => <Source source={item} />
+                                ({item}) => <Source source={item}/>
                             }
                         />
                     ) : (
@@ -127,7 +142,7 @@ const Search = () => {
                             params={params}
                             noResultsMessage={`Geen gebruikers gevonden volgens je zoekopdracht.`}
                             renderItem={
-                                ({item}) => <User user={item} />
+                                ({item}) => <User user={item}/>
                             }
                         />
                     )
