@@ -45,7 +45,7 @@ function PostDetails() {
                         <CommentList post_id={id}/>
                     </View>
 
-                    <CommentCreate post_id={id}/>
+                    <CommentCreate postId={id}/>
                 </KeyboardAvoidingView>
             </SafeAreaView>
         </>

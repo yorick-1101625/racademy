@@ -1,5 +1,8 @@
 import os
+import shutil
 import string
+from pathlib import Path
+from uuid import uuid4
 
 from flask import Flask
 from datetime import datetime
@@ -16,6 +19,7 @@ app = Flask(__name__, instance_path=instance_path)
 db_path = os.path.join(app.instance_path, 'database.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+ROOT_PATH = Path(__file__).parent.parent.resolve()
 
 init_db(app)
 
@@ -31,13 +35,36 @@ def generate_random_youtube_url():
     ]
     return random.choice(youtube_urls)
 
+def generate_files():
+    shutil.rmtree(ROOT_PATH / 'static' / 'user_images' / 'sources', ignore_errors=True)
+    shutil.rmtree(ROOT_PATH / 'static' / 'user_images' / 'profile_pictures', ignore_errors=True)
+
+    os.makedirs("../static/user_images/profile_pictures", exist_ok=True)
+    os.makedirs("../static/user_images/sources", exist_ok=True)
+    # Copy dummy images to user_images folder
+    shutil.copy(
+        ROOT_PATH / 'static' / 'dummy_images' / 'default.png',
+        ROOT_PATH / 'static' / 'user_images' / 'profile_pictures' / f'default.png'
+    )
+    shutil.copy(
+        ROOT_PATH / 'static' / 'dummy_images' / 'kevin.webp',
+        ROOT_PATH / 'static' / 'user_images' / 'profile_pictures' / f'kevin.webp'
+    )
+    shutil.copy(
+        ROOT_PATH / 'static' / 'dummy_images' / 'marco.webp',
+        ROOT_PATH / 'static' / 'user_images' / 'profile_pictures' / f'marco.webp'
+    )
+    shutil.copy(
+        ROOT_PATH / 'static' / 'dummy_images' / 'yorick.webp',
+        ROOT_PATH / 'static' / 'user_images' / 'profile_pictures' / f'yorick.webp'
+    )
+
 
 def generate_dummy_data():
     db.drop_all()
     db.create_all()
 
-    os.makedirs("../static/user_images/profile_pictures", exist_ok=True)
-    os.makedirs("../static/user_images/sources", exist_ok=True)
+    generate_files()
 
     users = [
         User(
@@ -186,7 +213,12 @@ def generate_dummy_data():
             source.url = generate_random_youtube_url()
         if source.type == 'book':
             source.isbn = generate_random_isbn()
-            source.image = '/static/user_images/sources/bookcover.jpg'
+            img_id = uuid4()
+            shutil.copy(
+                ROOT_PATH/'static'/'dummy_images'/'bookcover.jpg',
+                ROOT_PATH/'static'/'user_images'/'sources'/f'{img_id}.jpg'
+            )
+            source.image = f'/static/user_images/sources/{img_id}.jpg'
         if source.type == 'article':
             source.url = "https://www.netguru.com/glossary/react-native"
 

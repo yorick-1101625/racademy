@@ -44,7 +44,9 @@ export default function UserProfile({user}) {
                 {/*<Text className="text-sm mt-1">{userPosts.length} posts | {userSources.length} bronnen</Text>*/}
             </View>
 
-            <TopTabs tabs={tabs} state={[activeTab, setActiveTab]}/>
+            <View>
+                <TopTabs tabs={tabs} state={[activeTab, setActiveTab]}/>
+            </View>
 
             {/* Tab Content */}
             <View className="mt-6 flex-1">

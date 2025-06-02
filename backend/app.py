@@ -10,7 +10,7 @@ from backend.database.db import init_db, db
 
 
 ROOT_PATH = Path(__file__).parent.resolve()
-STATIC_PATH = ROOT_PATH.parent / 'static'
+STATIC_PATH = ROOT_PATH / 'static'
 
 
 app = Flask(__name__)

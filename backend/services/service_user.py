@@ -1,3 +1,4 @@
+from flask import current_app
 from sqlalchemy import or_, and_
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -95,22 +96,33 @@ class UserService:
 
             image_data = data.get('image')
             if image_data and 'base64' in image_data and 'mime_type' in image_data:
-                base64_str = image_data['base64']
+                old_picture = user.profile_picture
+
+                # Check if file is an image
                 mime_type = image_data['mime_type']
-                ext = 'jpg' if mime_type == 'image/jpeg' else 'png' if mime_type == 'image/png' else 'jpg'
+                file_type = mime_type.split('/')[0]
+                if file_type != 'image':
+                    return Exception('Uploaded file must be an image')
 
+                # Create filename
+                file_extension = mime_type.split('/')[-1]
+                filename = f"{uuid.uuid4()}.{file_extension}"
+
+                # Save image in bytes
+                base64_str = image_data['base64']
                 image_bytes = base64.b64decode(base64_str)
-                filename = f"{uuid.uuid4()}.{ext}"
-                project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-                save_dir = os.path.join(project_root, 'static', 'user_images', 'profile_pictures')
-
+                save_dir = current_app.config['IMAGE_UPLOAD_FOLDER'] / 'profile_pictures'
                 os.makedirs(save_dir, exist_ok=True)
 
-                file_path = os.path.join(save_dir, filename)
+                file_path = save_dir / filename
                 with open(file_path, 'wb') as f:
                     f.write(image_bytes)
 
                 user.profile_picture = f"/static/user_images/profile_pictures/{filename}"
+
+                # Delete old image
+                if old_picture != "/static/user_images/profile_pictures/default.png":
+                    os.remove(str(current_app.config['ROOT_PATH']) + (old_picture.replace('/', os.sep)))
 
             user.email = data.get('email', user.email)
             user.username = data.get('username', user.username)

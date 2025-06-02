@@ -169,32 +169,17 @@ class SourceService:
     @staticmethod
     def edit_source(data, source_id):
         try:
-            # Validation
-            if not data.get('type'):            return Exception('Must provide source type.')
-            if not data.get('title'):           return Exception('Must provide title.')
-            if not data.get('description'):     return Exception('Must provide description.')
-            if not data.get('school_subject'):  return Exception('Must provide school subject.')
-            if not data.get('subject'):         return Exception('Must provide subject.')
-            if not data.get('difficulty'):      return Exception('Must provide difficulty.')
-
-            if data.get('type') == 'book':
-                if not data.get('isbn'):
-                    return Exception('Must provide ISBN when type is book')
-                if not is_isbn(data.get('isbn')):
-                    return Exception('Invalid ISBN')
-                if data.get('image') is None:
-                    return Exception('Must provide image when type is book')
-            else:
-                if not data.get('url'):
-                    return Exception('Must provide URL')
-
             source = Source.query.get(source_id)
+            source.type = data.get('type', source.type)
+
+            # Validation
+            if source.type == 'book':
+                if data.get('isbn') and not is_isbn(data.get('isbn')):
+                    return Exception('Invalid ISBN')
+
             image = data.get('image')
-            source_type = data.get('type')
-            if image and (source_type == 'book' or source_type == 'link') and not image == source.image:
-                # Delete old image
-                if source.image:
-                    os.remove(str(current_app.config['ROOT_PATH']) + (source.image.replace('/', os.sep)))
+            if image and (source.type == 'book') and not image == source.image:
+                old_image = source.image
 
                 mime_type = image['mime_type'].split('/')
                 if mime_type[0] != 'image':
@@ -207,7 +192,10 @@ class SourceService:
                 image_path = '/' + str(image_path.relative_to(current_app.config['ROOT_PATH'])).replace(os.sep, '/')
                 source.image = image_path
 
-            source.type = data.get('type', source.type)
+                # Delete old image
+                if old_image:
+                    os.remove(str(current_app.config['ROOT_PATH']) + (source.image.replace('/', os.sep)))
+
             source.title = data.get('title', source.title)
             source.description = data.get('description', source.description)
             source.school_subject = data.get('school_subject', source.school_subject)
