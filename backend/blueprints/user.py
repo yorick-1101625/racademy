@@ -28,6 +28,51 @@ def get_users():
         }), 500
 
 
+@api_user.route("/<user_id>/liked-posts", methods=["GET"])
+@cross_origin()
+def get_liked_posts(user_id):
+    try:
+        current_user_id = get_jwt_identity()
+        liked_posts = UserService.get_liked_posts(user_id, current_user_id)
+        return jsonify({
+            "success": True,
+            "data": liked_posts
+        }), 200
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[get_liked_posts] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
+
+
+@api_user.route("/<user_id>/bookmarked-posts", methods=["GET"])
+@cross_origin()
+def get_bookmarked_posts(user_id):
+    try:
+        current_user_id = get_jwt_identity()
+        bookmarked_posts = UserService.get_bookmarked_posts(user_id, current_user_id)
+        bookmarked_sources = UserService.get_bookmarked_sources(user_id)
+        combined = {
+            "posts": bookmarked_posts,
+            "sources": bookmarked_sources
+        }
+        return jsonify({
+            "success": True,
+            "data": combined
+        }), 200
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[get_bookmarked_posts] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
+
+
 @api_user.route("/<user_id>", methods=["GET"])
 def get_user(user_id):
     try:
@@ -107,7 +152,6 @@ def update_user():
 @api_user.route("/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     try:
-        # If user not blocked...
         if user_id != get_jwt_identity(): # And not admin
             return {
                 "success": False,

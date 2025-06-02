@@ -32,12 +32,103 @@ class UserService:
         return users
 
     @staticmethod
+    def get_liked_posts(user_id, current_user_id=None):
+        from backend.models.models import UserLikedPost
+        from sqlalchemy.orm import joinedload
+        posts = (
+            db.session.query(Post)
+            .options(
+                joinedload(Post.comments),
+                joinedload(Post.users_liked),
+                joinedload(Post.users_bookmarked),
+            )
+            .join(UserLikedPost, Post.id == UserLikedPost.post_id)
+            .filter(UserLikedPost.user_id == user_id)
+            .all()
+        )
+        liked_posts_dicts = []
+        current_user = None
+        if current_user_id:
+            current_user = User.query.get(current_user_id)
+        for post in posts:
+            post_dict = post.to_dict()
+            post_dict['comments'] = [comment.to_dict() for comment in post.comments]
+            post_dict['user'] = {
+                'id': post.user.id,
+                'username': post.user.username,
+                'profile_picture': post.user.profile_picture
+            }
+            post_dict['number_of_comments'] = len(post.comments)
+            post_dict['number_of_likes'] = len(post.users_liked)
+            post_dict['liked_by_current_user'] = post in current_user.liked_posts if current_user else False
+            post_dict['bookmarked_by_current_user'] = post in current_user.bookmarked_posts if current_user else False
+            liked_posts_dicts.append(post_dict)
+        return liked_posts_dicts
+
+    @staticmethod
     def get_user_by_id(user_id):
         user = User.query.get(user_id)
         if user:
             user = user.to_dict()
             user.pop("password", None)
         return user if user else None
+
+    @staticmethod
+    def get_bookmarked_posts(user_id, current_user_id=None):
+        from backend.models.models import UserBookmarkedPost
+        from sqlalchemy.orm import joinedload
+        posts = (
+            db.session.query(Post)
+            .options(
+                joinedload(Post.comments),
+                joinedload(Post.users_liked),
+                joinedload(Post.users_bookmarked),
+            )
+            .join(UserBookmarkedPost, Post.id == UserBookmarkedPost.post_id)
+            .filter(UserBookmarkedPost.user_id == user_id)
+            .all()
+        )
+        bookmarked_posts_dicts = []
+        current_user = None
+        if current_user_id:
+            current_user = User.query.get(current_user_id)
+        for post in posts:
+            post_dict = post.to_dict()
+            post_dict['comments'] = [comment.to_dict() for comment in post.comments]
+            post_dict['user'] = {
+                'id': post.user.id,
+                'username': post.user.username,
+                'profile_picture': post.user.profile_picture
+            }
+            post_dict['number_of_comments'] = len(post.comments)
+            post_dict['number_of_likes'] = len(post.users_liked)
+            post_dict['liked_by_current_user'] = post in current_user.liked_posts if current_user else False
+            post_dict['bookmarked_by_current_user'] = post in current_user.bookmarked_posts if current_user else False
+            bookmarked_posts_dicts.append(post_dict)
+        return bookmarked_posts_dicts
+
+    @staticmethod
+    def get_bookmarked_sources(user_id):
+        from backend.models.models import Source, UserBookmarkedSource
+        from sqlalchemy.orm import joinedload
+
+        sources = (
+            db.session.query(Source)
+            .options(joinedload(Source.user))  # essentieel voor .user in to_dict()
+            .join(UserBookmarkedSource, Source.id == UserBookmarkedSource.source_id)
+            .filter(UserBookmarkedSource.user_id == user_id)
+            .all()
+        )
+
+        current_user = User.query.get(user_id)
+        result = []
+
+        for source in sources:
+            source_dict = source.to_dict()
+            source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
+            result.append(source_dict)
+
+        return result
 
     # TODO: Implement register instead of create_user
     @staticmethod
