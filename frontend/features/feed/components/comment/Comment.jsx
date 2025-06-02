@@ -3,13 +3,13 @@ import {BASE_URL} from "@/utils/url";
 import {Ionicons} from "@expo/vector-icons";
 import React, {useState} from "react";
 import BottomModal from "@/components/BottomModal";
-import {Link} from "expo-router";
+import {Link, router} from "expo-router";
 import Kebab from "@/components/Kebab";
 import fatty from "@/utils/fatty";
 import {showError, showSuccess} from "@/utils/toast";
 import useUser from "@/hooks/useUser";
 
-function Comment({comment}) {
+function Comment({comment, post_id}) {
     const [isVisible, setIsVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
@@ -21,6 +21,7 @@ function Comment({comment}) {
             .then(data => {
                 if (data.success) {
                     showSuccess("Comment is verwijderd")
+                    router.push(`/posts/${post_id}?refresh=1`);
                 } else if (!data.success) {
                     showError("Er ging iets mis")
                 }

@@ -11,8 +11,15 @@ api_user = Blueprint("api_user", __name__)
 def get_users():
     try:
         search_term = request.args.get('search')
+        sort_by = request.args.get('sort')
+        offset = int(request.args.get('offset', 0))
+        limit = int(request.args.get('limit', 10))
+
         users = UserService.get_all_users(
-            search_term=search_term
+            search_term=search_term,
+            sort_by = sort_by,
+            offset = offset,
+            limit = limit
         )
         return jsonify({
             "success": True,

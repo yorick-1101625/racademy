@@ -1,19 +1,21 @@
 import {ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, View} from 'react-native';
-import {useLocalSearchParams, useNavigation} from "expo-router";
+import {router, useFocusEffect, useLocalSearchParams, useNavigation} from "expo-router";
 import useFetch from "@/hooks/useFetch";
 import Error from "@/components/Error";
 import Post from "@/features/feed/components/post/Post";
-import {useLayoutEffect} from "react";
+import React, {useCallback, useLayoutEffect, useState} from "react";
 import CommentCreate from "@/features/feed/components/comment/CommentCreate";
 import CommentList from "@/features/feed/components/comment/CommentList";
+import InfiniteScrollList from "@/components/InfiniteScrollList";
+import Comment from "@/features/feed/components/comment/Comment";
 
 
 function PostDetails() {
     const {id} = useLocalSearchParams();
-
     const {data: post, isPending, error} = useFetch(`/api/post/${id}`);
-
     const navigation = useNavigation();
+    const {refresh: refreshParam} = useLocalSearchParams();
+    const [refresh, setRefresh] = useState(0);
 
     // Set tab title at the top of the screen
     useLayoutEffect(() => {
@@ -21,6 +23,15 @@ function PostDetails() {
             headerTitle: () => "",
         });
     }, [navigation]);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (refreshParam) {
+                setRefresh(i => i + 1);
+                router.replace(`/posts/${id}`);
+            }
+        }, [refreshParam])
+    );
 
     if (isPending) return (
         <View className="flex-1 justify-center items-center">
@@ -42,7 +53,15 @@ function PostDetails() {
                 >
                     <View className="flex-1">
                         <Post post={post}/>
-                        <CommentList post_id={id}/>
+                        {/*<CommentList post_id={id}/>*/}
+                        <InfiniteScrollList
+                            refresh={refresh}
+                            renderItem={({item}) => <Comment comment={item} post_id={id}/>}
+                            url={`/api/comment/${id}`}
+                            params="sort=recent"
+                            noResultsTitle=""
+                            noResultsMessage=""
+                        />
                     </View>
 
                     <CommentCreate postId={id}/>

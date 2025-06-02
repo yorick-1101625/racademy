@@ -137,7 +137,7 @@ function CreateSource() {
                 if (data.success) {
                     showSuccess('Bron succesvol aangemaakt!');
                     // router.push(`/sources/${data.data.id}`);
-                    router.push(`/sources/`);
+                     router.push('/sources?refresh=1');
                 } else {
                     console.error(data.message);
                     showError('Er is iets misgegaan.');

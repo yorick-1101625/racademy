@@ -11,7 +11,7 @@ from backend.utils.validators import is_hr_mail
 class UserService:
 
     @staticmethod
-    def get_all_users(search_term=None, offset=0, limit=10):
+    def get_all_users(search_term=None, sort_by='asc', offset=0, limit=None):
         query = db.session.query(User)
 
         if search_term:
@@ -23,6 +23,11 @@ class UserService:
                     db.func.lower(User.study).like(search_term),
                 )
             )
+
+        if sort_by == 'desc':
+            query = query.order_by(User.email.desc())
+        else:
+            query = query.order_by(User.email.asc())
 
         query = query.offset(offset).limit(limit)
         users = query.all()

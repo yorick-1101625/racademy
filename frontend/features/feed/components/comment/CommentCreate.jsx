@@ -15,8 +15,6 @@ function CommentCreate({ postId }) {
     const isMobile = Platform.OS === 'ios' || Platform.OS === 'android';
     const router = useRouter();
 
-
-
     function handleSubmit() {
         if (!(comment.trim())) {
             showError("Comment mag niet leeg zijn.");

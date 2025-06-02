@@ -81,7 +81,7 @@ function CreatePost() {
                     // router.push(`/posts/${data.data.id}`);
 
                     // Push to post feed
-                    router.push(`/posts/`);
+                    router.push(`/posts?refresh=1`);
                 } else {
                     console.error(data.message);
                     showError("Er ging iets fout.");

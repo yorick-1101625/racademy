@@ -199,7 +199,7 @@ def generate_dummy_data():
     db.session.commit()
 
     sources = []
-    for i in range(70):
+    for i in range(20):
         source = Source(
             type=random.choice(['video', 'article', 'book']),
             title=f"Bron {i}",
