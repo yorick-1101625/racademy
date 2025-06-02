@@ -30,14 +30,7 @@ export default function EditProfile() {
     );
     const [loading, setLoading] = useState(false);
 
-    const navigation = useNavigation();
 
-    // Set tab title at the top of the screen
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            headerTitle: () => "",
-        });
-    }, [navigation]);
 
     async function handleSave() {
         setLoading(true);
