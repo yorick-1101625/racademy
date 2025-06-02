@@ -136,7 +136,8 @@ function CreateSource() {
             .then(data => {
                 if (data.success) {
                     showSuccess('Bron succesvol aangemaakt!');
-                    router.push(`/sources/${data.data.id}`);
+                    // router.push(`/sources/${data.data.id}`);
+                    router.push(`/sources/`);
                 } else {
                     console.error(data.message);
                     showError('Er is iets misgegaan.');

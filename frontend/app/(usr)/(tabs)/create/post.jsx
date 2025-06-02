@@ -76,7 +76,12 @@ function CreatePost() {
             .then(data => {
                 if (data.success) {
                     showSuccess("Post succesvol aangemaakt.");
-                    router.push(`/posts/${data.data.id}`);
+
+                    // Push to post detail page
+                    // router.push(`/posts/${data.data.id}`);
+
+                    // Push to post feed
+                    router.push(`/posts/`);
                 } else {
                     console.error(data.message);
                     showError("Er ging iets fout.");
@@ -101,7 +106,7 @@ function CreatePost() {
                         </View>
 
                         <View className="flex-1">
-                            <View className="flex-row items-center mb-1">
+                            <View className="mb-1">
                                 <Text className="text-base font-bold text-gray-900 mr-2">
                                     {user.username}
                                 </Text>
@@ -111,7 +116,7 @@ function CreatePost() {
                             </View>
                             <MultilineTextInput
                                 placeholder="Wat wil je zeggen..."
-                                className="w-full min-h-32 text-base py-1 placeholder:text-gray-400 outline-none"
+                                className="w-full min-h-32 px-0 py-0 text-base placeholder:text-gray-400 outline-none"
                                 onChangeText={setContent}
                             />
                         </View>

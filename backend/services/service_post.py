@@ -60,7 +60,7 @@ class PostService:
         post = Post.query.get(post_id)
         current_user = User.query.get(current_user_id)
         if not post:
-            raise Exception("Source not found")
+            raise Exception("Post not found")
 
         user = post.user.to_dict()
         user.pop('password')

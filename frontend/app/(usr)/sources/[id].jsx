@@ -1,14 +1,23 @@
 import {ActivityIndicator, View} from 'react-native';
-import {useLocalSearchParams} from "expo-router";
+import {useLocalSearchParams, useNavigation} from "expo-router";
 import useFetch from "@/hooks/useFetch";
 import Source from "@/features/feed/components/source/Source";
 import Error from "@/components/Error";
+import {useLayoutEffect} from "react";
 
 
 function SourceDetails() {
-    const { id } = useLocalSearchParams();
+    const {id} = useLocalSearchParams();
 
     const {data: source, isPending, error} = useFetch(`/api/source/${id}`);
+
+    const navigation = useNavigation();
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitle: () => "",
+        });
+    }, [navigation]);
 
     if (isPending) return (
         <View className="flex-1 justify-center items-center">
@@ -17,7 +26,7 @@ function SourceDetails() {
     );
 
     if (error) return (
-        <Error />
+        <Error/>
     );
 
     return (

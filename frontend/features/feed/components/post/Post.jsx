@@ -59,7 +59,7 @@ function Post({post}) {
             />
 
             {/* Content */}
-            <Link href={`/posts/${post.id}`} className="flex-1">
+            <Link href={`/posts/${post.id}`}>
                 <PostContent content={post.content}/>
             </Link>
 

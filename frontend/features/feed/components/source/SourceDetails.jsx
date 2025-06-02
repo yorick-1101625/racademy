@@ -10,7 +10,16 @@ import fatty from "@/utils/fatty";
 import {showError} from "@/utils/toast";
 import {Link} from "expo-router";
 
-function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, isBookmarked, handleBookmark, currentRating}) {
+function SourceDetails({
+                           sourceId,
+                           createdAt,
+                           schoolSubject,
+                           subject,
+                           ratings,
+                           isBookmarked,
+                           handleBookmark,
+                           currentRating
+                       }) {
 
     const [ratingModalVisible, setRatingModalVisible] = useState(false);
     const [userRating, setUserRating] = useState(currentRating);
@@ -19,14 +28,13 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
     function handleRating(value) {
 
         fatty('/api/user/', "PATCH", {
-                "rated_source": sourceId,
-                "rating": value
-            })
+            "rated_source": sourceId,
+            "rating": value
+        })
             .then(data => {
                 if (data.success) {
                     setUserRating(value);
-                }
-                else {
+                } else {
                     console.error(data.message);
                     showError("Kon beoordeling niet aanpassen.");
                 }
@@ -44,10 +52,12 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
 
     return (
         <>
-            <View className="flex-row justify-between">
-                <Link href={`/sources/${sourceId}`} className="flex flex-col flex-1">
-                    <Text className="text-xs text-gray-500 mt-2">{calculateTimeFromToday(createdAt)}</Text>
-                    <Text className="text-xs text-gray-500">{schoolSubject}: {subject}</Text>
+            <View className="flex-row justify-between  items-end">
+                <Link href={`/sources/${sourceId}`} className="flex flex-col flex-1 mt-1">
+                    <View className="w-full">
+                        <Text className="text-xs text-gray-500">{calculateTimeFromToday(createdAt)}</Text>
+                        <Text className="text-xs text-gray-500">{schoolSubject}: {subject}</Text>
+                    </View>
                 </Link>
 
                 <View className="flex-row items-center right-0 justify-end mt-5">
@@ -55,7 +65,8 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
                         className="flex-row items-center ml-8"
                         onPress={() => setRatingModalVisible(true)}
                     >
-                        <Ionicons name={userRating ? 'star' : 'star-outline'} size={19} color={ userRating ? '#ebc553' : 'gray'}/>
+                        <Ionicons name={userRating ? 'star' : 'star-outline'} size={19}
+                                  color={userRating ? '#ebc553' : 'gray'}/>
                         <Text className="ml-1">{formatRating(averageRating)}</Text>
                     </Pressable>
 
@@ -75,17 +86,18 @@ function SourceDetails({sourceId, createdAt, schoolSubject, subject, ratings, is
             {/* Rating Modal */}
             <BottomModal state={[ratingModalVisible, setRatingModalVisible]}>
                 <View className="flex-row p-5 mb-5 justify-center">
-                {
-                    [10,20,30,40,50].map(i => (
-                        <Pressable
-                            key={i}
-                            className="mx-1"
-                            onPress={() => setSelectedRating(i)}
-                        >
-                            <Ionicons name={ selectedRating >= i ? 'star' : 'star-outline'} color={ selectedRating >= i ? '#ebc553' : 'gray'} size={36} />
-                        </Pressable>
-                    ))
-                }
+                    {
+                        [10, 20, 30, 40, 50].map(i => (
+                            <Pressable
+                                key={i}
+                                className="mx-1"
+                                onPress={() => setSelectedRating(i)}
+                            >
+                                <Ionicons name={selectedRating >= i ? 'star' : 'star-outline'}
+                                          color={selectedRating >= i ? '#ebc553' : 'gray'} size={36}/>
+                            </Pressable>
+                        ))
+                    }
                 </View>
 
 

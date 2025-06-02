@@ -1,4 +1,4 @@
-import {ActivityIndicator, View} from 'react-native';
+import {ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, View} from 'react-native';
 import {useLocalSearchParams, useNavigation} from "expo-router";
 import useFetch from "@/hooks/useFetch";
 import Error from "@/components/Error";
@@ -18,7 +18,7 @@ function PostDetails() {
     // Set tab title at the top of the screen
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: () => null,
+            headerTitle: () => "",
         });
     }, [navigation]);
 
@@ -34,9 +34,20 @@ function PostDetails() {
 
     return (
         <>
-            <Post post={post}/>
-            <CommentList post_id={id}/>
-            <CommentCreate post_id={id}/>
+            <SafeAreaView className="flex-1">
+                <KeyboardAvoidingView
+                    className="flex-1"
+                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
+                >
+                    <View className="flex-1">
+                        <Post post={post}/>
+                        <CommentList post_id={id}/>
+                    </View>
+
+                    <CommentCreate post_id={id}/>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
         </>
     );
 }
