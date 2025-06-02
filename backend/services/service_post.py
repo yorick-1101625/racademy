@@ -46,7 +46,9 @@ class PostService:
         result = []
         for post in posts:
             post_dict = post.to_dict()
-            post_dict['user'] = post.user.to_dict()
+            user = post.user.to_dict()
+            user.pop('password')
+            post_dict['user'] = user
             post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
             post_dict['number_of_likes'] = len(post.users_liked)
             post_dict['number_of_comments'] = len(post.comments)

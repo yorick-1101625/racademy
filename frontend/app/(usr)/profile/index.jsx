@@ -6,7 +6,7 @@ export default function ProfilePage() {
   const { user } = useUser();
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="flex-1">
         <UserProfile user={user} />
     </SafeAreaView>
   );

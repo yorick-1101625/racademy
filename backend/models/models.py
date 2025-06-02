@@ -18,16 +18,19 @@ class BaseModel(db.Model):
 class UserBookmarkedPost(BaseModel):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    bookmarked_at = db.Column(db.DateTime, default=datetime.now)
 
 
 class UserLikedPost(BaseModel):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    liked_at = db.Column(db.DateTime, default=datetime.now)
 
 
 class UserBookmarkedSource(BaseModel):
     user_id     = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     source_id   = db.Column(db.Integer, db.ForeignKey('source.id'), nullable=False)
+    bookmarked_at = db.Column(db.DateTime, default=datetime.now)
 
 
 class PostTag(BaseModel):

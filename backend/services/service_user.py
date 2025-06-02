@@ -2,7 +2,7 @@ from sqlalchemy import or_, and_
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from backend.models.models import User, Post, Source, Rating
+from backend.models.models import User, Post, Source, Rating, UserLikedPost, UserBookmarkedPost, UserBookmarkedSource
 from backend.database.db import db
 from backend.utils.validators import is_hr_mail
 
@@ -191,3 +191,114 @@ class UserService:
             db.session.rollback()
             print(f"Error deleting user: {e}")
             return False
+
+    @staticmethod
+    def get_liked_posts(user_id, current_user_id, offset=0, limit=None ):
+
+        user = User.query.get(user_id)
+        if not user:
+            raise Exception("User does not exist")
+
+        user_liked_posts = (
+            db.session
+                .query(UserLikedPost)
+                .filter(UserLikedPost.user_id == user.id)
+                .order_by(UserLikedPost.liked_at.desc())
+                .limit(limit)
+                .offset(offset)
+                .all()
+        )
+
+        user = user.to_dict()
+        user.pop('password')
+        current_user = User.query.get(current_user_id)
+
+        result = []
+        for user_liked_post in user_liked_posts:
+            post = Post.query.get(user_liked_post.post_id)
+            post_dict = post.to_dict()
+            post_dict['user'] = user
+            post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
+            post_dict['number_of_likes'] = len(post.users_liked)
+            post_dict['number_of_comments'] = len(post.comments)
+            post_dict['liked_by_current_user'] = post in current_user.liked_posts
+            post_dict['bookmarked_by_current_user'] = post in current_user.bookmarked_posts
+            result.append(post_dict)
+
+        return result
+
+
+    @staticmethod
+    def get_bookmarked_posts(user_id, current_user_id, offset=0, limit=None):
+
+        user = User.query.get(user_id)
+        if not user:
+            raise Exception("User does not exist")
+
+        user_bookmarked_posts = (
+            db.session
+            .query(UserBookmarkedPost)
+            .filter(UserBookmarkedPost.user_id == user.id)
+            .order_by(UserBookmarkedPost.bookmarked_at.desc())
+            .limit(limit)
+            .offset(offset)
+            .all()
+        )
+
+        user = user.to_dict()
+        user.pop('password')
+        current_user = User.query.get(current_user_id)
+
+        posts = []
+        for user_bookmarked_post in user_bookmarked_posts:
+            post = Post.query.get(user_bookmarked_post.post_id)
+            post_dict = post.to_dict()
+            post_dict['user'] = user
+            post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
+            post_dict['number_of_likes'] = len(post.users_liked)
+            post_dict['number_of_comments'] = len(post.comments)
+            post_dict['liked_by_current_user'] = post in current_user.liked_posts
+            post_dict['bookmarked_by_current_user'] = post in current_user.bookmarked_posts
+            posts.append(post_dict)
+
+        return posts
+
+
+    @staticmethod
+    def get_bookmarked_sources(user_id, current_user_id, offset=0, limit=None):
+
+        user = User.query.get(user_id)
+        if not user:
+            raise Exception("User does not exist")
+
+        user_bookmarked_sources = (
+            db.session
+            .query(UserBookmarkedSource)
+            .filter(UserBookmarkedSource.user_id == user.id)
+            .order_by(UserBookmarkedSource.bookmarked_at.desc())
+            .limit(limit)
+            .offset(offset)
+            .all()
+        )
+
+        current_user = User.query.get(current_user_id)
+
+        sources = []
+        for user_bookmarked_source in user_bookmarked_sources:
+            source = Source.query.get(user_bookmarked_source.source_id)
+            current_rating = Rating.query.filter(
+                and_(Rating.user_id == current_user_id, Rating.source_id == source.id)
+            ).one_or_none()
+            if current_rating:
+                current_rating = current_rating.rating
+
+            user = source.user.to_dict()
+            user.pop('password')
+            source_dict = source.to_dict()
+            source_dict['user'] = source.user.to_dict()
+            source_dict['ratings'] = [rating.to_dict()['rating'] for rating in source.ratings]
+            source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
+            source_dict['current_rating'] = current_rating
+            sources.append(source_dict)
+
+        return sources

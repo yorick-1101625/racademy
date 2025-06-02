@@ -58,7 +58,7 @@ class SourceService:
             user = source.user.to_dict()
             user.pop('password')
             source_dict = source.to_dict()
-            source_dict['user'] = source.user.to_dict()
+            source_dict['user'] = user
             source_dict['ratings'] = [rating.to_dict()['rating'] for rating in source.ratings]
             source_dict['bookmarked_by_current_user'] = source in current_user.bookmarked_sources
             source_dict['current_rating'] = current_rating

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, current_user
 from werkzeug.exceptions import HTTPException
 from backend.services.service_user import UserService
 
@@ -150,6 +150,90 @@ def get_current_user():
         raise e
     except Exception as e:
         print(f"[login] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
+
+
+@api_user.route('/<user_id>/liked', methods=["GET"])
+def get_liked_posts(user_id):
+    try:
+        offset = request.args.get('offset')
+        limit = request.args.get('limit')
+
+        liked_posts = UserService.get_liked_posts(
+            user_id,
+            current_user_id=get_jwt_identity(),
+            offset=offset,
+            limit=limit
+        )
+
+        return jsonify({
+            "success": True,
+            "data": liked_posts
+        }), 200
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[get_liked_posts] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
+
+
+@api_user.route('/<user_id>/bookmarked/posts', methods=["GET"])
+def get_bookmarked_posts(user_id):
+    try:
+        offset = request.args.get('offset')
+        limit = request.args.get('limit')
+
+        bookmarked_posts = UserService.get_bookmarked_posts(
+            user_id,
+            current_user_id=get_jwt_identity(),
+            offset=offset,
+            limit=limit
+        )
+
+        return jsonify({
+            "success": True,
+            "data": bookmarked_posts
+        }), 200
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[get_bookmarked_posts] Unexpected error: {e}")
+        return jsonify({
+            "success": False,
+            "message": "An unexpected error occurred."
+        }), 500
+
+
+@api_user.route('/<user_id>/bookmarked/sources', methods=["GET"])
+def get_bookmarked_sources(user_id):
+    try:
+        offset = request.args.get('offset')
+        limit = request.args.get('limit')
+
+        bookmarked_sources = UserService.get_bookmarked_sources(
+            user_id,
+            current_user_id=get_jwt_identity(),
+            offset=offset,
+            limit=limit
+        )
+
+        return jsonify({
+            "success": True,
+            "data": bookmarked_sources
+        }), 200
+
+    except HTTPException as e:
+        raise e
+    except Exception as e:
+        print(f"[get_bookmarked_sources] Unexpected error: {e}")
         return jsonify({
             "success": False,
             "message": "An unexpected error occurred."

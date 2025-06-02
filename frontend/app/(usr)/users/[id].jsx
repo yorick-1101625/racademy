@@ -20,7 +20,7 @@ export default function DynamicProfile() {
     if (error) return <Error title="Kon gebruiker niet vinden." />
 
     return (
-        <SafeAreaView>
+        <SafeAreaView className="flex-1">
             <UserProfile user={user} />
         </SafeAreaView>
     );

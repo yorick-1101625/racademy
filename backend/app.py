@@ -13,10 +13,7 @@ ROOT_PATH = Path(__file__).parent.resolve()
 STATIC_PATH = ROOT_PATH.parent / 'static'
 
 
-app = Flask(
-    __name__,
-    static_folder=str(STATIC_PATH)
-)
+app = Flask(__name__)
 
 # Configuratie
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
