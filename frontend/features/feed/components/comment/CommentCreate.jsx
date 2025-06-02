@@ -6,14 +6,13 @@ import {Ionicons} from "@expo/vector-icons";
 import {showError, showSuccess} from "@/utils/toast";
 import fatty from "@/utils/fatty";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {router} from "expo-router";
 
 function CommentCreate(post_id) {
     const {user} = useUser();
     const [comment, setComment] = useState("");
     const insets = useSafeAreaInsets();
     const isMobile = Platform.OS === 'ios' || Platform.OS === 'android';
-
-
 
     function handleSubmit() {
         if (!(comment.trim())) {
@@ -28,6 +27,7 @@ function CommentCreate(post_id) {
             .then(data => {
                 if (data.success) {
                     showSuccess("Comment toegevoegd.");
+                    router.push(`/posts/${post_id.post_id}?refresh=1`);
                 } else {
                     // console.error(data.message);
                     showError("Er ging iets fout.");

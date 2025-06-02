@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import fatty from "@/utils/fatty";
 import Error from "@/components/Error";
 
-function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is niks gevonden.", url, params="", refresh }) {
+function InfiniteScrollList({ renderItem, className="", noResultsTitle="Geen Resultaten", noResultsMessage="Er is niks gevonden.", url, params="", refresh }) {
 
     const [currentOffset, setCurrentOffset] = useState(0);
     const [data, setData] = useState([]);
@@ -77,7 +77,7 @@ function InfiniteScrollList({ renderItem, className="", noResultsMessage="Er is 
 
     if (error) return <Error />;
 
-    if (!data || data.length === 0) return <NoResults message={noResultsMessage}/>
+    if (!data || data.length === 0) return <NoResults title={noResultsTitle} message={noResultsMessage}/>
 
 
     return (
