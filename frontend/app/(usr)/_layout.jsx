@@ -65,6 +65,12 @@ function _Layout() {
                         headerTitle: () => ""
                     }}
                 />
+                <Stack.Screen
+                    name="change-password"
+                    options={{
+                        headerShown: false
+                    }}
+                />
             </Stack>
         </UserOnly>
     );
