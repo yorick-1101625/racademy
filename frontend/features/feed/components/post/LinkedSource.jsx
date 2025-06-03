@@ -18,7 +18,7 @@ function LinkedSource({linkedSource}) {
             <Text className="font-medium mt-1 text-neutral-800 break-words w-full flex-grow">{linkedSource.title}</Text>
             <Text className="text-sm text-neutral-500 break-words w-full flex-grow">@{linkedSource.user.username}</Text>
         </View>
-        // </Link>
+        </Link>
     );
 }
 
