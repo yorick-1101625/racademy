@@ -66,7 +66,7 @@ function Comment({comment, post_id}) {
                 comment.user.id === user.id
                     ? <Kebab>
                         <Pressable
-                            className="flex-row rounded-md p-3 items-center hover:bg-red-100 box-border transition-colors"
+                            className="flex-row rounded-md p-3 items-center hover:bg-red-100 transition-colors"
                             onPress={() => setDeleteModalVisible(true)}
                         >
                             <Ionicons name="trash-bin" color="red" size={18}/>
