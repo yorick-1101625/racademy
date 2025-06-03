@@ -25,11 +25,11 @@ def login():
             }), 401
         else:
             access_token = create_access_token(
-                identity=str(result.id),
+                identity=str(result['id']),
                 expires_delta=timedelta(hours=1)
             )
             refresh_token = create_refresh_token(
-                identity=str(result.id),
+                identity=str(result['id']),
                 expires_delta=timedelta(days=7)
             )
             return jsonify({

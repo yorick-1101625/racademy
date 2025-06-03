@@ -4,63 +4,44 @@ import {Link, useLocalSearchParams, useRouter} from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useFetch from '../../hooks/useFetch';
 import useUser from '../../hooks/useUser';
-import { BASE_URL } from '@/utils/url';
+import {BASE_URL} from '@/utils/url';
 import Post from '../../features/feed/components/post/Post';
 import Source from '../../features/feed/components/source/Source';
 import TopTabs from '../../components/TopTabs';
 import InfiniteScrollList from "@/components/InfiniteScrollList";
 import Kebab from '@/components/Kebab';
-import { showSuccess, showError } from '@/utils/toast';
+import {showSuccess, showError} from '@/utils/toast';
+import fatty from "@/utils/fatty";
 
 export default function UserProfile({user}) {
-    const router = useRouter();
     const [userData, setUserData] = useState(user);
     const [activeTab, setActiveTab] = useState('bookmarked-posts');
-    const {user: loggedInUser} = useUser();
-    const [token, setToken] = useState(null);
+    const {user: currentUser} = useUser();
 
-    useEffect(() => {
-        const loadToken = async () => {
-            const accessToken = await AsyncStorage.getItem('access');
-            setToken(accessToken);
-        };
-        loadToken();
-    }, []);
-
-  const toggleUserField = async (field, value) => {
-    try {
-        const payload = {
-            user_id: userData.id,
-            [field]: Boolean(value),
-        };
-
-        const res = await fetch(`${BASE_URL}/api/user/`, {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(payload),
-        });
-
-        const json = await res.json();
-        console.log("PATCH response", res.status, json);
-
-        if (res.ok) {
-            showSuccess('Succesvol', `Gebruiker ${field === "is_admin" ? "adminrechten" : "blokkeerstatus"} is bijgewerkt.`);
-            setUserData(prev => ({
-                ...prev,
+    const toggleUserField = async (field, value) => {
+        try {
+            const payload = {
+                user_id: userData.id,
                 [field]: Boolean(value),
-            }));
-        } else {
-            showError('Fout', `Kon ${field === "is_admin" ? "adminrechten" : "blokkeerstatus"} niet bijwerken.`);
-            console.error("Update mislukt", json);
+            };
+
+            const data = await fatty(`/api/user/`, "PATCH", payload);
+
+            if (data.success) {
+                showSuccess('Succesvol', `Gebruiker ${field === "is_admin" ? "adminrechten" : "blokkeerstatus"} is bijgewerkt.`);
+                setUserData(prev => ({
+                    ...prev,
+                    [field]: Boolean(value),
+                }));
+            } else {
+                showError('Fout', `Kon ${field === "is_admin" ? "adminrechten" : "blokkeerstatus"} niet bijwerken.`);
+                console.error(data.message);
+            }
+        } catch (err) {
+            showError('Fout', `Er is een fout opgetreden bij het bijwerken van ${field === "is_admin" ? "adminrechten" : "blokkeerstatus"}.`);
+            console.error(err);
         }
-    } catch (err) {
-        showError('Fout', `Er is een fout opgetreden bij het bijwerken van ${field === "is_admin" ? "adminrechten" : "blokkeerstatus"}.`);
-        console.error("Toggle error:", err);
-    }
-};
+    };
 
 
     const tabs = [
@@ -88,12 +69,15 @@ export default function UserProfile({user}) {
                 <View className="mt-16">
                     <View className="flex-row justify-between items-end mt-2">
                         <Text className="text-xl font-bold">{userData.username}</Text>
-                        {loggedInUser && loggedInUser.id === userData.id && (
-                            <Pressable onPress={() => router.push('/profile/edit')}>
+                        {currentUser.id === userData.id && (
+                            <Link
+                                className="flex flex-col"
+                                href={`/profile/edit`}
+                            >
                                 <Text className="px-4 py-1 border border-rac text-rac rounded-md">
                                     Bewerk profiel
                                 </Text>
-                            </Pressable>
+                            </Link>
                         )}
                     </View>
 
@@ -111,15 +95,15 @@ export default function UserProfile({user}) {
                     </View>
                 </View>
 
-                {loggedInUser?.is_admin && loggedInUser?.id !== userData.id && (
+                {currentUser?.is_admin && currentUser?.id !== userData.id && (
                     <Kebab>
                         <View className="px-2 py-1">
                             <Text className="font-medium">Admin</Text>
                             <Switch
                                 value={userData.is_admin}
                                 onValueChange={(val) => toggleUserField("is_admin", val)}
-                            trackColor={{ false: "#767577", true: "#3b82f6" }}
-                            thumbColor={userData.is_admin ? "#3daad3" : "#f4f3f4"}
+                                trackColor={{false: "#767577", true: "#3b82f6"}}
+                                thumbColor={userData.is_admin ? "#3daad3" : "#f4f3f4"}
                             />
                         </View>
                         <View className="px-2 py-1 mt-1">
@@ -127,8 +111,8 @@ export default function UserProfile({user}) {
                             <Switch
                                 value={userData.is_blocked}
                                 onValueChange={(val) => toggleUserField("is_blocked", val)}
-                            trackColor={{ false: "#767577", true: "#3b82f6" }}
-                            thumbColor={userData.is_blocked ? "#3daad3" : "#f4f3f4"}
+                                trackColor={{false: "#767577", true: "#3b82f6"}}
+                                thumbColor={userData.is_blocked ? "#3daad3" : "#f4f3f4"}
                             />
                         </View>
                     </Kebab>

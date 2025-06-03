@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import useUser from '@/hooks/useUser';
 import { BASE_URL } from '@/utils/url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showSuccess, showError } from '@/utils/toast';
+import fatty from "@/utils/fatty";
 
 export default function ChangePassword() {
   const router = useRouter();
@@ -33,27 +34,17 @@ export default function ChangePassword() {
 
     setLoading(true);
     try {
-      const token = await AsyncStorage.getItem('access');
-      const res = await fetch(`${BASE_URL}/api/user/change-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      const data = await fatty(`/api/user/`, "PATCH", {
           old_password: oldPassword,
           new_password: newPassword,
-        }),
-      });
+        });
 
-      const json = await res.json();
-
-      if (res.ok) {
+      if (data.success) {
         showSuccess('Gelukt', 'Wachtwoord succesvol gewijzigd. Log opnieuw in.');
         logout();
         router.replace('/');
       } else {
-        showError('Fout', json.message || 'Wachtwoord wijzigen is mislukt.');
+        showError('Fout', 'Wachtwoord wijzigen is mislukt.');
       }
     } catch (error) {
       showError('Fout', 'Er is een onverwachte fout opgetreden.');
@@ -69,15 +60,7 @@ export default function ChangePassword() {
       keyboardShouldPersistTaps="handled"
       className="flex-1"
     >
-      <View className="p-6 mt-4 border border-gray-300 rounded-lg bg-white">
-        <Pressable
-          onPress={() => router.push('/')}
-          className="mb-4 flex-row items-center space-x-2"
-        >
-          <Feather name="arrow-left" size={24} color="black" />
-          <Text className="text-base font-medium text-black">Terug</Text>
-        </Pressable>
-
+      <View className="p-6 border border-gray-100 rounded-lg bg-white">
         <View className="mb-4">
           <Text className="text-sm font-medium text-gray-700 mb-1">Oud wachtwoord</Text>
           <TextInput

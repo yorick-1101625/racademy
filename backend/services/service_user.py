@@ -40,17 +40,18 @@ class UserService:
     @staticmethod
     def get_user_by_id(user_id):
         user = User.query.get(user_id)
-        if user:
-            user_dict = user.to_dict()
-            user_dict.pop("password", None)
+        if not user:
+            return None
 
-            # Toegevoegde statistieken
-            user_dict["total_likes"] = len(user.liked_posts)
-            user_dict["total_bookmarked_posts"] = len(user.bookmarked_posts)
-            user_dict["total_bookmarked_sources"] = len(user.bookmarked_sources)
+        user_dict = user.to_dict()
+        user_dict.pop("password", None)
 
-            return user_dict
-        return None
+        # Toegevoegde statistieken
+        user_dict["total_likes"] = len(user.liked_posts)
+        user_dict["total_bookmarked_posts"] = len(user.bookmarked_posts)
+        user_dict["total_bookmarked_sources"] = len(user.bookmarked_sources)
+
+        return user_dict
 
     @staticmethod
     def create_user(data):
@@ -61,10 +62,10 @@ class UserService:
 
             # Check if email is blocked
             blocked_user = User.query.filter_by(email=email, is_blocked=True).one_or_none()
-            if blocked_user is not None:
+            if blocked_user:
                 return Exception("This email is blocked and cannot be used for registration")
 
-            if User.query.filter_by(email=email).one_or_none() is not None:
+            if User.query.filter_by(email=email).one_or_none():
                 return Exception("Email already exists")
 
             if not data.get("password"):
@@ -92,7 +93,7 @@ class UserService:
 
     @staticmethod
     def login_user(email, password):
-        user = User.query.filter_by(email=email.lower()).first()
+        user = User.query.filter_by(email=email.lower()).one_or_none()
 
         if not user:
             return Exception("User does not exist")
@@ -104,7 +105,7 @@ class UserService:
         if not check_password_hash(user.password, password):
             return Exception("Invalid password")
 
-        return user
+        return user.to_dict()
 
 
     @staticmethod
@@ -197,11 +198,20 @@ class UserService:
                     if deleted_rating:
                         db.session.delete(deleted_rating)
 
-            # ✅ Nieuw toegevoegd
-            if 'is_admin' in data:
+            if data.get('new_password'):
+                old_password = data.get('old_password')
+                new_password = data.get('new_password')
+
+                if not check_password_hash(user.password, old_password):
+                    raise Exception("Invalid password")
+
+                # Update password
+                user.password = generate_password_hash(new_password)
+
+            if data.get('is_admin'):
                 user.is_admin = data.get('is_admin')
 
-            if 'is_blocked' in data:
+            if data.get('is_blocked'):
                 user.is_blocked = data.get('is_blocked')
 
             db.session.commit()
@@ -226,6 +236,8 @@ class UserService:
             for post in user.created_posts:
                 db.session.delete(post)
             for source in user.created_sources:
+                for rating in source.ratings:
+                    db.session.delete(rating)
                 db.session.delete(source)
             for comment in user.comments:
                 db.session.delete(comment)

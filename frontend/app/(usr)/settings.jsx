@@ -5,9 +5,10 @@ import {Ionicons, MaterialIcons} from "@expo/vector-icons";
 import React, {useState} from "react";
 import BottomModal from "@/components/BottomModal";
 import fatty from "@/utils/fatty";
+import {showError} from "@/utils/toast";
 
 function Settings() {
-    const [modalVisible, setModalVisible] = useState(false);
+    const [logoutModalVisible, setLogoutModalVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     const {logout, user} = useUser()
     const router = useRouter();
@@ -18,28 +19,27 @@ function Settings() {
 
     async function handleDeleteUser() {
         try {
-            const response = await fatty(`/api/user/${user.id}`, 'DELETE');
-            if (response.success) {
+            const data = await fatty(`/api/user/${user.id}`, 'DELETE');
+            if (data.success) {
                 // After delete, logout and redirect
                 logout().then(() => router.replace('/'));
             } else {
-                Alert.alert('Fout', response.message || 'Kon gebruiker niet verwijderen.');
+                showError('Fout', 'Kon gebruiker niet verwijderen.');
             }
         } catch (error) {
-            Alert.alert('Fout', 'Er is een fout opgetreden bij het verwijderen van de gebruiker.');
+            showError('Fout', 'Er is een fout opgetreden bij het verwijderen van de gebruiker.');
         }
     }
-
     return (
         <>
             <View className="flex-1">
-                <View className="bg-white pt-4">
+                <View className="bg-white">
                     <Pressable
-                        onPress={() => setModalVisible(true)}
+                        onPress={() => setLogoutModalVisible(true)}
                         className="flex-row items-center px-4 py-4 border-b border-t border-gray-100"
                     >
                         <MaterialIcons name="logout" size={21.5} color="black"/>
-                        <Text className="ml-3 text-base text-black">Logout</Text>
+                        <Text className="ml-3 text-base text-black">Uitloggen</Text>
                     </Pressable>
 
                     <Pressable
@@ -47,7 +47,7 @@ function Settings() {
                         className="flex-row items-center px-4 py-4 border-b border-gray-100"
                     >
                         <Ionicons name="lock-closed" size={21.5} color="black"/>
-                        <Text className="ml-3 text-base text-black">Change Password</Text>
+                        <Text className="ml-3 text-base text-black">Verander Wachtwoord</Text>
                     </Pressable>
 
                     <Pressable
@@ -55,12 +55,12 @@ function Settings() {
                         className="flex-row items-center px-4 py-4 border-b border-gray-100"
                     >
                         <Ionicons name="trash-bin" size={21.5} color="red"/>
-                        <Text className="ml-3 text-base text-red-600">Delete Account</Text>
+                        <Text className="ml-3 text-base text-red-600">Verwijder Account</Text>
                     </Pressable>
                 </View>
             </View>
 
-            <BottomModal state={[modalVisible, setModalVisible]}>
+            <BottomModal state={[logoutModalVisible, setLogoutModalVisible]}>
                 <View className="items-center mb-4">
                     <MaterialIcons name="logout" size={64} color="#EF4444"/>
                 </View>
@@ -71,7 +71,7 @@ function Settings() {
 
                 <View className="flex-row justify-between space-x-3">
                     <Pressable
-                        onPress={() => setModalVisible(false)}
+                        onPress={() => setLogoutModalVisible(false)}
                         className="flex-1 py-3 bg-gray-200 rounded-md"
                     >
                         <Text className="text-center text-black font-semibold">Nee</Text>

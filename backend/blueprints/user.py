@@ -92,13 +92,14 @@ def register_user():
 def update_user():
     data = request.get_json()
     try:
-        current_id = get_jwt_identity()
-        update_id = data.get("user_id") or current_id
+        current_user_id = get_jwt_identity()
+        updated_user_id = data.get("user_id", current_user_id)
 
-        if update_id != current_id and not current_user.is_admin:
-            return jsonify({"success": False, "message": "Not authorized"}), 403
+        if data.get('is_admin') or data.get('is_blocked'):
+            if not current_user.is_admin:
+                return jsonify({"success": False, "message": "You are not authorized to edit this field"}), 401
 
-        updated_user = UserService.update_user(update_id, data)
+        updated_user = UserService.update_user(updated_user_id, data)
         if updated_user:
             return jsonify({
                 "success": True,
@@ -107,7 +108,7 @@ def update_user():
         else:
             return jsonify({
                 "success": False,
-                "message": f"User with ID {update_id} not found or not updated."
+                "message": f"User with ID {updated_user_id} not found or not updated."
             }), 404
     except HTTPException as e:
         raise e
@@ -165,34 +166,6 @@ def get_current_user():
             "success": False,
             "message": "An unexpected error occurred."
         }), 500
-
-
-@api_user.route('/change-password', methods=['POST'])
-@jwt_required()
-def change_password():
-    try:
-        data = request.get_json()
-        old_password = data.get('old_password')
-        new_password = data.get('new_password')
-        user_id = get_jwt_identity()
-
-        user = UserService.get_user_by_id(user_id)
-        if not user:
-            return jsonify({"success": False, "message": "User not found"}), 404
-
-        # Verify old password
-        user_obj = db.session.get(User, user_id)
-        if not user_obj or not check_password_hash(user_obj.password, old_password):
-            return jsonify({"success": False, "message": "Old password is incorrect"}), 400
-
-        # Update password
-        user_obj.password = generate_password_hash(new_password)
-        db.session.commit()
-
-        return jsonify({"success": True, "message": "Password changed successfully"}), 200
-    except Exception as e:
-        print(f"[change_password] Unexpected error: {e}")
-        return jsonify({"success": False, "message": "An unexpected error occurred."}), 500
 
 
 @api_user.route('/<user_id>/liked', methods=["GET"])

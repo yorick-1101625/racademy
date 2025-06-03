@@ -68,7 +68,7 @@ function _Layout() {
                 <Stack.Screen
                     name="change-password"
                     options={{
-                        headerShown: false
+                        headerTitle: () => ""
                     }}
                 />
             </Stack>
