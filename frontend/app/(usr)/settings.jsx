@@ -27,6 +27,14 @@ function Settings() {
                     </Pressable>
 
                     <Pressable
+                        onPress={() => router.push('/change-password')}
+                        className="flex-row items-center px-4 py-4 border-b border-gray-100"
+                    >
+                        <Ionicons name="lock-closed" size={21.5} color="black"/>
+                        <Text className="ml-3 text-base text-black">Change Password</Text>
+                    </Pressable>
+
+                    <Pressable
                         className="flex-row items-center px-4 py-4 border-b border-gray-100"
                     >
                         <Ionicons name="trash-bin" size={21.5} color="red"/>
