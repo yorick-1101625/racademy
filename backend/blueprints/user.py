@@ -17,9 +17,9 @@ def get_users():
 
         users = UserService.get_all_users(
             search_term=search_term,
-            sort_by = sort_by,
-            offset = offset,
-            limit = limit
+            sort_by=sort_by,
+            offset=offset,
+            limit=limit
         )
         return jsonify({
             "success": True,
@@ -52,7 +52,7 @@ def get_user(user_id):
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(f"[get_post] Unexpected error: {e}")
+        print(f"[get_user] Unexpected error: {e}")
         return jsonify({
             "success": False,
             "message": "An unexpected error occurred."
@@ -114,7 +114,7 @@ def update_user():
 @api_user.route("/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     try:
-        if user_id != get_jwt_identity(): # And not admin
+        if user_id != get_jwt_identity():
             return {
                 "success": False,
                 "message": "You are not authorized to delete this user"
@@ -144,18 +144,15 @@ def delete_user(user_id):
 @api_user.route('/current', methods=['GET'])
 def get_current_user():
     try:
-        current_user = UserService.get_user_by_id(
-            get_jwt_identity()
-        )
+        current_user = UserService.get_user_by_id(get_jwt_identity())
         return jsonify({
             "success": True,
             "user": current_user
         }), 200
-
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(f"[login] Unexpected error: {e}")
+        print(f"[get_current_user] Unexpected error: {e}")
         return jsonify({
             "success": False,
             "message": "An unexpected error occurred."
@@ -179,7 +176,6 @@ def get_liked_posts(user_id):
             "success": True,
             "data": liked_posts
         }), 200
-
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -207,7 +203,6 @@ def get_bookmarked_posts(user_id):
             "success": True,
             "data": bookmarked_posts
         }), 200
-
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -235,7 +230,6 @@ def get_bookmarked_sources(user_id):
             "success": True,
             "data": bookmarked_sources
         }), 200
-
     except HTTPException as e:
         raise e
     except Exception as e:
