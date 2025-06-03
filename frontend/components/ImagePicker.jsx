@@ -32,7 +32,7 @@ export default function ImagePicker({state, className = ""}) {
                             <Image
                                 source={{uri: image.uri}}
                                 className="w-full h-full"
-                                resizeMode="contain"
+                                resizeMode="cover"
                             />
                         </Pressable>
                     </View>
