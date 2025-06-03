@@ -31,12 +31,26 @@ function CreateSource() {
     const [isEditing, setIsEditing] = useState(false);
     const router = useRouter();
 
+    function clearStates() {
+        setIsEditing(false);
+
+        // Clear states
+        setType("video");
+        setTitle("");
+        setSchoolSubject("");
+        setSubject("");
+        setDescription("");
+        setDifficulty("easy");
+        setUrl("");
+        setIsbn("");
+        setImage(null);
+    }
+
     useEffect(() => {
          if (id) {
             fatty(`/api/source/${id}`)
                 .then(data => {
                     data = data?.data;
-                    console.log("userID", user.id, "AuthorID:", data.user.id)
                     if (user.id === data?.user.id) {
                         setIsEditing(true);
 
@@ -53,7 +67,7 @@ function CreateSource() {
                     }
                 });
         }
-    }, [id]);
+    }, [id, isEditing]);
 
 
     // Form States
@@ -137,7 +151,8 @@ function CreateSource() {
                 if (data.success) {
                     showSuccess('Bron succesvol aangemaakt!');
                     // router.push(`/sources/${data.data.id}`);
-                     router.push('/sources?refresh=1');
+                    clearStates();
+                    router.push('/sources?refresh=1');
                 } else {
                     console.error(data.message);
                     showError('Er is iets misgegaan.');
@@ -214,6 +229,7 @@ function CreateSource() {
             .then(data => {
                 if (data.success) {
                     showSuccess('Bron succesvol Bijgewerkt!');
+                    clearStates();
                     router.push(`/sources/${id}`);
                 } else {
                     console.error(data.message);
@@ -233,18 +249,7 @@ function CreateSource() {
                             className="absolute right-5"
                             onPress={() => {
                                 router.replace("/create/source?");
-                                setIsEditing(false);
-
-                                // Clear states
-                                setType("video");
-                                setTitle("");
-                                setSchoolSubject("");
-                                setSubject("");
-                                setDescription("");
-                                setDifficulty("easy");
-                                setUrl("");
-                                setIsbn("");
-                                setImage(null);
+                                clearStates();
                             }}
                         >
                             <Ionicons name="close-circle-outline" size={22} color="white"/>
@@ -309,8 +314,15 @@ function CreateSource() {
                             />
                         )
                     }
+
                     {
-                        type === 'book' ? <ImagePicker state={[image, setImage]}/> : <View className="flex-1"/>
+                        type === 'book' &&
+                            <View className="h-56">
+                                <ImagePicker
+                                    className="border-2 border-dashed border-gray-300 rounded-lg"
+                                    state={[image, setImage]}
+                                />
+                            </View>
                     }
                 </ScrollView>
             </SafeAreaView>

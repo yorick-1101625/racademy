@@ -6,8 +6,8 @@ import {BASE_URL} from "@/utils/url";
 function User({user}) {
     const router = useRouter();
     return (
-        <Pressable className="flex-row items-center px-4 py-3 bg-white border-t border-gray-200"
-                   onPress={() => router.push(`/user/${user.id}`)}
+        <Link className="flex-row items-center px-4 py-3 bg-white border-t border-gray-200"
+                   href={`/users/${user.id}`}
         >
             <Image
                 source={{uri: `${BASE_URL}${user.profile_picture}`}}
@@ -19,7 +19,7 @@ function User({user}) {
                 </Text>
                 <Text className="text-gray-500">@{user.username}</Text>
             </View>
-        </Pressable>
+        </Link>
     );
 }
 

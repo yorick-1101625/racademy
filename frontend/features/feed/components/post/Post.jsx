@@ -13,6 +13,7 @@ import {Feather, Ionicons} from "@expo/vector-icons";
 import useUser from "@/hooks/useUser";
 import BottomModal from "@/components/BottomModal";
 import {openURL} from "expo-linking";
+import LinkedSource from "@/features/feed/components/post/LinkedSource";
 
 function Post({post}) {
 
@@ -64,6 +65,12 @@ function Post({post}) {
                 <PostContent content={post.content}/>
             </Link>
 
+            {/* Linked Source */}
+            {
+                post.linked_source &&
+                <LinkedSource linkedSource={post.linked_source}/>
+            }
+
             <View className="flex-row justify-between items-center py-2">
                 <Link href={`/posts/${post.id}`} className="flex-1">
                     {/* Timestamp */}
@@ -77,6 +84,8 @@ function Post({post}) {
                     handleBookmark={handleBookmark} isBookmarked={isBookmarked}
                 />
             </View>
+
+
 
             {
                 post.user.id === user.id

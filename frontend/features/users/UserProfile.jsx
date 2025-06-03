@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {View, Text, Image, ActivityIndicator, ScrollView, Pressable, ImageBackground} from 'react-native';
-import {useLocalSearchParams, useRouter} from 'expo-router';
+import {Link, useLocalSearchParams, useRouter} from 'expo-router';
 import useFetch from '../../hooks/useFetch';
 import useUser from '../../hooks/useUser';
 import {BASE_URL} from '../../utils/url';
@@ -11,11 +11,8 @@ import TopTabs from '../../components/TopTabs';
 import InfiniteScrollList from "@/components/InfiniteScrollList";
 
 export default function UserProfile({user}) {
-    const router = useRouter();
 
     const [activeTab, setActiveTab] = useState('bookmarked-posts');
-
-    const { loggedInUser } = useUser();
 
     const tabs = [
         {value: 'bookmarked-posts', label: 'Favoriete Posts'},
@@ -46,12 +43,10 @@ export default function UserProfile({user}) {
                 <View className="mt-16">
                     <View className="flex-row justify-between items-end mt-2">
                         <Text className="text-xl font-bold">{user.username}</Text>
-                        <Pressable
-                            onPress={() => router.push('/profile/edit')}
-                        >
+                        <Link href={'/profile/edit'}>
                             <Text className="px-4 py-1 border border-rac text-rac rounded-md">Bewerk profiel</Text>
                             {/*<Feather name="edit" size={24} color="black" />*/}
-                        </Pressable>
+                        </Link>
                     </View>
 
                     <Text className="text-gray-600 mt-1">{user.study}</Text>
