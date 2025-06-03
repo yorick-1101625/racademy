@@ -22,7 +22,7 @@ const Search = () => {
     const [filterModalVisible, setFilterModalVisible] = useState(false);
 
     const endpoint = filter === "Posts" ? "post" : filter === "Sources" ? "source" : "user";
-    // const url = `/api/${endpoint}?search=${encodeURIComponent(query)}&sort=${sortBy}`;
+
     const url = `/api/${endpoint}`;
     const params = `search=${encodeURIComponent(query)}&sort=${sortBy}`;
     const showResults = query.trim().length > 0;

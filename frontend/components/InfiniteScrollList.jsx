@@ -1,19 +1,19 @@
-import {ActivityIndicator, FlatList, View} from 'react-native';
+import {ActivityIndicator, FlatList, RefreshControl, View} from 'react-native';
 import NoResults from "@/features/search/components/NoResults";
 import {useEffect, useState} from "react";
 import fatty from "@/utils/fatty";
 import Error from "@/components/Error";
 
 function InfiniteScrollList({
-                                renderItem,
-                                className="",
-                                noResultsTitle="Geen Resultaten",
-                                noResultsMessage="Er is niks gevonden.",
-                                url,
-                                params="",
-                                refresh,
-                                listRef,
-                                onScroll
+    renderItem,
+    className="",
+    noResultsTitle="Geen Resultaten",
+    noResultsMessage="Er is niks gevonden.",
+    url,
+    params="",
+    refresh,
+    listRef,
+    onScroll
 }) {
 
     const [currentOffset, setCurrentOffset] = useState(0);
@@ -21,6 +21,8 @@ function InfiniteScrollList({
     const [isPending, setIsPending] = useState(true);
     const [error, setError] = useState(null);
     const [listEnded, setListEnded] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
+
 
     const limit = 10;
     url = `${url}?${params}&offset=${currentOffset}&limit=${limit}`;
@@ -31,29 +33,23 @@ function InfiniteScrollList({
             setCurrentOffset(0); // Clear offset when params such as queries change
         }
         else {
-            getData();
+            getData(true);
         }
-    }, [params]);
+    }, [params, refresh]);
 
     useEffect(() => {
         getData();
     }, [currentOffset]);
 
-    useEffect(() => {
-        setCurrentOffset(0);
-        setListEnded(false);
-        getData();
-      }, [refresh]);
-
-    function getData() {
-        if (listEnded) {
-            return;
+    async function getData(clear=false) {
+        if (listEnded && !clear) {
+            return true;
         }
         setIsPending(true);
         fatty(url)
             .then(data => {
                 if (data.success) {
-                    if (currentOffset === 0) {
+                    if (currentOffset === 0 || clear) {
                         setData(data.data);
                     }
                     else {
@@ -72,11 +68,26 @@ function InfiniteScrollList({
                 }
             })
             .catch(err => setError(err))
-            .finally(() => setIsPending(false));
+            .finally(() => {
+                setIsPending(false);
+                return true;
+            });
     }
 
     function handleItemLoading() {
         setCurrentOffset(c => c + 10);
+    }
+
+    async function handleRefresh() {
+        setRefreshing(true);
+        setListEnded(false);
+        if (currentOffset !== 0) {
+            setCurrentOffset(0); // Clear offset when params such as queries change
+        }
+        else {
+            await getData(true);
+        }
+        setRefreshing(false);
     }
 
     if (isPending && (!data || data.length === 0)) return (
@@ -93,6 +104,9 @@ function InfiniteScrollList({
     return (
         data &&
         <FlatList
+            refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+            }
             className={className}
             data={data}
             keyExtractor={item => item.id.toString()}
