@@ -33,23 +33,28 @@ function Comment({comment, post_id}) {
         <View className="flex-row p-4 border-t border-gray-200 bg-white">
             <View className="mr-3">
                 <View className="items-center justify-center">
-                    <Image
-                        source={{uri: `${BASE_URL}${comment.user.profile_picture}`}}
-                        className="w-10 h-10 rounded-full"
-                    />
+                    <Link href={`/users/${comment.user.id}`}>
+                        <Image
+                            source={{uri: `${BASE_URL}${comment.user.profile_picture}`}}
+                            className="w-10 h-10 rounded-full"
+                        />
+                    </Link>
                 </View>
             </View>
 
             <View className="flex-1">
                 <View className="flex-row items-center justify-between mb-1">
-                    <View>
-                        <Text className="font-bold text-gray-900 mr-2">
-                            {comment.user.username}
-                        </Text>
-                        <Text className="text-gray-500 text-xs">
-                            {comment.user.email}
-                        </Text>
-                    </View>
+                    <Link href={`/users/${comment.user.id}`}>
+                        <View>
+                            <Text className="font-bold text-gray-900 mr-2">
+                                {comment.user.username}
+                            </Text>
+                            <Text className="text-gray-500 text-xs">
+                                {comment.user.email}
+                            </Text>
+                        </View>
+                    </Link>
+
                 </View>
 
                 <Text className="text-gray-900 mb-1">

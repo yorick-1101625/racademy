@@ -16,7 +16,7 @@ import {BASE_URL} from '../../../utils/url';
 import fatty from '../../../utils/fatty';
 import ImagePicker from '../../../components/ImagePicker';
 import {showSuccess, showError} from '../../../utils/toast';
-import {Ionicons} from "@expo/vector-icons";
+import {Feather, Ionicons} from "@expo/vector-icons";
 import {SafeAreaContext} from "react-native-safe-area-context";
 
 export default function EditProfile() {
@@ -29,7 +29,6 @@ export default function EditProfile() {
         {uri: `${BASE_URL}${user.profile_picture}`}
     );
     const [loading, setLoading] = useState(false);
-
 
 
     async function handleSave() {
@@ -61,26 +60,36 @@ export default function EditProfile() {
     }
 
     return (
-        <SafeAreaView className="p-6 relative flex-1">
+        <SafeAreaView className="flex-1 border-t border-gray-200">
+            <View className="bg-white p-6">
 
-            <Text>Profiel Foto</Text>
-            <View className="w-32 h-32 mb-4 border border-gray-300 rounded overflow-hidden">
-                <ImagePicker state={[profilePicture, setProfilePicture]}/>
+                <View className="items-center mb-6">
+                    <View className="w-36 h-36 rounded-full border border-gray-300 overflow-hidden">
+                        <ImagePicker state={[profilePicture, setProfilePicture]}/>
+                    </View>
+                    <Text className="text-sm text-gray-500 mt-2">Tik om te wijzigen</Text>
+                </View>
+
+                <View className="mb-4">
+                    <Text className="text-sm font-medium text-gray-700 mb-1">Gebruikersnaam</Text>
+                    <TextInput
+                        value={username}
+                        onChangeText={setUsername}
+                        placeholder=""
+                        className="outline-none focus:border-rac border border-gray-300 rounded-lg px-4 py-2 bg-gray-50"
+                    />
+                </View>
+
+                <View className="mb-6">
+                    <Text className="text-sm font-medium text-gray-700 mb-1">Studie</Text>
+                    <TextInput
+                        value={study}
+                        onChangeText={setStudy}
+                        placeholder=""
+                        className="outline-none focus:border-rac border border-gray-300 rounded-lg px-4 py-2 bg-gray-50"
+                    />
+                </View>
             </View>
-
-            <Text>Gebruikersnaam</Text>
-            <TextInput
-                value={username}
-                onChangeText={setUsername}
-                className="border border-gray-300 rounded p-2 mb-4"
-            />
-
-            <Text>Studie</Text>
-            <TextInput
-                value={study}
-                onChangeText={setStudy}
-                className="border border-gray-300 rounded p-2 mb-4"
-            />
 
 
             <KeyboardAvoidingView className="absolute bottom-12 right-4">
@@ -94,7 +103,7 @@ export default function EditProfile() {
                             className="flex-1 items-center justify-center"
                             onPress={handleSave}
                         >
-                            <Ionicons name="return-up-forward" size={24} color="white"/>
+                            <Feather name="edit" size={21} color="white"/>
                         </Pressable>
 
                     )}
