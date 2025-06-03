@@ -237,14 +237,16 @@ class UserService:
                 .all()
         )
 
-        user = user.to_dict()
-        user.pop('password')
+
         current_user = User.query.get(current_user_id)
 
         result = []
         for user_liked_post in user_liked_posts:
             post = Post.query.get(user_liked_post.post_id)
+            user = post.user.to_dict()
+            user.pop('password')
             post_dict = post.to_dict()
+
             post_dict['user'] = user
             post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
             post_dict['number_of_likes'] = len(post.users_liked)
@@ -273,14 +275,16 @@ class UserService:
             .all()
         )
 
-        user = user.to_dict()
-        user.pop('password')
         current_user = User.query.get(current_user_id)
 
         posts = []
         for user_bookmarked_post in user_bookmarked_posts:
             post = Post.query.get(user_bookmarked_post.post_id)
+            user = post.user.to_dict()
+            user.pop('password')
             post_dict = post.to_dict()
+
+
             post_dict['user'] = user
             post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
             post_dict['number_of_likes'] = len(post.users_liked)
