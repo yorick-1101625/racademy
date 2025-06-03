@@ -1,8 +1,11 @@
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
-from flask_jwt_extended import get_jwt_identity, current_user
+from flask_jwt_extended import jwt_required, get_jwt_identity, current_user
 from werkzeug.exceptions import HTTPException
 from backend.services.service_user import UserService
+from backend.models.models import User
+from backend.database.db import db
+from werkzeug.security import check_password_hash, generate_password_hash
 
 api_user = Blueprint("api_user", __name__)
 
@@ -89,8 +92,13 @@ def register_user():
 def update_user():
     data = request.get_json()
     try:
-        user_id = get_jwt_identity()
-        updated_user = UserService.update_user(user_id, data)
+        current_id = get_jwt_identity()
+        update_id = data.get("user_id") or current_id
+
+        if update_id != current_id and not current_user.is_admin:
+            return jsonify({"success": False, "message": "Not authorized"}), 403
+
+        updated_user = UserService.update_user(update_id, data)
         if updated_user:
             return jsonify({
                 "success": True,
@@ -99,7 +107,7 @@ def update_user():
         else:
             return jsonify({
                 "success": False,
-                "message": f"User with ID {user_id} not found or not updated."
+                "message": f"User with ID {update_id} not found or not updated."
             }), 404
     except HTTPException as e:
         raise e
@@ -107,7 +115,7 @@ def update_user():
         print(f"[update_user] Unexpected error: {e}")
         return jsonify({
             "success": False,
-            "message": "An unexpected error occurred."
+            "message": str(e)
         }), 500
 
 
@@ -157,6 +165,34 @@ def get_current_user():
             "success": False,
             "message": "An unexpected error occurred."
         }), 500
+
+
+@api_user.route('/change-password', methods=['POST'])
+@jwt_required()
+def change_password():
+    try:
+        data = request.get_json()
+        old_password = data.get('old_password')
+        new_password = data.get('new_password')
+        user_id = get_jwt_identity()
+
+        user = UserService.get_user_by_id(user_id)
+        if not user:
+            return jsonify({"success": False, "message": "User not found"}), 404
+
+        # Verify old password
+        user_obj = db.session.get(User, user_id)
+        if not user_obj or not check_password_hash(user_obj.password, old_password):
+            return jsonify({"success": False, "message": "Old password is incorrect"}), 400
+
+        # Update password
+        user_obj.password = generate_password_hash(new_password)
+        db.session.commit()
+
+        return jsonify({"success": True, "message": "Password changed successfully"}), 200
+    except Exception as e:
+        print(f"[change_password] Unexpected error: {e}")
+        return jsonify({"success": False, "message": "An unexpected error occurred."}), 500
 
 
 @api_user.route('/<user_id>/liked', methods=["GET"])
