@@ -114,6 +114,16 @@ class PostService:
             return None
         try:
             post.content = data.get('content', post.content)
+
+            # Create Tags
+            tags = []
+            for t in data.get('tags'):
+                tag = Tag(name=t.lower())
+                tags.append(tag)
+
+            post.tags = tags
+            post.source_id = data.get('source_id', None)
+
             db.session.commit()
             return post.to_dict()
         except SQLAlchemyError as e:

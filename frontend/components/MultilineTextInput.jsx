@@ -1,7 +1,7 @@
 import {TextInput} from "react-native";
 import {useRef, useState} from "react";
 
-function MultilineTextInput({ placeholder, className, onChangeText }) {
+function MultilineTextInput({ placeholder, className, onChangeText, value }) {
 
     const [height, setHeight] = useState(128);
     const inputRef = useRef(null);
@@ -23,6 +23,7 @@ function MultilineTextInput({ placeholder, className, onChangeText }) {
             className={className}
             onChangeText={onChangeText}
             textAlignVertical="top"
+            value={value}
         />
     );
 }
