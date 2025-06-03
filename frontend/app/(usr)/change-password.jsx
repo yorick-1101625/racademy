@@ -6,8 +6,6 @@ import { BASE_URL } from '@/utils/url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showSuccess, showError } from '@/utils/toast';
 
-
-
 export default function ChangePassword() {
   const router = useRouter();
   const { user, logout } = useUser();
@@ -19,7 +17,7 @@ export default function ChangePassword() {
 
   const handleChangePassword = async () => {
     if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'New password and confirmation do not match.');
+      Alert.alert('Fout', 'Nieuw wachtwoord en bevestiging komen niet overeen.');
       return;
     }
     setLoading(true);
@@ -38,14 +36,14 @@ export default function ChangePassword() {
       });
       const json = await res.json();
       if (res.ok) {
-        showSuccess('Success', 'Password changed successfully. Please log in again.');
+        showSuccess('Gelukt', 'Wachtwoord succesvol gewijzigd. Log opnieuw in.');
         logout();
         router.replace('/');
       } else {
-        showError('Error', json.message || 'Failed to change password.');
+        showError('Fout', json.message || 'Wachtwoord wijzigen is mislukt.');
       }
     } catch (error) {
-      showError('Error', 'An unexpected error occurred.');
+      showError('Fout', 'Er is een onverwachte fout opgetreden.');
     } finally {
       setLoading(false);
     }
@@ -53,23 +51,23 @@ export default function ChangePassword() {
 
   return (
     <View className="flex-1 p-4 bg-white">
-      <Text className="text-xl font-bold mb-4">Change Password</Text>
+      <Text className="text-xl font-bold mb-4">Wachtwoord wijzigen</Text>
       <TextInput
-        placeholder="Old Password"
+        placeholder="Oud wachtwoord"
         secureTextEntry
         value={oldPassword}
         onChangeText={setOldPassword}
         className="border border-gray-300 rounded p-2 mb-4"
       />
       <TextInput
-        placeholder="New Password"
+        placeholder="Nieuw wachtwoord"
         secureTextEntry
         value={newPassword}
         onChangeText={setNewPassword}
         className="border border-gray-300 rounded p-2 mb-4"
       />
       <TextInput
-        placeholder="Confirm New Password"
+        placeholder="Bevestig nieuw wachtwoord"
         secureTextEntry
         value={confirmPassword}
         onChangeText={setConfirmPassword}
@@ -81,7 +79,7 @@ export default function ChangePassword() {
         className="bg-blue-600 rounded p-3"
       >
         <Text className="text-white text-center font-semibold">
-          {loading ? 'Changing...' : 'Change Password'}
+          {loading ? 'Wijzigen...' : 'Wachtwoord wijzigen'}
         </Text>
       </Pressable>
     </View>
