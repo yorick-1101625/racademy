@@ -198,11 +198,33 @@ def generate_dummy_data():
     db.session.add_all(comments)
     db.session.commit()
 
+    sample_source_titles = [
+        "Goed boek om Javascript te leren!",
+        "Python tutorial van youtube!",
+        "Beste artikel over OOP",
+        "Gratis cursus over Web Dev.",
+        "Uitstekende handleiding voor beginners in Java!",
+        "Compleet video cursus over React!",
+        "Top 10 tips voor effectief leren van C++",
+        "Gratis online cursus over machine learning!",
+        "De beste bronnen voor leren van SQL!",
+        "Interactieve video's over HTML en CSS",
+        "Gratis e-book over Python voor data science",
+        "Uitstekende handleiding voor beginners in Ruby!",
+        "Compleet video cursus over Angular!",
+        "Top 10 tips voor effectief leren van Swift",
+        "Gratis online cursus over blockchain technologie!",
+        "De beste bronnen voor leren van JavaScript frameworks!",
+        "Interactieve video's over Node.js",
+        "Gratis e-book over PHP voor web development",
+        "Uitstekende handleiding voor beginners in Kotlin!"
+    ]
+
     sources = []
     for i in range(20):
         source = Source(
             type=random.choice(['video', 'article', 'book']),
-            title=f"Bron {i}",
+            title=random.choice(sample_source_titles),
             description=f"Beschrijving voor bron {i}",
             school_subject=random.choice(['Werkplaats', 'Programming Essentials']),
             subject=random.choice(['Programmeren', 'Python', 'Javascript']),

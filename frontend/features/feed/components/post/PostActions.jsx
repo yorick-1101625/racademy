@@ -7,6 +7,7 @@ import fatty from "@/utils/fatty";
 import {showError, showSuccess} from "@/utils/toast";
 import BottomModal from "@/components/BottomModal";
 import useUser from "@/hooks/useUser";
+import {Link} from "expo-router";
 
 function PostActions({
     numberOfComments,
@@ -37,14 +38,15 @@ function PostActions({
         <>
             <View className="flex-row justify-end pl-2">
 
-                <Pressable
-                    className="flex-row items-center ml-8"
+                <Link
+                    href={`/posts/${postId}`}
+                    className="flex-row items-center ml-8 flex"
                 >
                     <Ionicons name="chatbubble-outline" size={19} color="gray"/>
                     <Text className="ml-1 text-sm text-gray-600">
                         {numberOfComments}
                     </Text>
-                </Pressable>
+                </Link>
 
                 <Pressable
                     onPress={handleLike}
