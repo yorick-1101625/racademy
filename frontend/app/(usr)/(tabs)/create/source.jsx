@@ -309,8 +309,15 @@ function CreateSource() {
                             />
                         )
                     }
+
                     {
-                        type === 'book' ? <ImagePicker state={[image, setImage]}/> : <View className="flex-1"/>
+                        type === 'book' &&
+                            <View className="h-56">
+                                <ImagePicker
+                                    className="border-2 border-dashed border-gray-300 rounded-lg"
+                                    state={[image, setImage]}
+                                />
+                            </View>
                     }
                 </ScrollView>
             </SafeAreaView>
