@@ -1,13 +1,14 @@
-import {Pressable, Image, View, Text} from "react-native";
-import { useRouter } from "expo-router";
+import {Image, View, Text} from "react-native";
+import {Link} from "expo-router";
 import {BASE_URL} from "@/utils/url";
 
 
 function User({user}) {
-    const router = useRouter();
+
     return (
-        <Link className="flex-row items-center px-4 py-3 bg-white border-t border-gray-200"
-                   href={`/users/${user.id}`}
+        <Link
+            className="flex-row flex items-center px-4 py-3 bg-white border-t border-gray-200"
+            href={`/users/${user.id}`}
         >
             <Image
                 source={{uri: `${BASE_URL}${user.profile_picture}`}}
