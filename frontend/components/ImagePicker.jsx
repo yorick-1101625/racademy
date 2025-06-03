@@ -27,7 +27,7 @@ export default function ImagePicker({state, className = ""}) {
         <>
             {
                 image
-                    ? <View className={`w-full h-48 ${className}`}>
+                    ? <View className={`w-full h-full ${className}`}>
                         <Pressable onPress={() => setFocus(true)} className="flex-1">
                             <Image
                                 source={{uri: image.uri}}

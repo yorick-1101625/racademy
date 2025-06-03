@@ -1,12 +1,7 @@
-import { useState } from 'react';
-import {
-    View,
-    Text,
-    Image,
-    Pressable,
-    ImageBackground,
-} from 'react-native';
-import { useRouter } from 'expo-router';
+import {useState} from 'react';
+import {View, Text, Image, ActivityIndicator, ScrollView, Pressable, ImageBackground} from 'react-native';
+import {Link, useLocalSearchParams, useRouter} from 'expo-router';
+import useFetch from '../../hooks/useFetch';
 import useUser from '../../hooks/useUser';
 import { BASE_URL } from '../../utils/url';
 import Post from '../../features/feed/components/post/Post';
@@ -16,8 +11,11 @@ import InfiniteScrollList from "@/components/InfiniteScrollList";
 
 export default function UserProfile({ user }) {
     const router = useRouter();
+export default function UserProfile({user}) {
+
     const [activeTab, setActiveTab] = useState('bookmarked-posts');
     const { user: loggedInUser } = useUser();
+
 
     const tabs = [
         { value: 'bookmarked-posts', label: 'Favoriete Posts' },
@@ -31,10 +29,11 @@ export default function UserProfile({ user }) {
         <View className="flex-1">
 
             <ImageBackground
-                source={{ uri: 'https://images.hogeschoolrotterdam.nl/Blob/113c5d6411e34ffdba8d23bd7da9f02c/0873435aebe643bcbd4a983b46de7842.jpg?mode=crop&quality=90&format=jpg&width=1869&height=539' }}
+                source={{uri: 'https://images.hogeschoolrotterdam.nl/Blob/113c5d6411e34ffdba8d23bd7da9f02c/0873435aebe643bcbd4a983b46de7842.jpg?mode=crop&quality=90&format=jpg&width=1869&height=539'}} // or require('path/to/local/image.jpg')
                 className="h-24 px-4 flex-row items-end justify-between pb-2"
                 resizeMode="cover"
-            />
+            >
+            </ImageBackground>
 
             <View className="bg-white px-4 relative">
                 <Image
@@ -73,6 +72,7 @@ export default function UserProfile({ user }) {
                 <TopTabs tabs={tabs} state={[activeTab, setActiveTab]} />
             </View>
 
+            {/* Tab Content */}
             <View className="flex-1">
                 {activeTab === 'bookmarked-posts' && (
                     <InfiniteScrollList

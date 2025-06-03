@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, get_jwt
 from flask_cors import cross_origin
 from werkzeug.exceptions import HTTPException
+
+from backend.blueprints.auth import login
 from backend.services.service_post import PostService
 
 api_post = Blueprint("api_post", __name__)
@@ -93,8 +95,8 @@ def create_post():
 def update_post(post_id):
     data = request.get_json()
     try:
-        post = PostService.get_post_by_id(post_id)
-        if post.user.id != get_jwt_identity():
+        post = PostService.get_post_by_id(post_id, current_user_id=get_jwt_identity())
+        if str(post['user']['id']) != str(get_jwt_identity()):
             return {
                 "success": False,
                 "message": "You are not authorized to edit this post"

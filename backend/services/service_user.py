@@ -52,7 +52,7 @@ class UserService:
             return user_dict
         return None
 
-
+    # TODO: Implement register instead of create_user
     @staticmethod
     def create_user(data):
         try:
@@ -112,14 +112,17 @@ class UserService:
             if image_data and 'base64' in image_data and 'mime_type' in image_data:
                 old_picture = user.profile_picture
 
+                # Check if file is an image
                 mime_type = image_data['mime_type']
                 file_type = mime_type.split('/')[0]
                 if file_type != 'image':
                     return Exception('Uploaded file must be an image')
 
+                # Create filename
                 file_extension = mime_type.split('/')[-1]
                 filename = f"{uuid.uuid4()}.{file_extension}"
 
+                # Save image in bytes
                 base64_str = image_data['base64']
                 image_bytes = base64.b64decode(base64_str)
                 save_dir = current_app.config['IMAGE_UPLOAD_FOLDER'] / 'profile_pictures'
@@ -131,6 +134,7 @@ class UserService:
 
                 user.profile_picture = f"/static/user_images/profile_pictures/{filename}"
 
+                # Delete old image
                 if old_picture != "/static/user_images/profile_pictures/default.png":
                     os.remove(str(current_app.config['ROOT_PATH']) + (old_picture.replace('/', os.sep)))
 
@@ -170,8 +174,11 @@ class UserService:
                     current_rating = Rating.query.filter(
                         and_(Rating.user_id==user_id, Rating.source_id==source_id)
                     ).one_or_none()
+                    # Update rating
                     if current_rating:
                         current_rating.rating = rating
+
+                    # Create rating
                     else:
                         new_rating = Rating(
                             rating=rating,
@@ -204,6 +211,7 @@ class UserService:
         if not user:
             return False
         try:
+            # Delete all content created by user
             for post in user.created_posts:
                 db.session.delete(post)
             for source in user.created_sources:
@@ -220,7 +228,6 @@ class UserService:
             print(f"Error deleting user: {e}")
             return False
 
-
     @staticmethod
     def get_liked_posts(user_id, current_user_id, offset=0, limit=None ):
         user = User.query.get(user_id)
@@ -228,7 +235,8 @@ class UserService:
             raise Exception("User does not exist")
 
         user_liked_posts = (
-            db.session.query(UserLikedPost)
+            db.session
+                .query(UserLikedPost)
                 .filter(UserLikedPost.user_id == user.id)
                 .order_by(UserLikedPost.liked_at.desc())
                 .limit(limit)
@@ -236,14 +244,16 @@ class UserService:
                 .all()
         )
 
-        user = user.to_dict()
-        user.pop('password')
+
         current_user = User.query.get(current_user_id)
 
         result = []
         for user_liked_post in user_liked_posts:
             post = Post.query.get(user_liked_post.post_id)
+            user = post.user.to_dict()
+            user.pop('password')
             post_dict = post.to_dict()
+
             post_dict['user'] = user
             post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
             post_dict['number_of_likes'] = len(post.users_liked)
@@ -257,6 +267,7 @@ class UserService:
 
     @staticmethod
     def get_bookmarked_posts(user_id, current_user_id, offset=0, limit=None):
+
         user = User.query.get(user_id)
         if not user:
             raise Exception("User does not exist")
@@ -270,15 +281,17 @@ class UserService:
                 .all()
         )
 
-        user = user.to_dict()
-        user.pop('password')
         current_user = User.query.get(current_user_id)
 
         posts = []
         for user_bookmarked_post in user_bookmarked_posts:
             post = Post.query.get(user_bookmarked_post.post_id)
+            user = post.user.to_dict()
+            user.pop('password')
             post_dict = post.to_dict()
-            post_dict['user'] = post.user.to_dict()
+
+
+            post_dict['user'] = user
             post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
             post_dict['number_of_likes'] = len(post.users_liked)
             post_dict['number_of_comments'] = len(post.comments)
@@ -291,17 +304,19 @@ class UserService:
 
     @staticmethod
     def get_bookmarked_sources(user_id, current_user_id, offset=0, limit=None):
+
         user = User.query.get(user_id)
         if not user:
             raise Exception("User does not exist")
 
         user_bookmarked_sources = (
-            db.session.query(UserBookmarkedSource)
-                .filter(UserBookmarkedSource.user_id == user.id)
-                .order_by(UserBookmarkedSource.bookmarked_at.desc())
-                .limit(limit)
-                .offset(offset)
-                .all()
+            db.session
+            .query(UserBookmarkedSource)
+            .filter(UserBookmarkedSource.user_id == user.id)
+            .order_by(UserBookmarkedSource.bookmarked_at.desc())
+            .limit(limit)
+            .offset(offset)
+            .all()
         )
 
         current_user = User.query.get(current_user_id)

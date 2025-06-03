@@ -8,7 +8,7 @@ import {
     Image, ScrollView
 } from 'react-native';
 import MultilineTextInput from "@/components/MultilineTextInput";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {showError, showSuccess} from "@/utils/toast";
 import {Ionicons} from "@expo/vector-icons";
 import BottomModal from "@/components/BottomModal";
@@ -18,10 +18,14 @@ import fatty from "@/utils/fatty";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import ContentAuthor from "@/features/feed/components/ContentAuthor";
 import useUser from "@/hooks/useUser";
-import {Link, useRouter} from "expo-router";
+import {Link, useLocalSearchParams, useRouter} from "expo-router";
 import {BASE_URL} from "@/utils/url";
 
 function CreatePost() {
+
+    // Editing States
+    const { id } = useLocalSearchParams();
+    const [isEditing, setIsEditing] = useState(false);
 
     const [content, setContent] = useState("");
     const [tags, setTags] = useState("");
@@ -33,6 +37,37 @@ function CreatePost() {
     const router = useRouter();
 
     const {user} = useUser();
+    console.log(id)
+
+    function clearStates() {
+        setIsEditing(false);
+
+        // Clear states
+        setContent("");
+        setTags("");
+        setSelectedSource(null);
+        setLinkedSource(null);
+    }
+
+    useEffect(() => {
+         if (id) {
+            fatty(`/api/post/${id}`)
+                .then(data => {
+                    data = data?.data;
+                    if (user.id === data?.user.id) {
+                        setIsEditing(true);
+
+                        // set the states
+                        setContent(data.content);
+                        if (data.tags.length) {
+                            setTags('#' + (data.tags.join(" #")));
+                        }
+                        setLinkedSource(data.linked_source);
+                        setSelectedSource(data.linked_source);
+                    }
+                });
+        }
+    }, [id, isEditing]);
 
     function handleTags(value) {
         if (value.trim()) {
@@ -50,7 +85,7 @@ function CreatePost() {
     function handleSubmit() {
         if (!(content.trim())) {
             showError("Post mag niet leeg zijn.");
-            return
+            return;
         }
 
         // Split tags to array, remove empty strings, to lowercase, remove #
@@ -68,29 +103,67 @@ function CreatePost() {
             .filter(tag => tag !== '')
             .map(tag => (tag.replace("#", "")).toLowerCase());
 
-        fatty('/api/post/', 'POST', {
-            content: content.trim(),
-            tags: formattedTags,
-            'source_id': linkedSource?.id
-        })
-            .then(data => {
-                if (data.success) {
-                    showSuccess("Post succesvol aangemaakt.");
-
-                    // Push to post detail page
-                    // router.push(`/posts/${data.data.id}`);
-
-                    // Push to post feed
-                    router.push(`/posts?refresh=1`);
-                } else {
-                    console.error(data.message);
-                    showError("Er ging iets fout.");
-                }
+        if (isEditing) {
+            fatty(`/api/post/${id}`, 'PATCH', {
+                content: content.trim(),
+                tags: formattedTags,
+                'source_id': linkedSource?.id
             })
+                .then(data => {
+                    if (data.success) {
+                        showSuccess("Post succesvol Bewerkt.");
+                        clearStates();
+
+                        // Push to post page
+                        router.push(`/posts/${id}`);
+                    } else {
+                        console.error(data.message);
+                        showError("Er ging iets fout.");
+                    }
+                })
+        }
+        else {
+            fatty('/api/post/', 'POST', {
+                content: content.trim(),
+                tags: formattedTags,
+                'source_id': linkedSource?.id
+            })
+                .then(data => {
+                    if (data.success) {
+                        showSuccess("Post succesvol aangemaakt.");
+
+                        // Push to post detail page
+                        // router.push(`/posts/${data.data.id}`);
+
+                        clearStates();
+
+                        // Push to post feed
+                        router.push(`/posts?refresh=1`);
+                    } else {
+                        console.error(data.message);
+                        showError("Er ging iets fout.");
+                    }
+                })
+        }
     }
 
     return (
         <SafeAreaView className="flex-1">
+            {
+                isEditing && // Editing indicator
+                <View className="p-3 bg-rac items-center justify-center flex-row ">
+                    <Text className="text-base text-white">Je bent aan het bewerken</Text>
+                    <Pressable
+                        className="absolute right-5"
+                        onPress={() => {
+                            router.replace("/create/post?");
+                            clearStates();
+                        }}
+                    >
+                        <Ionicons name="close-circle-outline" size={22} color="white"/>
+                    </Pressable>
+                </View>
+            }
             <ScrollView className="pb-72">
 
                 <View className="bg-white p-4">
@@ -118,6 +191,7 @@ function CreatePost() {
                                 placeholder="Wat wil je zeggen..."
                                 className="w-full min-h-32 px-0 py-0 text-base placeholder:text-gray-400 outline-none"
                                 onChangeText={setContent}
+                                value={content}
                             />
                         </View>
                     </View>
@@ -128,6 +202,7 @@ function CreatePost() {
                             placeholder="#tags"
                             className="flex-1 text-base px-4 py-2 placeholder:text-neutral-400 outline-none"
                             onChangeText={handleTags}
+                            value={tags}
                         />
 
                         <Pressable

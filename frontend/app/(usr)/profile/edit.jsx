@@ -38,7 +38,7 @@ export default function EditProfile() {
             if (profilePicture && profilePicture.base64) {
                 data.image = {
                     base64: profilePicture.base64,
-                    mime_type: 'image/jpeg',
+                    mime_type: profilePicture.mimeType,
                 };
             }
 
@@ -93,21 +93,16 @@ export default function EditProfile() {
 
 
             <KeyboardAvoidingView className="absolute bottom-12 right-4">
-                <View
+                <Pressable
+                    onPress={handleSave}
                     className="bg-rac w-14 h-14 items-center justify-center rounded-full active:opacity-80"
                 >
                     {loading ? (
                         <ActivityIndicator color="white" size="large" className="flex-1 items-center justify-center"/>
                     ) : (
-                        <Pressable
-                            className="flex-1 items-center justify-center"
-                            onPress={handleSave}
-                        >
-                            <Feather name="edit" size={21} color="white"/>
-                        </Pressable>
-
+                        <Feather name="edit" size={21} color="white"/>
                     )}
-                </View>
+                </Pressable>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
