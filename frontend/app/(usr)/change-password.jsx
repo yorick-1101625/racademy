@@ -63,12 +63,13 @@ export default function ChangePassword() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
-      <ScrollView
-        contentContainerStyle={{ padding: 24, paddingBottom: 100 }}
-        keyboardShouldPersistTaps="handled"
-        className="bg-gray-100"
-      >
+  <SafeAreaView className="flex-1 bg-gray-100">
+    <ScrollView
+      contentContainerStyle={{ paddingBottom: 100 }}
+      keyboardShouldPersistTaps="handled"
+      className="flex-1"
+    >
+      <View className="bg-white p-6 rounded-2xl mx-4 mt-4">
         <Pressable
           onPress={() => router.push('/')}
           className="mb-4 flex-row items-center space-x-2"
@@ -76,6 +77,7 @@ export default function ChangePassword() {
           <Feather name="arrow-left" size={24} color="black" />
           <Text className="text-base font-medium text-black">Terug</Text>
         </Pressable>
+
         <View className="mb-4">
           <Text className="text-sm font-medium text-gray-700 mb-1">Oud wachtwoord</Text>
           <TextInput
@@ -108,21 +110,22 @@ export default function ChangePassword() {
             className="border border-gray-300 rounded-lg px-4 py-2 bg-gray-50"
           />
         </View>
-      </ScrollView>
+      </View>
+    </ScrollView>
 
-      <KeyboardAvoidingView className="absolute bottom-12 right-4">
-        <Pressable
-          onPress={handleChangePassword}
-          className="bg-rac w-14 h-14 items-center justify-center rounded-full active:opacity-80"
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="white" size="large" />
-          ) : (
-            <Feather name="edit" size={21} color="white" />
-          )}
-        </Pressable>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    <KeyboardAvoidingView className="absolute bottom-12 right-4">
+      <Pressable
+        onPress={handleChangePassword}
+        className="bg-rac w-14 h-14 items-center justify-center rounded-full active:opacity-80"
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="white" size="large" />
+        ) : (
+          <Feather name="edit" size={21} color="white" />
+        )}
+      </Pressable>
+    </KeyboardAvoidingView>
+  </SafeAreaView>
   );
 }
