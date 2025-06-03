@@ -118,8 +118,8 @@ export default function UserProfile({user}) {
                             <Switch
                                 value={userData.is_admin}
                                 onValueChange={(val) => toggleUserField("is_admin", val)}
-                                trackColor={{ false: "#767577", true: "#3daad3" }}
-                                thumbColor={userData.is_admin ? "#3daad3" : "#f4f3f4"}
+                            trackColor={{ false: "#767577", true: "#3b82f6" }}
+                            thumbColor={userData.is_admin ? "#3daad3" : "#f4f3f4"}
                             />
                         </View>
                         <View className="px-2 py-1 mt-1">
@@ -127,8 +127,8 @@ export default function UserProfile({user}) {
                             <Switch
                                 value={userData.is_blocked}
                                 onValueChange={(val) => toggleUserField("is_blocked", val)}
-                                trackColor={{ false: "#767577", true: "#3daad3" }}
-                                thumbColor={userData.is_blocked ? "#3daad3" : "#f4f3f4"}
+                            trackColor={{ false: "#767577", true: "#3b82f6" }}
+                            thumbColor={userData.is_blocked ? "#3daad3" : "#f4f3f4"}
                             />
                         </View>
                     </Kebab>

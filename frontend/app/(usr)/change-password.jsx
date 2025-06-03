@@ -69,7 +69,7 @@ export default function ChangePassword() {
       keyboardShouldPersistTaps="handled"
       className="flex-1"
     >
-      <View className="bg-white p-6 rounded-2xl mx-4 mt-4">
+      <View className="p-6 mt-4 border border-gray-300 rounded-lg bg-white">
         <Pressable
           onPress={() => router.push('/')}
           className="mb-4 flex-row items-center space-x-2"
