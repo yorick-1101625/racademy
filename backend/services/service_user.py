@@ -40,13 +40,19 @@ class UserService:
     @staticmethod
     def get_user_by_id(user_id):
         user = User.query.get(user_id)
-        if user:
-            user = user.to_dict()
-            user.pop("password", None)
-        return user if user else None
+        if not user:
+            return None
 
+        user_dict = user.to_dict()
+        user_dict.pop("password", None)
 
-    # TODO: Implement register instead of create_user
+        # Toegevoegde statistieken
+        user_dict["total_likes"] = len(user.liked_posts)
+        user_dict["total_bookmarked_posts"] = len(user.bookmarked_posts)
+        user_dict["total_bookmarked_sources"] = len(user.bookmarked_sources)
+
+        return user_dict
+
     @staticmethod
     def create_user(data):
         try:
@@ -54,7 +60,12 @@ class UserService:
             if not is_hr_mail(email):
                 return Exception("Must provide a valid email address")
 
-            if User.query.filter_by(email=email).one_or_none() is not None:
+            # Check if email is blocked
+            blocked_user = User.query.filter_by(email=email, is_blocked=True).one_or_none()
+            if blocked_user:
+                return Exception("This email is blocked and cannot be used for registration")
+
+            if User.query.filter_by(email=email).one_or_none():
                 return Exception("Email already exists")
 
             if not data.get("password"):
@@ -79,16 +90,23 @@ class UserService:
             print(f"Error creating user: {e}")
             return Exception(f"Error creating user: {e}")
 
+
     @staticmethod
     def login_user(email, password):
-        user = User.query.filter_by(email=email.lower()).first()
+        user = User.query.filter_by(email=email.lower()).one_or_none()
 
         if not user:
             return Exception("User does not exist")
+
+        # Check if user is blocked
+        if user.is_blocked:
+            return Exception("User is blocked and cannot log in")
+
         if not check_password_hash(user.password, password):
             return Exception("Invalid password")
 
-        return user
+        return user.to_dict()
+
 
     @staticmethod
     def update_user(user_id, data):
@@ -100,22 +118,19 @@ class UserService:
         if not user:
             return None
         try:
-
             image_data = data.get('image')
-            if image_data and 'base64' in image_data and 'mime_type' in image_data:
+            if isinstance(image_data, dict) and 'base64' in image_data and 'mime_type' in image_data:
                 old_picture = user.profile_picture
 
-                # Check if file is an image
                 mime_type = image_data['mime_type']
                 file_type = mime_type.split('/')[0]
                 if file_type != 'image':
-                    return Exception('Uploaded file must be an image')
+                    # Instead of returning Exception object, raise ValueError
+                    raise ValueError('Uploaded file must be an image')
 
-                # Create filename
                 file_extension = mime_type.split('/')[-1]
                 filename = f"{uuid.uuid4()}.{file_extension}"
 
-                # Save image in bytes
                 base64_str = image_data['base64']
                 image_bytes = base64.b64decode(base64_str)
                 save_dir = current_app.config['IMAGE_UPLOAD_FOLDER'] / 'profile_pictures'
@@ -127,7 +142,6 @@ class UserService:
 
                 user.profile_picture = f"/static/user_images/profile_pictures/{filename}"
 
-                # Delete old image
                 if old_picture != "/static/user_images/profile_pictures/default.png":
                     os.remove(str(current_app.config['ROOT_PATH']) + (old_picture.replace('/', os.sep)))
 
@@ -161,17 +175,15 @@ class UserService:
 
                 if data.get('rating'):
                     rating = int(data.get('rating'))
-                    if rating not in [10,20,30,40,50]:
-                        return Exception("Invalid rating")
+                    if rating not in [10, 20, 30, 40, 50]:
+                        # Instead of returning Exception object, raise ValueError
+                        raise ValueError("Invalid rating")
 
                     current_rating = Rating.query.filter(
-                        and_(Rating.user_id==user_id, Rating.source_id==source_id)
+                        and_(Rating.user_id == user_id, Rating.source_id == source_id)
                     ).one_or_none()
-                    # Update rating
                     if current_rating:
                         current_rating.rating = rating
-
-                    # Create rating
                     else:
                         new_rating = Rating(
                             rating=rating,
@@ -181,21 +193,39 @@ class UserService:
                         db.session.add(new_rating)
                 else:
                     deleted_rating = Rating.query.filter(
-                        and_(Rating.user_id==user_id, Rating.source_id==source_id)
+                        and_(Rating.user_id == user_id, Rating.source_id == source_id)
                     ).one_or_none()
-
                     if deleted_rating:
                         db.session.delete(deleted_rating)
+
+            if data.get('new_password'):
+                old_password = data.get('old_password')
+                new_password = data.get('new_password')
+
+                if not check_password_hash(user.password, old_password):
+                    raise Exception("Invalid password")
+
+                # Update password
+                user.password = generate_password_hash(new_password)
+
+            if data.get('is_admin'):
+                user.is_admin = data.get('is_admin')
+
+            if data.get('is_blocked'):
+                user.is_blocked = data.get('is_blocked')
 
             db.session.commit()
 
             user = user.to_dict()
             user.pop("password", None)
             return user
-        except SQLAlchemyError as e:
+        except (SQLAlchemyError, ValueError) as e:
             db.session.rollback()
             print(f"Error updating user: {e}")
+            import traceback
+            traceback.print_exc()
             return None
+
 
     @staticmethod
     def delete_user(user_id):
@@ -203,10 +233,11 @@ class UserService:
         if not user:
             return False
         try:
-            # Delete all content created by user
             for post in user.created_posts:
                 db.session.delete(post)
             for source in user.created_sources:
+                for rating in source.ratings:
+                    db.session.delete(rating)
                 db.session.delete(source)
             for comment in user.comments:
                 db.session.delete(comment)
@@ -220,9 +251,9 @@ class UserService:
             print(f"Error deleting user: {e}")
             return False
 
-    @staticmethod
-    def get_liked_posts(user_id, current_user_id, offset=0, limit=None ):
 
+    @staticmethod
+    def get_liked_posts(user_id, current_user_id, offset=0, limit=None):
         user = User.query.get(user_id)
         if not user:
             raise Exception("User does not exist")
@@ -236,7 +267,6 @@ class UserService:
                 .offset(offset)
                 .all()
         )
-
 
         current_user = User.query.get(current_user_id)
 
@@ -260,19 +290,17 @@ class UserService:
 
     @staticmethod
     def get_bookmarked_posts(user_id, current_user_id, offset=0, limit=None):
-
         user = User.query.get(user_id)
         if not user:
             raise Exception("User does not exist")
 
         user_bookmarked_posts = (
-            db.session
-            .query(UserBookmarkedPost)
-            .filter(UserBookmarkedPost.user_id == user.id)
-            .order_by(UserBookmarkedPost.bookmarked_at.desc())
-            .limit(limit)
-            .offset(offset)
-            .all()
+            db.session.query(UserBookmarkedPost)
+                .filter(UserBookmarkedPost.user_id == user.id)
+                .order_by(UserBookmarkedPost.bookmarked_at.desc())
+                .limit(limit)
+                .offset(offset)
+                .all()
         )
 
         current_user = User.query.get(current_user_id)
@@ -283,7 +311,6 @@ class UserService:
             user = post.user.to_dict()
             user.pop('password')
             post_dict = post.to_dict()
-
 
             post_dict['user'] = user
             post_dict['tags'] = [tag.to_dict()['name'] for tag in post.tags]
@@ -298,7 +325,6 @@ class UserService:
 
     @staticmethod
     def get_bookmarked_sources(user_id, current_user_id, offset=0, limit=None):
-
         user = User.query.get(user_id)
         if not user:
             raise Exception("User does not exist")

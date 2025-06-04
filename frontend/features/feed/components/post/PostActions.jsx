@@ -37,15 +37,13 @@ function PostActions({
     return (
         <>
             <View className="flex-row justify-end pl-2">
-
-                <Link
-                    href={`/posts/${postId}`}
-                    className="flex-row items-center ml-8 flex"
-                >
-                    <Ionicons name="chatbubble-outline" size={19} color="gray"/>
-                    <Text className="ml-1 text-sm text-gray-600">
-                        {numberOfComments}
-                    </Text>
+                <Link href={`/posts/${postId}`}>
+                    <View className="items-center flex-row">
+                        <Ionicons name="chatbubble-outline" size={19} color="gray"/>
+                        <Text className="ml-1 text-sm text-gray-600">
+                            {numberOfComments}
+                        </Text>
+                    </View>
                 </Link>
 
                 <Pressable

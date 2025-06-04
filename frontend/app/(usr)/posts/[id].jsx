@@ -45,7 +45,7 @@ function PostDetails() {
                 >
                     <View className="flex-1">
                         <Post post={post}/>
-                        {/*<CommentList post_id={id}/>*/}
+
                         <InfiniteScrollList
                             refresh={refresh}
                             renderItem={({item}) => <Comment comment={item} post_id={id}/>}

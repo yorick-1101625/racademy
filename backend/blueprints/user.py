@@ -1,8 +1,11 @@
 from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
-from flask_jwt_extended import get_jwt_identity, current_user
+from flask_jwt_extended import jwt_required, get_jwt_identity, current_user
 from werkzeug.exceptions import HTTPException
 from backend.services.service_user import UserService
+from backend.models.models import User
+from backend.database.db import db
+from werkzeug.security import check_password_hash, generate_password_hash
 
 api_user = Blueprint("api_user", __name__)
 
@@ -17,9 +20,9 @@ def get_users():
 
         users = UserService.get_all_users(
             search_term=search_term,
-            sort_by = sort_by,
-            offset = offset,
-            limit = limit
+            sort_by=sort_by,
+            offset=offset,
+            limit=limit
         )
         return jsonify({
             "success": True,
@@ -52,7 +55,7 @@ def get_user(user_id):
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(f"[get_post] Unexpected error: {e}")
+        print(f"[get_user] Unexpected error: {e}")
         return jsonify({
             "success": False,
             "message": "An unexpected error occurred."
@@ -89,8 +92,14 @@ def register_user():
 def update_user():
     data = request.get_json()
     try:
-        user_id = get_jwt_identity()
-        updated_user = UserService.update_user(user_id, data)
+        current_user_id = get_jwt_identity()
+        updated_user_id = data.get("user_id", current_user_id)
+
+        if data.get('is_admin') or data.get('is_blocked'):
+            if not current_user.is_admin:
+                return jsonify({"success": False, "message": "You are not authorized to edit this field"}), 401
+
+        updated_user = UserService.update_user(updated_user_id, data)
         if updated_user:
             return jsonify({
                 "success": True,
@@ -99,7 +108,7 @@ def update_user():
         else:
             return jsonify({
                 "success": False,
-                "message": f"User with ID {user_id} not found or not updated."
+                "message": f"User with ID {updated_user_id} not found or not updated."
             }), 404
     except HTTPException as e:
         raise e
@@ -107,14 +116,14 @@ def update_user():
         print(f"[update_user] Unexpected error: {e}")
         return jsonify({
             "success": False,
-            "message": "An unexpected error occurred."
+            "message": str(e)
         }), 500
 
 
 @api_user.route("/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     try:
-        if user_id != get_jwt_identity(): # And not admin
+        if user_id != get_jwt_identity():
             return {
                 "success": False,
                 "message": "You are not authorized to delete this user"
@@ -144,18 +153,15 @@ def delete_user(user_id):
 @api_user.route('/current', methods=['GET'])
 def get_current_user():
     try:
-        current_user = UserService.get_user_by_id(
-            get_jwt_identity()
-        )
+        current_user = UserService.get_user_by_id(get_jwt_identity())
         return jsonify({
             "success": True,
             "user": current_user
         }), 200
-
     except HTTPException as e:
         raise e
     except Exception as e:
-        print(f"[login] Unexpected error: {e}")
+        print(f"[get_current_user] Unexpected error: {e}")
         return jsonify({
             "success": False,
             "message": "An unexpected error occurred."
@@ -179,7 +185,6 @@ def get_liked_posts(user_id):
             "success": True,
             "data": liked_posts
         }), 200
-
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -207,7 +212,6 @@ def get_bookmarked_posts(user_id):
             "success": True,
             "data": bookmarked_posts
         }), 200
-
     except HTTPException as e:
         raise e
     except Exception as e:
@@ -235,7 +239,6 @@ def get_bookmarked_sources(user_id):
             "success": True,
             "data": bookmarked_sources
         }), 200
-
     except HTTPException as e:
         raise e
     except Exception as e:

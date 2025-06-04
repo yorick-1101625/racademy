@@ -71,7 +71,7 @@ function Post({post}) {
                 <LinkedSource linkedSource={post.linked_source}/>
             }
 
-            <View className="flex-row justify-between items-center py-2">
+            <View className="flex-row justify-between items-end py-2">
                 <Link href={`/posts/${post.id}`} className="flex-1">
                     {/* Timestamp */}
                     <PostDetails createdAt={post['created_at']} tags={post.tags}/>
