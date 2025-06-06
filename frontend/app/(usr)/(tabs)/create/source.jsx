@@ -2,7 +2,7 @@ import {KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, TextInput, Vi
 import {useEffect, useState} from "react";
 import TopTabs from "@/components/TopTabs";
 import ImagePicker from "@/components/ImagePicker";
-import {Ionicons} from "@expo/vector-icons";
+import {Entypo, Ionicons} from "@expo/vector-icons";
 import fatty from "@/utils/fatty";
 import {showError, showSuccess} from "@/utils/toast";
 import {isISBN} from "@/utils/validators";
@@ -18,10 +18,10 @@ const SOURCE_TYPES = [
 ]
 
 const DIFFICULTIES = [
-    {value: 'easy', label: 'Beginner'},
-    {value: 'medium', label: 'Gemiddeld'},
-    {value: 'hard', label: 'Gevorderd'},
-    {value: 'expert', label: 'Professional'}
+    {value: 'easy', label: <Entypo size={24} color="#3daad3" name="progress-empty"/>},
+    {value: 'medium', label: <Entypo size={24} color="#3daad3" name="progress-one"/>},
+    {value: 'hard', label: <Entypo size={24} color="#3daad3" name="progress-two"/>},
+    {value: 'expert', label: <Entypo size={24} color="#3daad3" name="progress-full"/>}
 ]
 
 function CreateSource() {
@@ -80,6 +80,13 @@ function CreateSource() {
     const [url, setUrl] = useState("");
     const [isbn, setIsbn] = useState("");
     const [image, setImage] = useState(null);
+
+    const DIFFICULTIES = [
+        {value: 'easy', label: <Entypo size={24} color={difficulty === 'easy' ? 'white' : '#3daad3'} name="progress-empty"/>},
+        {value: 'medium', label: <Entypo size={24} color={difficulty === 'medium' ? 'white' : '#3daad3'} name="progress-one"/>},
+        {value: 'hard', label: <Entypo size={24} color={difficulty === 'hard' ? 'white' : '#3daad3'} name="progress-two"/>},
+        {value: 'expert', label: <Entypo size={24} color={difficulty === 'expert' ? 'white' : '#3daad3'} name="progress-full"/>}
+    ]
 
     function handleSubmit() {
         // Validation
@@ -150,7 +157,6 @@ function CreateSource() {
             .then(data => {
                 if (data.success) {
                     showSuccess('Bron succesvol aangemaakt!');
-                    // router.push(`/sources/${data.data.id}`);
                     clearStates();
                     router.push('/sources?refresh=1');
                 } else {
@@ -230,7 +236,7 @@ function CreateSource() {
                 if (data.success) {
                     showSuccess('Bron succesvol Bijgewerkt!');
                     clearStates();
-                    router.push(`/sources/${id}`);
+                    router.push('/sources?refresh=1');
                 } else {
                     console.error(data.message);
                     showError('Er is iets misgegaan.');
@@ -287,7 +293,8 @@ function CreateSource() {
                         value={description}
                     />
 
-                    <View className="flex-row mt-4 mb-4">
+                    <Text className="mt-4 text-gray-600">Moeilijkheid</Text>
+                    <View className="flex-row mb-4">
                         <TopTabs tabs={DIFFICULTIES} state={[difficulty, setDifficulty]}/>
                     </View>
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, current_user
 from flask_cors import cross_origin
 from werkzeug.exceptions import HTTPException
 
@@ -31,6 +31,12 @@ def get_comments(post_id):
 def create_comment():
     data = request.get_json()
     try:
+        if current_user.is_blocked:
+            return {
+                "success": False,
+                "message": "This account is blocked."
+            }, 400
+
         result = CommentService.create_comment(data, current_user_id=get_jwt_identity())
         if type(result) == Exception:
             error = str(result)
@@ -58,7 +64,7 @@ def delete_comment(comment_id):
     try:
         current_user_id = int(get_jwt_identity())
         comment = CommentService.get_comment_by_id(comment_id)
-        if comment["user"]["id"] != current_user_id:  # And user not admin
+        if comment["user"]["id"] != current_user_id and not current_user.is_admin:  # And user not admin
             return {
                 "success": False,
                 "message": "You are not authorized to delete this comment"

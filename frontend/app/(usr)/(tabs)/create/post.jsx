@@ -37,7 +37,6 @@ function CreatePost() {
     const router = useRouter();
 
     const {user} = useUser();
-    console.log(id)
 
     function clearStates() {
         setIsEditing(false);
@@ -131,13 +130,8 @@ function CreatePost() {
                 .then(data => {
                     if (data.success) {
                         showSuccess("Post succesvol aangemaakt.");
-
-                        // Push to post detail page
-                        // router.push(`/posts/${data.data.id}`);
-
                         clearStates();
 
-                        // Push to post feed
                         router.push(`/posts?refresh=1`);
                     } else {
                         console.error(data.message);

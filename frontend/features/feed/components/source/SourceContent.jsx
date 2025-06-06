@@ -1,12 +1,12 @@
 import {Text, Image, View} from 'react-native';
 import {BASE_URL} from "@/utils/url";
-import truncate from "@/features/feed/utils/truncate";
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {useMemo} from "react";
 import FocusableImage from "@/components/FocusableImage";
 import {Link} from "expo-router";
+import {Entypo} from "@expo/vector-icons";
 
-function SourceContent({title, image, type, url, description}) {
+function SourceContent({difficulty, title, image, type, url, description}) {
 
     const videoId = useMemo(() => {
         if (!url) return null;
@@ -16,12 +16,13 @@ function SourceContent({title, image, type, url, description}) {
 
 
     return (
-        <View>
+        <View className="max-w-2xl">
+
             {
                 type === "video" &&
                     <>
                         <View className="
-                            relative min-h-40 max-h-96 max-w-2xl aspect-video z-50 rounded-md overflow-hidden
+                            relative min-h-40 max-h-96 aspect-video z-50 rounded-md overflow-hidden
                         ">
                             <YoutubePlayer
                                 height="100%"
@@ -34,8 +35,6 @@ function SourceContent({title, image, type, url, description}) {
                                 }}
                             />
                         </View>
-                         {/*<Text className="font-semibold text-md text-neutral-900">{ title }</Text>*/}
-                        <Text className="text-gray-500 text-s mt-2">{ truncate(description, 110) }</Text>
                     </>
             }
 
@@ -45,7 +44,7 @@ function SourceContent({title, image, type, url, description}) {
                         href={url}
                         className="max-w-2xl border border-gray-200 rounded-md overflow-hidden"
                     >
-                        <View className="p-3">
+                        <View className="p-3 w-full">
                             <Text className="text-black font-medium" numberOfLines={2}>
                                 {title}
                             </Text>
@@ -60,7 +59,6 @@ function SourceContent({title, image, type, url, description}) {
                                     />
                                 </View>
                             }
-                            <Text className="text-gray-500 text-s mt-2">{ truncate(description, 110) }</Text>
                         </View>
                     </Link>
                 )
@@ -75,10 +73,29 @@ function SourceContent({title, image, type, url, description}) {
                             source={{ uri: `${BASE_URL}${image}`}}
                             resizeMode="contain"
                         />
-                        <Text className="text-gray-500 text-s mt-2">{ truncate(description, 110) }</Text>
                     </>
                 )
             }
+
+            <View className="flex-row justify-between items-start mt-2">
+                    <Text className="text-gray-500 text-sm flex-row w-11/12">{ description }</Text>
+                    {
+                        difficulty === 'easy' &&
+                        <Entypo size={24} color="#3daad3" name="progress-empty"/>
+                    }
+                    {
+                        difficulty === 'medium' &&
+                        <Entypo size={24} color="#3daad3" name="progress-one"/>
+                    }
+                    {
+                        difficulty === 'hard' &&
+                        <Entypo size={24} color="#3daad3" name="progress-two"/>
+                    }
+                    {
+                        difficulty === 'expert' &&
+                        <Entypo size={24} color="#3daad3" name="progress-full"/>
+                    }
+            </View>
         </View>
     );
 }

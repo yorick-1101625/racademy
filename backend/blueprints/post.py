@@ -1,9 +1,8 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import get_jwt_identity, get_jwt
+from flask_jwt_extended import get_jwt_identity, get_jwt, current_user
 from flask_cors import cross_origin
 from werkzeug.exceptions import HTTPException
 
-from backend.blueprints.auth import login
 from backend.services.service_post import PostService
 
 api_post = Blueprint("api_post", __name__)
@@ -69,6 +68,12 @@ def get_post(post_id):
 def create_post():
     data = request.get_json()
     try:
+        if current_user.is_blocked:
+            return {
+                "success": False,
+                "message": "This account is blocked."
+            }, 400
+
         result = PostService.create_post(data, current_user_id=get_jwt_identity())
         if type(result) == Exception:
             error = str(result)
@@ -128,7 +133,7 @@ def delete_post(post_id):
     try:
         current_user_id = int(get_jwt_identity())
         post = PostService.get_post_by_id(post_id, current_user_id)
-        if post["user"]["id"] != current_user_id:  # And user not admin
+        if (post["user"]["id"] != current_user_id) and not current_user.is_admin:
             return {
                 "success": False,
                 "message": "You are not authorized to delete this post"

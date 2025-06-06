@@ -14,8 +14,9 @@ import useUser from "@/hooks/useUser";
 import BottomModal from "@/components/BottomModal";
 import {openURL} from "expo-linking";
 import LinkedSource from "@/features/feed/components/post/LinkedSource";
+import truncate from "@/features/feed/utils/truncate";
 
-function Post({post}) {
+function Post({post, shorten=true}) {
 
     const {user} = useUser();
     const [isBookmarked, setIsBookmarked] = useState(post['bookmarked_by_current_user']);
@@ -62,7 +63,11 @@ function Post({post}) {
 
             {/* Content */}
             <Link href={`/posts/${post.id}`}>
-                <PostContent content={post.content}/>
+                <PostContent content={
+                    shorten
+                        ?   truncate(post.content, 300)
+                        :   post.content
+                }/>
             </Link>
 
             {/* Linked Source */}
@@ -88,15 +93,18 @@ function Post({post}) {
 
 
             {
-                post.user.id === user.id
+                post.user.id === user.id || user.is_admin
                     ?   <Kebab>
-                            <Link
-                                href={`/create/post?id=${post.id}`}
-                                className="flex-row rounded-md p-3 items-center hover:bg-blue-50 box-border transition-colors"
-                            >
-                                <Feather name="edit-2" color="#3daad3" size={18} />
-                                <Text className="ml-3 text-rac text-base">Bewerken</Text>
-                            </Link>
+                            {
+                                post.user.id === user.id &&
+                                <Link
+                                    href={`/create/post?id=${post.id}`}
+                                    className="flex-row rounded-md p-3 items-center hover:bg-blue-50 box-border transition-colors"
+                                >
+                                    <Feather name="edit-2" color="#3daad3" size={18} />
+                                    <Text className="ml-3 text-rac text-base">Bewerken</Text>
+                                </Link>
+                            }
                             <Pressable
                                 className="flex-row rounded-md p-3 items-center hover:bg-red-100 box-border transition-colors"
                                 onPress={() => setDeleteModalVisible(true)}
