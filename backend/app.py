@@ -5,8 +5,9 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 
-from backend.blueprints import register_blueprints
-from backend.database.db import init_db, db
+from blueprints import register_blueprints
+from database.db import init_db, db
+
 
 
 ROOT_PATH = Path(__file__).parent.resolve()
@@ -27,7 +28,7 @@ migrate = Migrate(app, db)
 CORS(app)
 jwt = JWTManager(app)
 
-from backend.models.models import User
+from models.models import User
 
 @jwt.user_lookup_loader
 def user_lookup_callback(_jwt_header, jwt_data):

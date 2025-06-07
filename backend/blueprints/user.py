@@ -2,9 +2,9 @@ from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
 from flask_jwt_extended import jwt_required, get_jwt_identity, current_user
 from werkzeug.exceptions import HTTPException
-from backend.services.service_user import UserService
-from backend.models.models import User
-from backend.database.db import db
+from services.service_user import UserService
+from models.models import User
+from database.db import db
 from werkzeug.security import check_password_hash, generate_password_hash
 
 api_user = Blueprint("api_user", __name__)

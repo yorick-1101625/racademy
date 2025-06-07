@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_cors import cross_origin
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required
 from werkzeug.exceptions import HTTPException
-from backend.services.service_user import UserService
+from services.service_user import UserService
 from datetime import timedelta
 
 api_auth = Blueprint('api_auth', __name__)

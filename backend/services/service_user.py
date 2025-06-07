@@ -3,9 +3,9 @@ from sqlalchemy import or_, and_
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from backend.models.models import User, Post, Source, Rating, UserLikedPost, UserBookmarkedPost, UserBookmarkedSource
-from backend.database.db import db
-from backend.utils.validators import is_hr_mail
+from models.models import User, Post, Source, Rating, UserLikedPost, UserBookmarkedPost, UserBookmarkedSource
+from database.db import db
+from utils.validators import is_hr_mail
 
 
 class UserService:

@@ -10,8 +10,8 @@ import random
 
 from werkzeug.security import generate_password_hash
 
-from backend.models.models import User, Post, Comment, Tag, Source, Rating
-from backend.database.db import init_db, db
+from models.models import User, Post, Comment, Tag, Source, Rating
+from database.db import init_db, db
 
 instance_path = os.path.join(os.path.dirname(__file__), '..', 'instance')
 app = Flask(__name__, instance_path=instance_path)
@@ -150,7 +150,7 @@ def generate_dummy_data():
 
     Ik koos Flask voor de backend, omdat ik al wat ervaring had met Python, en React voor de frontend (dat laatste bleef wel een uitdaging, vooral met state management en props-drilling). Alles lokaal opgezet met Docker, PostgreSQL als database, en uiteindelijk zelfs user authentication met JWT geïmplementeerd.
 
-    De eerste week was chaotisch. Routes werkten niet, ik kreeg rare CORS-fouten, en m’n React-componenten herlaadden constant zonder reden. Maar iedere keer als ik een bug oploste, voelde het als een mini-overwinning."""
+    De eerste week was chaotisch. Routes werkten niet, ik kreeg rare CORS-fouten, en m’n React-componenten herlaadden constant zonder reden. Maar iedere keer als ik een bug oploste, voelde het als een mini-overwinning.""" 
     ]
 
     sample_comment_texts = [

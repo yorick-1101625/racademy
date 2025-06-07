@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from flask_cors import cross_origin
 from flask_jwt_extended import get_jwt_identity
 from werkzeug.exceptions import HTTPException
-from backend.services.service_source import SourceService
+from services.service_source import SourceService
 
 api_source = Blueprint("api_source", __name__)
 

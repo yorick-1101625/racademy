@@ -1,6 +1,6 @@
 from sqlalchemy.exc import SQLAlchemyError
-from backend.database.db import db
-from backend.models.models import Comment, Post, User
+from database.db import db
+from models.models import Comment, Post, User
 
 
 class CommentService:

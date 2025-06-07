@@ -1,4 +1,4 @@
-from backend.database.db import db
+from database.db import db
 from datetime import datetime
 
 
