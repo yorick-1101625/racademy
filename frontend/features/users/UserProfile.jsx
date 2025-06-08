@@ -68,7 +68,13 @@ export default function UserProfile({user}) {
 
                 <View className="mt-16">
                     <View className="flex-row justify-between items-end mt-2">
-                        <Text className="text-xl font-bold">{userData.username}</Text>
+                        <View className="flex-row items-center">
+                            <Text className="text-xl font-bold">{userData.username}</Text>
+                            {
+                                userData.is_admin &&
+                                <Text className="ml-2 text-gray-600 text-xs">Admin</Text>
+                            }
+                        </View>
                         {currentUser.id === userData.id && (
                             <Link
                                 className="flex flex-col"

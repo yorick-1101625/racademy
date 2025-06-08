@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from flask_cors import cross_origin
-from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import get_jwt_identity, current_user
 from werkzeug.exceptions import HTTPException
 from backend.services.service_source import SourceService
 
@@ -43,6 +43,12 @@ def get_sources():
 def create_source():
     data = request.get_json()
     try:
+        if current_user.is_blocked:
+            return {
+                "success": False,
+                "message": "This account is blocked."
+            }, 400
+
         result = SourceService.create_source(data, current_user_id=get_jwt_identity())
         if type(result) == Exception:
             error = str(result)
@@ -88,7 +94,7 @@ def get_source(source_id):
 def delete_source(source_id):
     try:
         source = SourceService.get_source_by_id(source_id, current_user_id=get_jwt_identity())
-        if source['user']['id'] != int(get_jwt_identity()):  # And user not admin
+        if source['user']['id'] != int(get_jwt_identity()) and not current_user.is_admin:  # And user not admin
             return {
                 "success": False,
                 "message": "You are not authorized to delete this source"

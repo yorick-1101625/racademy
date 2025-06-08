@@ -7,7 +7,7 @@ function Kebab({ children }) {
     const [isVisible, setIsVisible] = useState(false);
 
     return (
-        <View className="absolute top-5 right-3 z-10 items-end">
+        <View className="absolute top-5 right-3 z-50 items-end">
             <Pressable
                 className="h-7 w-7 items-center justify-center z-20 rounded-full hover:border active:border border-neutral-300"
                 onPress={() => setIsVisible(i => !i)}

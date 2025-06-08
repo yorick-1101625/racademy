@@ -52,7 +52,7 @@ function SourceDetails({
 
     return (
         <>
-            <View className="flex-row justify-between  items-end">
+            <View className="flex-row justify-between items-end">
                 <Link href={`/sources/${sourceId}`} className="flex flex-col flex-1 mt-1">
                     <View className="w-full">
                         <Text className="text-xs text-gray-500">{calculateTimeFromToday(createdAt)}</Text>
@@ -60,7 +60,7 @@ function SourceDetails({
                     </View>
                 </Link>
 
-                <View className="flex-row items-center right-0 justify-end mt-5">
+                <View className="flex-row items-center justify-end mt-5">
                     <Pressable
                         className="flex-row items-center ml-8"
                         onPress={() => setRatingModalVisible(true)}

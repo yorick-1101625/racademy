@@ -208,10 +208,11 @@ class UserService:
                 # Update password
                 user.password = generate_password_hash(new_password)
 
-            if data.get('is_admin'):
+            if data.get('is_admin') is not None:
+                print(data.get('is_admin'))
                 user.is_admin = data.get('is_admin')
 
-            if data.get('is_blocked'):
+            if data.get('is_blocked') is not None:
                 user.is_blocked = data.get('is_blocked')
 
             db.session.commit()

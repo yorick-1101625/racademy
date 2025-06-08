@@ -17,7 +17,7 @@ export async function refreshToken() {
             await AsyncStorage.setItem('access', data['access_token']);
         }
         else {
-            console.error("Could not refresh token.");
+            console.log("Could not refresh token.");
         }
     }
     catch (e) {
