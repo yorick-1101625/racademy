@@ -17,6 +17,9 @@ RUN pip install -r requirements.txt
 # Copy backend source code
 COPY . /backend/
 
+# Copy instance directory into container
+COPY instance /backend/instance
+
 # Expose port 8000 for the Flask app
 EXPOSE 8000
 
