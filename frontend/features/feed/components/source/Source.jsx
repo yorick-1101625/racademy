@@ -58,10 +58,11 @@ function Source({source, shorten=true}) {
 
             {/* Content */}
             <SourceContent
+                sourceId={source.id}
                 difficulty={source.difficulty}
                 title={
                     shorten
-                        ?   truncate(source.title, 80)
+                        ?   truncate(source.title, 70)
                         :   source.title
                 }
                 image={source.image}
@@ -69,7 +70,7 @@ function Source({source, shorten=true}) {
                 url={source.url}
                 description={
                     shorten
-                        ?   truncate(source.description, 110)
+                        ?   truncate(source.description, 60)
                         :   source.description
                 }
 
@@ -92,12 +93,13 @@ function Source({source, shorten=true}) {
                     ?   <Kebab>
                         {
                             source.user.id === user.id &&
-                            <Link href={`/create/source?id=${source.id}`}
+                            <Pressable
+                                onPress={() => router.push(`/create/source?id=${source.id}`)}
                                 className="flex-row rounded-md p-3 items-center hover:bg-blue-50 box-border transition-colors"
                             >
                                 <Feather name="edit-2" color="#3daad3" size={18} />
                                 <Text className="ml-3 text-rac text-base">Bewerken</Text>
-                            </Link>
+                            </Pressable>
                         }
                             <Pressable
                                 className="flex-row rounded-md p-3 items-center hover:bg-red-100 box-border transition-colors"

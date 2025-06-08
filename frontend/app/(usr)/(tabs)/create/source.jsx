@@ -1,5 +1,5 @@
 import {KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, TextInput, View} from 'react-native';
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import TopTabs from "@/components/TopTabs";
 import ImagePicker from "@/components/ImagePicker";
 import {Entypo, Ionicons} from "@expo/vector-icons";
@@ -10,6 +10,7 @@ import useUser from "@/hooks/useUser";
 import {useLocalSearchParams, useRouter} from "expo-router";
 import {Text} from 'react-native';
 import {BASE_URL} from "@/utils/url";
+import MultilineTextInput from "@/components/MultilineTextInput";
 
 const SOURCE_TYPES = [
     {value: 'video', label: 'Video'},
@@ -89,6 +90,10 @@ function CreateSource() {
     ]
 
     function handleSubmit() {
+        const _url = url.toLowerCase();
+        const _title = title.trim();
+        const _description = description.trim();
+
         // Validation
         if (!(title?.trim())) {
             showError('Titel is verplicht.');
@@ -134,7 +139,7 @@ function CreateSource() {
             showError('Bestand moet een foto zijn.');
             return;
         }
-        if (type === 'video' && url.slice(0, 23) !== 'https://www.youtube.com') {
+        if (type === 'video' && _url.toLowerCase().slice(0, 23) !== 'https://www.youtube.com') {
             showError('URL moet op https://www.youtube.com/.... lijken');
             return;
         }
@@ -146,13 +151,13 @@ function CreateSource() {
         fatty('/api/source/', 'POST', {
             'school_subject': schoolSubject,
             image: imageData,
-            description,
+            description: _description,
             type: type,
             difficulty,
             subject,
-            title,
+            title: _title,
             isbn,
-            url
+            url: _url
         })
             .then(data => {
                 if (data.success) {
@@ -208,7 +213,7 @@ function CreateSource() {
             showError('Foto is verplicht bij boeken.');
             return;
         }
-        if (type === 'video' && url.slice(0, 23) !== 'https://www.youtube.com') {
+        if (type === 'video' && url.toLowerCase().slice(0, 23) !== 'https://www.youtube.com') {
             showError('URL moet op https://www.youtube.com/.... lijken');
             return;
         }
@@ -219,18 +224,17 @@ function CreateSource() {
                 'mime_type': image.mimeType,
             };
         }
-        console.log(imageData)
 
         fatty(`/api/source/${id}`, 'PATCH', {
             'school_subject': schoolSubject,
             image: imageData,
-            description,
+            description: description.trim(),
             type: type,
             difficulty,
             subject,
-            title,
+            title: title.trim(),
             isbn,
-            url
+            url: url.toLowerCase()
         })
             .then(data => {
                 if (data.success) {
@@ -262,7 +266,8 @@ function CreateSource() {
                         </Pressable>
                     </View>
                 }
-                <ScrollView contentContainerClassName="bg-white p-4">
+                <ScrollView contentContainerClassName="bg-white">
+                    <View className="p-4">
                     <TopTabs tabs={SOURCE_TYPES} state={[type, setType]}/>
 
                     <TextInput
@@ -286,9 +291,9 @@ function CreateSource() {
                         value={subject}
                     />
 
-                    <TextInput
+                    <MultilineTextInput
                         className="text-sm h-32 border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
-                        placeholder="Beschrijving" multiline={true}
+                        placeholder="Beschrijving"
                         onChangeText={setDescription}
                         value={description}
                     />
@@ -331,6 +336,8 @@ function CreateSource() {
                                 />
                             </View>
                     }
+                    </View>
+                    <View className="h-96 bg-gray-100 w-full"/>
                 </ScrollView>
             </SafeAreaView>
 

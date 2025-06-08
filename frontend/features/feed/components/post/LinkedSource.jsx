@@ -3,6 +3,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import {Link} from "expo-router";
 import {Ionicons} from "@expo/vector-icons";
 import React from "react";
+import truncate from "@/features/feed/utils/truncate";
 
 function LinkedSource({linkedSource}) {
 
@@ -15,7 +16,7 @@ function LinkedSource({linkedSource}) {
                         <Text className="text-sm text-neutral-500 ml-1">Gekoppelde bron:</Text>
                     </View>
                 </View>
-                <Text className="font-medium mt-1 text-neutral-800">{linkedSource.title}</Text>
+                <Text className="font-medium mt-1 text-neutral-800">{truncate(linkedSource.title, 50)}</Text>
                 <Text className="text-sm text-neutral-500">@{linkedSource.user.username}</Text>
             </View>
         </Link>

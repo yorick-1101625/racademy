@@ -6,7 +6,7 @@ import FocusableImage from "@/components/FocusableImage";
 import {Link} from "expo-router";
 import {Entypo} from "@expo/vector-icons";
 
-function SourceContent({difficulty, title, image, type, url, description}) {
+function SourceContent({sourceId, difficulty, title, image, type, url, description}) {
 
     const videoId = useMemo(() => {
         if (!url) return null;
@@ -16,8 +16,8 @@ function SourceContent({difficulty, title, image, type, url, description}) {
 
 
     return (
-        <View className="max-w-2xl">
-
+        <View>
+            <View className="max-w-2xl">
             {
                 type === "video" &&
                     <>
@@ -67,18 +67,23 @@ function SourceContent({difficulty, title, image, type, url, description}) {
             {
                 type === "book" && (
                     <>
-                        <Text className="text-black font-medium mt-1">{title}</Text>
                         <FocusableImage
-                            className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl"
+                            className="mt-2 aspect-square max-h-96 w-full max-w-2xl"
                             source={{ uri: `${BASE_URL}${image}`}}
                             resizeMode="contain"
                         />
+                        <Link href={`/sources/${sourceId}`} className="mt-2">
+                            <Text className="text-black font-medium">{title}</Text>
+                        </Link>
                     </>
                 )
             }
+            </View>
 
-            <View className="flex-row justify-between items-start mt-2">
-                    <Text className="text-gray-500 text-sm flex-row w-11/12">{ description }</Text>
+            <Link href={`/sources/${sourceId}`} className="mt-2">
+                <View className="flex-row justify-between items-start w-full">
+                    <Text className="text-gray-500 text-sm flex-row">{ description }</Text>
+                    <View className="block ml-auto">
                     {
                         difficulty === 'easy' &&
                         <Entypo size={24} color="#3daad3" name="progress-empty"/>
@@ -95,7 +100,9 @@ function SourceContent({difficulty, title, image, type, url, description}) {
                         difficulty === 'expert' &&
                         <Entypo size={24} color="#3daad3" name="progress-full"/>
                     }
-            </View>
+                    </View>
+                </View>
+            </Link>
         </View>
     );
 }
