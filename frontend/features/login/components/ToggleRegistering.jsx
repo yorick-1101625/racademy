@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 
 function ToggleRegistering({ text, onPress }) {
     return (

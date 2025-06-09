@@ -12,7 +12,6 @@ export default function ImagePicker({state, className = ""}) {
         const result = await launchImageLibraryAsync({
             mediaTypes: ['images'],
             allowsEditing: true,
-            // aspect: [4, 3],
             quality: 1,
         });
 

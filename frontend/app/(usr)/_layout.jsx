@@ -1,4 +1,4 @@
-import {Link, Slot, Stack} from "expo-router";
+import {Link, Stack} from "expo-router";
 import CurrentUserProfilePicture from "@/components/CurrentUserProfilePicture";
 import {Image} from "react-native";
 import Logo from "@/assets/logo.png";

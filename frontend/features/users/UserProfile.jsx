@@ -1,8 +1,6 @@
-import {useState, useEffect} from 'react';
-import {View, Text, Image, ActivityIndicator, ScrollView, Pressable, ImageBackground, Switch} from 'react-native';
-import {Link, useLocalSearchParams, useRouter} from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import useFetch from '../../hooks/useFetch';
+import {useState} from 'react';
+import {Image, ImageBackground, Switch, Text, View} from 'react-native';
+import {Link} from 'expo-router';
 import useUser from '../../hooks/useUser';
 import {BASE_URL} from '@/utils/url';
 import Post from '../../features/feed/components/post/Post';
@@ -10,7 +8,7 @@ import Source from '../../features/feed/components/source/Source';
 import TopTabs from '../../components/TopTabs';
 import InfiniteScrollList from "@/components/InfiniteScrollList";
 import Kebab from '@/components/Kebab';
-import {showSuccess, showError} from '@/utils/toast';
+import {showError, showSuccess} from '@/utils/toast';
 import fatty from "@/utils/fatty";
 
 export default function UserProfile({user}) {

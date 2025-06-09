@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {View, TextInput, Text, Pressable, ActivityIndicator, Modal, SafeAreaView} from "react-native";
-import PostList from "@/features/feed/components/post/PostList";
-import SourceList from "@/features/feed/components/source/SourceList";
+import {ActivityIndicator, Pressable, SafeAreaView, Text, TextInput, View} from "react-native";
 import NoResults from "@/features/search/components/NoResults";
-import UserList from "@/features/search/components/user/UserList";
 import {Ionicons} from "@expo/vector-icons";
 import BottomModal from "@/components/BottomModal";
 import InfiniteScrollList from "@/components/InfiniteScrollList";

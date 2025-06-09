@@ -112,14 +112,20 @@ python app.py
 In de `frontend` folder:
 
 ```bash
-npm run web
+npx expo start  
+of  
+npm run start
 ```
 
 Als je de app wilt starten met Expo Go en het bovenstaande werkt niet:
 
 ```bash
-npm run web --tunnel
+npx expo start --tunnel  
+of  
+npm run start --tunnel
 ```
+
+Mocht dat ook niet werken, zet dan je internetverbinding op particulier, zet je firewall uit en probeer het opnieuw
 
 ---
 
@@ -152,7 +158,7 @@ https://www.youtube.com/watch?v=RcrWlOgL1hM
 Net Ninja. (2025c, May 7). Complete React Native Tutorial #19 - Protecting routes [Video]. YouTube.   
 https://www.youtube.com/watch?v=v4-q39sBfvU
 
-Reddit user [username]. (2013, July 2). Debounce search input [Online forum post]. Reddit.   
+vinde_sensumars [username]. (2013, July 2). Debounce search input [Online forum post]. Reddit.   
 https://www.reddit.com/r/reactjs/comments/1fajz2e/debounce_search_input/
 
 ImagePicker. (n.d.). Expo Documentation.   

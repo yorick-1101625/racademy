@@ -1,7 +1,7 @@
 import re
 
-def is_hr_mail(email):
 
+def is_hr_mail(email):
     # Only allow xyz123@hr.nl emails
     regex = r"^[\w\-\.]+@hr\.nl$"
     return re.fullmatch(regex, email) is not None

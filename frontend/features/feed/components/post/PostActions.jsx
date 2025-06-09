@@ -4,9 +4,6 @@ import {Pressable, Text, View} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 
 import fatty from "@/utils/fatty";
-import {showError, showSuccess} from "@/utils/toast";
-import BottomModal from "@/components/BottomModal";
-import useUser from "@/hooks/useUser";
 import {Link} from "expo-router";
 
 function PostActions({

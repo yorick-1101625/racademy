@@ -2,7 +2,7 @@ import {Animated, SafeAreaView} from 'react-native';
 import InfiniteScrollList from "@/components/InfiniteScrollList";
 import Post from "@/features/feed/components/post/Post";
 import {router, useFocusEffect, useLocalSearchParams} from "expo-router";
-import {useCallback, useEffect, useRef, useState} from "react";
+import {useCallback, useRef, useState} from "react";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 
 function Posts() {
@@ -26,10 +26,6 @@ function Posts() {
             flatListRef.current.scrollToOffset({offset: 0, animated: true});
         }
     };
-
-    // useEffect(() => {
-    //     console.log('refreshFlag changed:', refreshFlag);
-    // }, [refreshFlag]);
 
     return (
         <SafeAreaView className="flex-1">

@@ -1,8 +1,8 @@
-import {Image, Pressable, Text, View} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 
 import calculateTimeFromToday from "@/features/feed/utils/calculateTimeFromToday";
 import formatRating from "@/features/feed/utils/formatRating";
-import {Ionicons} from "@expo/vector-icons";
+import {Entypo, Ionicons} from "@expo/vector-icons";
 import BottomModal from "@/components/BottomModal";
 import {useState} from "react";
 import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
@@ -11,15 +11,17 @@ import {showError} from "@/utils/toast";
 import {Link} from "expo-router";
 
 function SourceDetails({
-                           sourceId,
-                           createdAt,
-                           schoolSubject,
-                           subject,
-                           ratings,
-                           isBookmarked,
-                           handleBookmark,
-                           currentRating
-                       }) {
+   sourceId,
+   createdAt,
+   schoolSubject,
+   subject,
+   ratings,
+   isBookmarked,
+   handleBookmark,
+   currentRating,
+   difficulty,
+   showDifficulty
+}) {
 
     const [ratingModalVisible, setRatingModalVisible] = useState(false);
     const [userRating, setUserRating] = useState(currentRating);
@@ -52,7 +54,7 @@ function SourceDetails({
 
     return (
         <>
-            <View className="flex-row justify-between items-end">
+            <View className="flex-row justify-between items-end mt-5">
                 <Link href={`/sources/${sourceId}`} className="flex flex-col flex-1 mt-1">
                     <View className="w-full">
                         <Text className="text-xs text-gray-500">{calculateTimeFromToday(createdAt)}</Text>
@@ -60,9 +62,31 @@ function SourceDetails({
                     </View>
                 </Link>
 
-                <View className="flex-row items-center justify-end mt-5">
+                <View className="flex-row items-center justify-end">
+                    {
+                        showDifficulty &&
+                        <>
+                        {
+                            difficulty === 'easy' &&
+                            <Entypo size={24} color="#3daad3" name="progress-empty"/>
+                        }
+                        {
+                            difficulty === 'medium' &&
+                            <Entypo size={24} color="#3daad3" name="progress-one"/>
+                        }
+                        {
+                            difficulty === 'hard' &&
+                            <Entypo size={24} color="#3daad3" name="progress-two"/>
+                        }
+                        {
+                            difficulty === 'expert' &&
+                            <Entypo size={24} color="#3daad3" name="progress-full"/>
+                        }
+                        </>
+                    }
+
                     <Pressable
-                        className="flex-row items-center ml-8"
+                        className="flex-row items-start ml-8"
                         onPress={() => setRatingModalVisible(true)}
                     >
                         <Ionicons name={userRating ? 'star' : 'star-outline'} size={19}

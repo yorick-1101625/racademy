@@ -3,8 +3,8 @@ from sqlalchemy import or_, and_
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from backend.models.models import User, Post, Source, Rating, UserLikedPost, UserBookmarkedPost, UserBookmarkedSource
 from backend.database.db import db
+from backend.models.models import User, Post, Source, Rating, UserLikedPost, UserBookmarkedPost, UserBookmarkedSource
 from backend.utils.validators import is_hr_mail
 
 
@@ -35,7 +35,6 @@ class UserService:
         for user in users:
             user.pop("password", None)
         return users
-
 
     @staticmethod
     def get_user_by_id(user_id):
@@ -90,7 +89,6 @@ class UserService:
             print(f"Error creating user: {e}")
             return Exception(f"Error creating user: {e}")
 
-
     @staticmethod
     def login_user(email, password):
         user = User.query.filter_by(email=email.lower()).one_or_none()
@@ -106,7 +104,6 @@ class UserService:
             return Exception("Invalid password")
 
         return user.to_dict()
-
 
     @staticmethod
     def update_user(user_id, data):
@@ -227,7 +224,6 @@ class UserService:
             traceback.print_exc()
             return None
 
-
     @staticmethod
     def delete_user(user_id):
         user = User.query.get(user_id)
@@ -252,7 +248,6 @@ class UserService:
             print(f"Error deleting user: {e}")
             return False
 
-
     @staticmethod
     def get_liked_posts(user_id, current_user_id, offset=0, limit=None):
         user = User.query.get(user_id)
@@ -261,12 +256,12 @@ class UserService:
 
         user_liked_posts = (
             db.session
-                .query(UserLikedPost)
-                .filter(UserLikedPost.user_id == user.id)
-                .order_by(UserLikedPost.liked_at.desc())
-                .limit(limit)
-                .offset(offset)
-                .all()
+            .query(UserLikedPost)
+            .filter(UserLikedPost.user_id == user.id)
+            .order_by(UserLikedPost.liked_at.desc())
+            .limit(limit)
+            .offset(offset)
+            .all()
         )
 
         current_user = User.query.get(current_user_id)
@@ -288,7 +283,6 @@ class UserService:
 
         return result
 
-
     @staticmethod
     def get_bookmarked_posts(user_id, current_user_id, offset=0, limit=None):
         user = User.query.get(user_id)
@@ -297,11 +291,11 @@ class UserService:
 
         user_bookmarked_posts = (
             db.session.query(UserBookmarkedPost)
-                .filter(UserBookmarkedPost.user_id == user.id)
-                .order_by(UserBookmarkedPost.bookmarked_at.desc())
-                .limit(limit)
-                .offset(offset)
-                .all()
+            .filter(UserBookmarkedPost.user_id == user.id)
+            .order_by(UserBookmarkedPost.bookmarked_at.desc())
+            .limit(limit)
+            .offset(offset)
+            .all()
         )
 
         current_user = User.query.get(current_user_id)
@@ -322,7 +316,6 @@ class UserService:
             posts.append(post_dict)
 
         return posts
-
 
     @staticmethod
     def get_bookmarked_sources(user_id, current_user_id, offset=0, limit=None):

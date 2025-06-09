@@ -3,7 +3,6 @@ import useFetch from "@/hooks/useFetch";
 import {ActivityIndicator, FlatList, View} from "react-native";
 import Error from "@/components/Error";
 import NoResults from "@/features/search/components/NoResults";
-import React from "react";
 
 function CommentList({ post_id }) {
     const url = `/api/comment/${post_id}`;

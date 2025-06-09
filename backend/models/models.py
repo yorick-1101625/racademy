@@ -1,6 +1,6 @@
-from backend.database.db import db
 from datetime import datetime
 
+from backend.database.db import db
 
 
 class BaseModel(db.Model):
@@ -34,7 +34,7 @@ class UserBookmarkedSource(BaseModel):
 
 
 class PostTag(BaseModel):
-    post_id   = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
+    post_id     = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
     tag_id      = db.Column(db.Integer, db.ForeignKey('tag.id'), nullable=False)
 
 
@@ -59,7 +59,8 @@ class User(BaseModel):
     bookmarked_posts  = db.relationship('Post', secondary='user_bookmarked_post', back_populates='users_bookmarked')
     liked_posts     = db.relationship('Post', secondary='user_liked_post', back_populates='users_liked')
     # users >-< sources
-    bookmarked_sources = db.relationship('Source', secondary='user_bookmarked_source', back_populates='users_bookmarked')
+    bookmarked_sources = db.relationship('Source', secondary='user_bookmarked_source',
+                                         back_populates='users_bookmarked')
 
     def __repr__(self):
         return f"<User(id={self.id}, email='{self.email}')>"

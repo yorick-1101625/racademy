@@ -1,4 +1,4 @@
-import {Image, View, Text} from "react-native";
+import {Image, Text, View} from "react-native";
 import {Link} from "expo-router";
 import {BASE_URL} from "@/utils/url";
 

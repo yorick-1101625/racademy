@@ -12,8 +12,6 @@ import {
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import useUser from '@/hooks/useUser';
-import { BASE_URL } from '@/utils/url';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { showSuccess, showError } from '@/utils/toast';
 import fatty from "@/utils/fatty";
 

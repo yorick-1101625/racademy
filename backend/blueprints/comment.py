@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import get_jwt_identity, current_user
 from flask_cors import cross_origin
+from flask_jwt_extended import get_jwt_identity, current_user
 from werkzeug.exceptions import HTTPException
 
 from backend.services.service_comment import CommentService

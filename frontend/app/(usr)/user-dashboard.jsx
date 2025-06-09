@@ -11,7 +11,6 @@ import { Link } from 'expo-router';
 import useFetch from '../../hooks/useFetch';
 import {BASE_URL} from "@/utils/url";
 import Error from "@/components/Error";
-import React from "react";
 
 export default function AdminDashboard() {
   const { width } = useWindowDimensions();

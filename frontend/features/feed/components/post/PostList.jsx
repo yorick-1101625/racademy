@@ -2,8 +2,7 @@ import {ActivityIndicator, FlatList, View} from 'react-native';
 import Post from "./Post";
 import useFetch from "@/hooks/useFetch";
 import NoResults from "@/features/search/components/NoResults";
-import Error from "@/components/Error"
-import React from "react";
+import Error from "@/components/Error";
 
 function PostList({url = `/api/post?sort=recent`}) {
 

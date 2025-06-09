@@ -1,6 +1,6 @@
 import useUser from "@/hooks/useUser";
 import {useRouter} from "expo-router";
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 import {ActivityIndicator, View} from "react-native";
 
 function GuestOnly({ children }) {

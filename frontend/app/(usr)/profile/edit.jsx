@@ -1,23 +1,12 @@
-import React, {useState, useEffect, useLayoutEffect} from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    Button,
-    Image,
-    ActivityIndicator,
-    Alert,
-    Pressable,
-    KeyboardAvoidingView, SafeAreaView
-} from 'react-native';
-import {useNavigation, useRouter} from 'expo-router';
-import useUser from '../../../hooks/useUser';
-import {BASE_URL} from '../../../utils/url';
-import fatty from '../../../utils/fatty';
-import ImagePicker from '../../../components/ImagePicker';
-import {showSuccess, showError} from '../../../utils/toast';
-import {Feather, Ionicons} from "@expo/vector-icons";
-import {SafeAreaContext} from "react-native-safe-area-context";
+import {useState} from 'react';
+import {ActivityIndicator, KeyboardAvoidingView, Pressable, SafeAreaView, Text, TextInput, View} from 'react-native';
+import {useRouter} from 'expo-router';
+import useUser from '@/hooks/useUser';
+import {BASE_URL} from '@/utils/url';
+import fatty from '@/utils/fatty';
+import ImagePicker from '@/components/ImagePicker';
+import {showError, showSuccess} from '@/utils/toast';
+import {Feather} from "@expo/vector-icons";
 
 export default function EditProfile() {
     const {user, setUser} = useUser();
