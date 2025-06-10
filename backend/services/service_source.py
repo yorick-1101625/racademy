@@ -2,12 +2,12 @@ import base64
 import os
 from uuid import uuid4
 
-from sqlalchemy import asc, desc, or_, and_
-from sqlalchemy.exc import SQLAlchemyError
 from flask import current_app
+from sqlalchemy import or_, and_
+from sqlalchemy.exc import SQLAlchemyError
 
-from models.models import Source, User, Rating
 from database.db import db
+from models.models import Source, User, Rating
 from utils.validators import is_isbn
 
 
@@ -88,7 +88,6 @@ class SourceService:
         source_dict['current_rating'] = current_rating
         return source_dict
 
-
     @staticmethod
     def create_source(data, current_user_id):
         try:
@@ -164,7 +163,6 @@ class SourceService:
             db.session.rollback()
             print(f"Error deleting source: {e}")
             return Exception("Error deleting source")
-
 
     @staticmethod
     def edit_source(data, source_id):

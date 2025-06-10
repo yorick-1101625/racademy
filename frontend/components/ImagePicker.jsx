@@ -12,7 +12,6 @@ export default function ImagePicker({state, className = ""}) {
         const result = await launchImageLibraryAsync({
             mediaTypes: ['images'],
             allowsEditing: true,
-            // aspect: [4, 3],
             quality: 1,
         });
 
@@ -49,10 +48,10 @@ export default function ImagePicker({state, className = ""}) {
                 focus && image && (
                     <Modal className="absolute top-0 bottom-0 left-0 right-0 bg-white z-10">
                         <View
-                            className="absolute bottom-0 right-0 z-20 bg-white border border-gray-200 rounded-t-md flex-row">
+                            className="absolute bottom-0 z-20 bg-white border border-gray-200 rounded-t-md flex-row w-full">
                             {/* Clear image */}
                             <Pressable
-                                className="w-16 h-16 items-center justify-center"
+                                className="w-1/3 h-16 items-center justify-center"
                                 onPress={() => {
                                     setFocus(false);
                                     setImage(null);
@@ -62,14 +61,14 @@ export default function ImagePicker({state, className = ""}) {
                             </Pressable>
                             {/* Re-Upload */}
                             <Pressable
-                                className="w-16 h-16 items-center justify-center"
+                                className="w-1/3 h-16 items-center justify-center"
                                 onPress={pickImage}
                             >
                                 <Ionicons name="images" size={36} color="#3daad3"/>
                             </Pressable>
                             {/* Close */}
                             <Pressable
-                                className="w-16 h-16 justify-center items-center"
+                                className="w-1/3 h-16 justify-center items-center"
                                 onPress={() => setFocus(false)}
                             >
                                 <Ionicons name="close-circle-outline" color="#3daad3" size={36}/>

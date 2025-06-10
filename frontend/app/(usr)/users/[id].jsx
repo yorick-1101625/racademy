@@ -1,10 +1,8 @@
-
-import {useLocalSearchParams, useNavigation} from 'expo-router';
+import {useLocalSearchParams} from 'expo-router';
 import {ActivityIndicator, SafeAreaView, View} from "react-native";
 import UserProfile from "@/features/users/UserProfile";
 import useFetch from "@/hooks/useFetch";
 import Error from "@/components/Error";
-import {useLayoutEffect} from "react";
 
 export default function DynamicProfile() {
     const { id } = useLocalSearchParams();

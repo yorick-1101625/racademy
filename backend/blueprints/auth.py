@@ -1,11 +1,14 @@
-from flask import Blueprint, request, jsonify
-from flask_cors import cross_origin
-from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required
-from werkzeug.exceptions import HTTPException
-from services.service_user import UserService
 from datetime import timedelta
 
+from flask import Blueprint, request, jsonify
+from flask_cors import cross_origin
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity
+from werkzeug.exceptions import HTTPException
+
+from services.service_user import UserService
+
 api_auth = Blueprint('api_auth', __name__)
+
 
 @api_auth.route('/login', methods=['POST'])
 @cross_origin()
@@ -48,14 +51,6 @@ def login():
             "message": "An unexpected error occurred."
         }), 500
 
-
-# TODO: Find better implementation for cors?
-# if request.method == 'OPTIONS':
-#     response = jsonify({'status': 'success'})
-#     response.headers.add('Access-Control-Allow-Origin', '*')
-#     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-#     response.headers.add('Access-Control-Allow-Methods', 'POST, OPTIONS')
-#     return response, 200
 
 @api_auth.route('/refresh', methods=['POST'])
 def refresh():

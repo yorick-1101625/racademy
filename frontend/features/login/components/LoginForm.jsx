@@ -4,7 +4,7 @@ import FormSubmitButton from "./FormSubmitButton";
 import ToggleRegistering from "./ToggleRegistering";
 import {useState} from "react";
 import {useRouter} from "expo-router";
-import { showSuccess, showError } from "utils/toast"
+import {showError, showSuccess} from "utils/toast"
 import useUser from "@/hooks/useUser";
 import {isHrMail} from "@/utils/validators";
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {BASE_URL} from "@/utils/url";
-import tokens, {isTokenExpired, refreshToken} from "@/utils/tokens";
+import {isTokenExpired, refreshToken} from "@/utils/tokens";
 
 function useFetch(url) {
     const [data, setData] = useState(null);

@@ -1,5 +1,5 @@
-import {View, TouchableOpacity, TextInput, Image, KeyboardAvoidingView, Platform} from 'react-native';
-import React, {useState} from "react";
+import {Image, Platform, TextInput, TouchableOpacity, View} from 'react-native';
+import {useState} from "react";
 import useUser from "@/hooks/useUser";
 import {BASE_URL} from "@/utils/url";
 import {Ionicons} from "@expo/vector-icons";

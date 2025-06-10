@@ -1,12 +1,11 @@
-import {Text, Image, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import {BASE_URL} from "@/utils/url";
-import truncate from "@/features/feed/utils/truncate";
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {useMemo} from "react";
 import FocusableImage from "@/components/FocusableImage";
 import {Link} from "expo-router";
 
-function SourceContent({title, image, type, url, description}) {
+function SourceContent({sourceId, title, image, type, url, description}) {
 
     const videoId = useMemo(() => {
         if (!url) return null;
@@ -17,11 +16,12 @@ function SourceContent({title, image, type, url, description}) {
 
     return (
         <View>
+            <View className="max-w-2xl">
             {
                 type === "video" &&
                     <>
                         <View className="
-                            relative min-h-40 max-h-96 max-w-2xl aspect-video z-50 rounded-md overflow-hidden
+                            relative min-h-40 max-h-96 aspect-video z-50 rounded-md overflow-hidden
                         ">
                             <YoutubePlayer
                                 height="100%"
@@ -34,8 +34,6 @@ function SourceContent({title, image, type, url, description}) {
                                 }}
                             />
                         </View>
-                         {/*<Text className="font-semibold text-md text-neutral-900">{ title }</Text>*/}
-                        <Text className="text-gray-500 text-s mt-2">{ truncate(description, 110) }</Text>
                     </>
             }
 
@@ -45,7 +43,7 @@ function SourceContent({title, image, type, url, description}) {
                         href={url}
                         className="max-w-2xl border border-gray-200 rounded-md overflow-hidden"
                     >
-                        <View className="p-3">
+                        <View className="p-3 w-full">
                             <Text className="text-black font-medium" numberOfLines={2}>
                                 {title}
                             </Text>
@@ -60,7 +58,6 @@ function SourceContent({title, image, type, url, description}) {
                                     />
                                 </View>
                             }
-                            <Text className="text-gray-500 text-s mt-2">{ truncate(description, 110) }</Text>
                         </View>
                     </Link>
                 )
@@ -69,16 +66,24 @@ function SourceContent({title, image, type, url, description}) {
             {
                 type === "book" && (
                     <>
-                        <Text className="text-black font-medium mt-1">{title}</Text>
                         <FocusableImage
-                            className="px-4 mt-2 aspect-square max-h-96 w-full max-w-2xl"
+                            className="mt-2 aspect-square max-h-96 w-full max-w-2xl"
                             source={{ uri: `${BASE_URL}${image}`}}
                             resizeMode="contain"
                         />
-                        <Text className="text-gray-500 text-s mt-2">{ truncate(description, 110) }</Text>
+                        <Link href={`/sources/${sourceId}`} className="mt-2">
+                            <Text className="text-black font-medium">{title}</Text>
+                        </Link>
                     </>
                 )
             }
+            </View>
+
+            <Link href={`/sources/${sourceId}`} className="mt-2">
+                <View className="flex-row justify-between items-start w-full">
+                    <Text className="text-gray-500 text-sm flex-row">{ description }</Text>
+                </View>
+            </Link>
         </View>
     );
 }

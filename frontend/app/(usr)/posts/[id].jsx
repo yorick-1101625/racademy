@@ -1,11 +1,10 @@
-import {ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, View} from 'react-native';
-import {router, useFocusEffect, useLocalSearchParams, useNavigation} from "expo-router";
+import {ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, View} from 'react-native';
+import {router, useFocusEffect, useLocalSearchParams} from "expo-router";
 import useFetch from "@/hooks/useFetch";
 import Error from "@/components/Error";
 import Post from "@/features/feed/components/post/Post";
-import React, {useCallback, useLayoutEffect, useState} from "react";
+import React, {useCallback, useState} from "react";
 import CommentCreate from "@/features/feed/components/comment/CommentCreate";
-import CommentList from "@/features/feed/components/comment/CommentList";
 import InfiniteScrollList from "@/components/InfiniteScrollList";
 import Comment from "@/features/feed/components/comment/Comment";
 
@@ -43,8 +42,8 @@ function PostDetails() {
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0}
                 >
-                    <View className="flex-1">
-                        <Post post={post}/>
+                    <ScrollView className="flex-1">
+                        <Post post={post} shorten={false}/>
 
                         <InfiniteScrollList
                             refresh={refresh}
@@ -54,7 +53,7 @@ function PostDetails() {
                             noResultsTitle=""
                             noResultsMessage=""
                         />
-                    </View>
+                    </ScrollView>
 
                     <CommentCreate postId={id}/>
                 </KeyboardAvoidingView>

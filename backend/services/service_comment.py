@@ -1,6 +1,7 @@
 from sqlalchemy.exc import SQLAlchemyError
+
 from database.db import db
-from models.models import Comment, Post, User
+from models.models import Comment, Post
 
 
 class CommentService:
@@ -65,4 +66,3 @@ class CommentService:
             db.session.rollback()
             print(f"Error deleting comment: {e}")
             return False
-

@@ -1,9 +1,9 @@
-from sqlalchemy import asc, desc, or_
+from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import aliased
 
-from models.models import Post, User, Tag
 from database.db import db
+from models.models import Post, User, Tag
 
 
 class PostService:
@@ -89,7 +89,7 @@ class PostService:
             # Create Tags
             tags = []
             for t in data.get('tags'):
-                tag = Tag(name=t.lower())
+                tag = Tag(name=t)
                 tags.append(tag)
 
             new_post = Post(
@@ -118,7 +118,7 @@ class PostService:
             # Create Tags
             tags = []
             for t in data.get('tags'):
-                tag = Tag(name=t.lower())
+                tag = Tag(name=t)
                 tags.append(tag)
 
             post.tags = tags

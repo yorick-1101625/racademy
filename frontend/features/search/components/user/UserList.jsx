@@ -1,4 +1,4 @@
-import {ActivityIndicator, FlatList, Text, View} from 'react-native';
+import {ActivityIndicator, FlatList, Text} from 'react-native';
 import useFetch from "@/hooks/useFetch";
 import NoResults from "@/features/search/components/NoResults";
 import User from "@/features/search/components/user/User";

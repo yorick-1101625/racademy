@@ -14,7 +14,7 @@ function CompactSourceSelector({ query, setSource, selectedSource }) {
             noResultsMessage="Geen bronnen gevonden voor je zoekopdracht."
             renderItem={({item}) =>
                 <Pressable
-                    className={`transition-transform duration-150 ${item.id === selectedSource?.id ? 'translate-x-3 border-b border-rac' : 'hover:translate-x-1' } `}
+                    className={`transition-transform duration-150 ${item.id === selectedSource?.id ? 'translate-x-3 border-b border-rac' : 'hover:translate-x-1 border-b-0 ' } `}
                     onPress={() => {
                         if (selectedSource?.id === item.id) {
                             setSource(null);

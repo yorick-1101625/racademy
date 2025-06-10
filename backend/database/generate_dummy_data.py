@@ -1,17 +1,16 @@
 import os
+import random
 import shutil
 import string
+from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
 
 from flask import Flask
-from datetime import datetime
-import random
-
 from werkzeug.security import generate_password_hash
 
-from models.models import User, Post, Comment, Tag, Source, Rating
 from database.db import init_db, db
+from models.models import User, Post, Comment, Tag, Source, Rating
 
 instance_path = os.path.join(os.path.dirname(__file__), '..', 'instance')
 app = Flask(__name__, instance_path=instance_path)
@@ -34,6 +33,7 @@ def generate_random_youtube_url():
         "https://www.youtube.com/watch?v=gvkqT_Uoahw",
     ]
     return random.choice(youtube_urls)
+
 
 def generate_files():
     shutil.rmtree(ROOT_PATH / 'static' / 'user_images' / 'sources', ignore_errors=True)
@@ -105,16 +105,6 @@ def generate_dummy_data():
         ),
     ]
 
-    # for i in range(10):
-    #     user = User(
-    #         email=f"test{i}@hr.nl",
-    #         username=f"user{i}",
-    #         password=generate_password_hash("1234"),
-    #         study=random.choice(['Software Development']),
-    #         is_blocked=random.choice([True, False]),
-    #         is_admin=random.choice([True, False])
-    #     )
-    #     users.append(user)
     db.session.add_all(users)
     db.session.commit()
 
@@ -148,9 +138,9 @@ def generate_dummy_data():
         "Vandaag geprobeerd om mijn project mobile-first te maken. Niet normaal hoeveel kleine layout bugs je tegenkomt zodra je op een kleiner scherm kijkt. Maar wat een verschil als het goed werkt! Responsive design is echt een kunst op zich 📱🎨",
         """Afgelopen maand heb ik mezelf uitgedaagd om een volledige webapplicatie from scratch te bouwen, zonder tutorials stap voor stap te volgen — gewoon zelf uitzoeken, documentatie lezen, fouten maken, en vooral: veel leren.
 
-    Ik koos Flask voor de backend, omdat ik al wat ervaring had met Python, en React voor de frontend (dat laatste bleef wel een uitdaging, vooral met state management en props-drilling). Alles lokaal opgezet met Docker, PostgreSQL als database, en uiteindelijk zelfs user authentication met JWT geïmplementeerd.
+Ik koos Flask voor de backend, omdat ik al wat ervaring had met Python, en React voor de frontend (dat laatste bleef wel een uitdaging, vooral met state management en props-drilling). Alles lokaal opgezet met Docker, PostgreSQL als database, en uiteindelijk zelfs user authentication met JWT geïmplementeerd.
 
-    De eerste week was chaotisch. Routes werkten niet, ik kreeg rare CORS-fouten, en m’n React-componenten herlaadden constant zonder reden. Maar iedere keer als ik een bug oploste, voelde het als een mini-overwinning.""" 
+De eerste week was chaotisch. Routes werkten niet, ik kreeg rare CORS-fouten, en m’n React-componenten herlaadden constant zonder reden. Maar iedere keer als ik een bug oploste, voelde het als een mini-overwinning."""
     ]
 
     sample_comment_texts = [
@@ -172,7 +162,6 @@ def generate_dummy_data():
         "Ik ben benieuwd of je achteraf dingen anders zou aanpakken. Reflecties zijn altijd interessant!",
         "Dit soort updates motiveren echt. Thanks voor het delen en succes met de volgende stap!"
     ]
-
 
     posts = []
     for i in range(30):
@@ -237,8 +226,8 @@ def generate_dummy_data():
             source.isbn = generate_random_isbn()
             img_id = uuid4()
             shutil.copy(
-                ROOT_PATH/'static'/'dummy_images'/'bookcover.jpg',
-                ROOT_PATH/'static'/'user_images'/'sources'/f'{img_id}.jpg'
+                ROOT_PATH / 'static' / 'dummy_images' / 'bookcover.jpg',
+                ROOT_PATH / 'static' / 'user_images' / 'sources' / f'{img_id}.jpg'
             )
             source.image = f'/static/user_images/sources/{img_id}.jpg'
         if source.type == 'article':

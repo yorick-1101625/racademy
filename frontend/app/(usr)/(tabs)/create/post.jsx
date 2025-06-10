@@ -1,30 +1,31 @@
 import {
+    Image,
+    KeyboardAvoidingView,
+    Platform,
     Pressable,
     SafeAreaView,
-    TextInput,
+    ScrollView,
     Text,
-    KeyboardAvoidingView,
-    View,
-    Image, ScrollView
+    TextInput,
+    View
 } from 'react-native';
 import MultilineTextInput from "@/components/MultilineTextInput";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {showError, showSuccess} from "@/utils/toast";
 import {Ionicons} from "@expo/vector-icons";
 import BottomModal from "@/components/BottomModal";
 import CompactSourceSelector from "@/features/create/post/CompactSourceSelector";
-import CompactSource from "@/features/create/post/CompactSource";
 import fatty from "@/utils/fatty";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import ContentAuthor from "@/features/feed/components/ContentAuthor";
 import useUser from "@/hooks/useUser";
 import {Link, useLocalSearchParams, useRouter} from "expo-router";
 import {BASE_URL} from "@/utils/url";
+import truncate from "@/features/feed/utils/truncate";
 
 function CreatePost() {
 
     // Editing States
-    const { id } = useLocalSearchParams();
+    const {id} = useLocalSearchParams();
     const [isEditing, setIsEditing] = useState(false);
 
     const [content, setContent] = useState("");
@@ -37,7 +38,6 @@ function CreatePost() {
     const router = useRouter();
 
     const {user} = useUser();
-    console.log(id)
 
     function clearStates() {
         setIsEditing(false);
@@ -50,7 +50,7 @@ function CreatePost() {
     }
 
     useEffect(() => {
-         if (id) {
+        if (id) {
             fatty(`/api/post/${id}`)
                 .then(data => {
                     data = data?.data;
@@ -101,7 +101,7 @@ function CreatePost() {
 
         formattedTags = formattedTags
             .filter(tag => tag !== '')
-            .map(tag => (tag.replace("#", "")).toLowerCase());
+            .map(tag => (tag.replace("#", "")));
 
         if (isEditing) {
             fatty(`/api/post/${id}`, 'PATCH', {
@@ -115,7 +115,7 @@ function CreatePost() {
                         clearStates();
 
                         // Push to post page
-                        router.push(`/posts/${id}`);
+                        router.push(`/posts?refresh=1`);
                     } else {
                         console.error(data.message);
                         showError("Er ging iets fout.");
@@ -131,13 +131,8 @@ function CreatePost() {
                 .then(data => {
                     if (data.success) {
                         showSuccess("Post succesvol aangemaakt.");
-
-                        // Push to post detail page
-                        // router.push(`/posts/${data.data.id}`);
-
                         clearStates();
 
-                        // Push to post feed
                         router.push(`/posts?refresh=1`);
                     } else {
                         console.error(data.message);
@@ -164,7 +159,7 @@ function CreatePost() {
                     </Pressable>
                 </View>
             }
-            <ScrollView className="pb-72">
+            <ScrollView>
 
                 <View className="bg-white p-4">
 
@@ -225,11 +220,14 @@ function CreatePost() {
                                     <Ionicons name="close-circle-outline" size={22} color="#657786"/>
                                 </Pressable>
                             </View>
-                            <Text className="font-medium mt-1 text-neutral-800">{linkedSource.title}</Text>
+                            <Text className="font-medium mt-1 text-neutral-800">
+                                {truncate(linkedSource.title, 50)}
+                            </Text>
                             <Text className="text-sm text-neutral-500">@{linkedSource.user.username}</Text>
                         </View>
                     )}
                 </View>
+                <View className="h-96 bg-gray-100"/>
             </ScrollView>
             <KeyboardAvoidingView className="absolute bottom-4 right-4">
                 <Pressable
@@ -241,35 +239,43 @@ function CreatePost() {
             </KeyboardAvoidingView>
 
             <BottomModal state={[isModalVisible, setIsModalVisible]}>
-                <View className="h-screen">
-                    <TextInput
-                        placeholder="Bron zoeken..."
-                        autoFocus
-                        className="mt-12 border border-gray-300 bg-gray-50 focus:border-rac outline-none px-4 py-3 rounded-lg placeholder:text-gray-600"
-                        onChangeText={setQuery}
-                    />
+                <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                >
+                    <View className="h-screen">
+                        <TextInput
+                            placeholder="Bron zoeken..."
+                            autoFocus
+                            className="mt-12 border border-gray-300 bg-gray-50 focus:border-rac outline-none px-4 py-3 rounded-lg placeholder:text-gray-600"
+                            onChangeText={setQuery}
+                        />
 
-                    <CompactSourceSelector query={query} setSource={setSelectedSource} selectedSource={selectedSource}/>
+                        <CompactSourceSelector
+                            query={query}
+                            setSource={setSelectedSource}
+                            selectedSource={selectedSource}
+                        />
 
-                    <View className="flex-row justify-between space-x-3">
-                        <Pressable
-                            onPress={() => setIsModalVisible(false)}
-                            className="flex-1 py-3 bg-gray-200 rounded-md"
-                        >
-                            <Text className="text-center text-black font-semibold">Annuleren</Text>
-                        </Pressable>
+                        <View className="flex-row justify-between space-x-3">
+                            <Pressable
+                                onPress={() => setIsModalVisible(false)}
+                                className="flex-1 py-3 bg-gray-200 rounded-md"
+                            >
+                                <Text className="text-center text-black font-semibold">Annuleren</Text>
+                            </Pressable>
 
-                        <Pressable
-                            className="flex-1 py-3 bg-rac rounded-md"
-                            onPress={() => {
-                                setLinkedSource(selectedSource);
-                                setIsModalVisible(false);
-                            }}
-                        >
-                            <Text className="text-center text-white font-semibold">Toepassen</Text>
-                        </Pressable>
+                            <Pressable
+                                className="flex-1 py-3 bg-rac rounded-md"
+                                onPress={() => {
+                                    setLinkedSource(selectedSource);
+                                    setIsModalVisible(false);
+                                }}
+                            >
+                                <Text className="text-center text-white font-semibold">Toepassen</Text>
+                            </Pressable>
+                        </View>
                     </View>
-                </View>
+                </KeyboardAvoidingView>
             </BottomModal>
         </SafeAreaView>
     );

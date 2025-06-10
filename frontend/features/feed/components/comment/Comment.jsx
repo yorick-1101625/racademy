@@ -1,7 +1,7 @@
-import {View, Text, Image, Pressable} from "react-native";
+import {Image, Pressable, Text, View} from "react-native";
 import {BASE_URL} from "@/utils/url";
 import {Ionicons} from "@expo/vector-icons";
-import React, {useState} from "react";
+import {useState} from "react";
 import BottomModal from "@/components/BottomModal";
 import {Link, router} from "expo-router";
 import Kebab from "@/components/Kebab";
@@ -10,7 +10,6 @@ import {showError, showSuccess} from "@/utils/toast";
 import useUser from "@/hooks/useUser";
 
 function Comment({comment, post_id}) {
-    const [isVisible, setIsVisible] = useState(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
     const {user} = useUser();
@@ -63,7 +62,7 @@ function Comment({comment, post_id}) {
             </View>
 
             {
-                comment.user.id === user.id
+                comment.user.id === user.id || user.is_admin
                     ? <Kebab>
                         <Pressable
                             className="flex-row rounded-md p-3 items-center hover:bg-red-100 transition-colors"

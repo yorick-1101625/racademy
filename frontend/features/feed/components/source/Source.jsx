@@ -1,19 +1,20 @@
 import {Pressable, Text, View} from 'react-native';
-import React, {useState} from "react";
+import {useState} from "react";
 import ContentAuthor from "../ContentAuthor";
 import SourceContent from "./SourceContent";
 import SourceDetails from "./SourceDetails";
 
-import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
 import fatty from "@/utils/fatty";
-import {Link, router} from "expo-router";
+import {router} from "expo-router";
 import Kebab from "@/components/Kebab";
 import {Feather, Ionicons} from "@expo/vector-icons";
 import useUser from "@/hooks/useUser";
 import BottomModal from "@/components/BottomModal";
 import {showError, showSuccess} from "@/utils/toast";
+import truncate from "@/features/feed/utils/truncate";
 
-function Source({source}) {
+
+function Source({source, shorten=true}) {
 
     const [isBookmarked, setIsBookmarked] = useState(source['bookmarked_by_current_user']);
     const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -56,11 +57,22 @@ function Source({source}) {
 
             {/* Content */}
             <SourceContent
-                title={source.title}
+                sourceId={source.id}
+                difficulty={source.difficulty}
+                title={
+                    shorten
+                        ?   truncate(source.title, 70)
+                        :   source.title
+                }
                 image={source.image}
                 type={source.type}
                 url={source.url}
-                description={source.description}
+                description={
+                    shorten
+                        ?   truncate(source.description, 60)
+                        :   source.description
+                }
+
             />
 
             {/* Timestamp */}
@@ -73,17 +85,23 @@ function Source({source}) {
                 handleBookmark={handleBookmark}
                 isBookmarked={isBookmarked}
                 currentRating={source['current_rating']}
+                difficulty={source.difficulty}
+                showDifficulty={!shorten}
             />
 
             {
-                source.user.id === user.id
+                source.user.id === user.id || user.is_admin
                     ?   <Kebab>
-                            <Link href={`/create/source?id=${source.id}`}
+                        {
+                            source.user.id === user.id &&
+                            <Pressable
+                                onPress={() => router.push(`/create/source?id=${source.id}`)}
                                 className="flex-row rounded-md p-3 items-center hover:bg-blue-50 box-border transition-colors"
                             >
                                 <Feather name="edit-2" color="#3daad3" size={18} />
                                 <Text className="ml-3 text-rac text-base">Bewerken</Text>
-                            </Link>
+                            </Pressable>
+                        }
                             <Pressable
                                 className="flex-row rounded-md p-3 items-center hover:bg-red-100 box-border transition-colors"
                                 onPress={() => setDeleteModalVisible(true)}
