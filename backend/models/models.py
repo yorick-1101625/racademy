@@ -48,13 +48,13 @@ class User(BaseModel):
     is_admin        = db.Column(db.Boolean, default=False, nullable=False)
 
     # user -< posts
-    created_posts   = db.relationship('Post', back_populates='user')
+    created_posts   = db.relationship('Post', back_populates='user', cascade="all, delete-orphan")
     # user -< sources
-    created_sources   = db.relationship('Source', back_populates='user')
+    created_sources   = db.relationship('Source', back_populates='user', cascade="all, delete-orphan")
     # user -< comments
-    comments        = db.relationship('Comment', back_populates='user')
+    comments        = db.relationship('Comment', back_populates='user', cascade="all, delete-orphan")
     # user -< ratings
-    created_ratings = db.relationship('Rating', back_populates='user')
+    created_ratings = db.relationship('Rating', back_populates='user', cascade="all, delete-orphan")
     # users >-< posts
     bookmarked_posts  = db.relationship('Post', secondary='user_bookmarked_post', back_populates='users_bookmarked')
     liked_posts     = db.relationship('Post', secondary='user_liked_post', back_populates='users_liked')
@@ -86,7 +86,7 @@ class Post(BaseModel):
     source = db.relationship('Source')
 
     def __repr__(self):
-        return f"<Post(id={self.id}, name='{self.title}')>"
+        return f"<Post(id={self.id} user_id={self.user_id})>"
 
 
 class Comment(BaseModel):
@@ -103,7 +103,7 @@ class Comment(BaseModel):
     post            = db.relationship('Post', back_populates='comments')
 
     def __repr__(self):
-        return f"<Comment(id={self.id}, name='{self.title}')>"
+        return f"<Comment(id={self.id})>"
 
 
 class Source(BaseModel):
@@ -122,7 +122,7 @@ class Source(BaseModel):
     user_id         = db.Column(db.ForeignKey('user.id'), nullable=False)
     user            = db.relationship('User', back_populates='created_sources')
     # source -< ratings
-    ratings = db.relationship('Rating', back_populates='source')
+    ratings = db.relationship('Rating', back_populates='source', cascade="all, delete-orphan")
     # sources >-< users
     users_bookmarked = db.relationship('User', secondary='user_bookmarked_source', back_populates='bookmarked_sources')
 
