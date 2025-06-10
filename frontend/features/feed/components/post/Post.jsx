@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import {useState} from "react";
 import {Pressable, Text, View} from 'react-native';
 
 import PostContent from "./PostContent";
@@ -12,7 +12,6 @@ import Kebab from "@/components/Kebab";
 import {Feather, Ionicons} from "@expo/vector-icons";
 import useUser from "@/hooks/useUser";
 import BottomModal from "@/components/BottomModal";
-import {openURL} from "expo-linking";
 import LinkedSource from "@/features/feed/components/post/LinkedSource";
 import truncate from "@/features/feed/utils/truncate";
 

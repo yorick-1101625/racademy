@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import {Image, Modal, Pressable, View} from 'react-native';
-import {Ionicons} from "@expo/vector-icons";
+import {useState} from 'react';
+import {Image, Modal, Pressable} from 'react-native';
 
 export default function FocusableImage({ source, className="", resizeMode }) {
     const [focus, setFocus] = useState(false);

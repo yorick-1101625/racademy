@@ -1,5 +1,5 @@
-import {KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, TextInput, View} from 'react-native';
-import React, {useEffect, useState} from "react";
+import {KeyboardAvoidingView, Pressable, SafeAreaView, ScrollView, Text, TextInput, View} from 'react-native';
+import {useEffect, useState} from "react";
 import TopTabs from "@/components/TopTabs";
 import ImagePicker from "@/components/ImagePicker";
 import {Entypo, Ionicons} from "@expo/vector-icons";
@@ -8,7 +8,6 @@ import {showError, showSuccess} from "@/utils/toast";
 import {isISBN} from "@/utils/validators";
 import useUser from "@/hooks/useUser";
 import {useLocalSearchParams, useRouter} from "expo-router";
-import {Text} from 'react-native';
 import {BASE_URL} from "@/utils/url";
 import MultilineTextInput from "@/components/MultilineTextInput";
 
@@ -18,16 +17,9 @@ const SOURCE_TYPES = [
     {value: 'article', label: 'Link'}
 ]
 
-const DIFFICULTIES = [
-    {value: 'easy', label: <Entypo size={24} color="#3daad3" name="progress-empty"/>},
-    {value: 'medium', label: <Entypo size={24} color="#3daad3" name="progress-one"/>},
-    {value: 'hard', label: <Entypo size={24} color="#3daad3" name="progress-two"/>},
-    {value: 'expert', label: <Entypo size={24} color="#3daad3" name="progress-full"/>}
-]
-
 function CreateSource() {
     // Editing States
-    const { id } = useLocalSearchParams();
+    const {id} = useLocalSearchParams();
     const {user} = useUser();
     const [isEditing, setIsEditing] = useState(false);
     const router = useRouter();
@@ -48,7 +40,7 @@ function CreateSource() {
     }
 
     useEffect(() => {
-         if (id) {
+        if (id) {
             fatty(`/api/source/${id}`)
                 .then(data => {
                     data = data?.data;
@@ -83,10 +75,22 @@ function CreateSource() {
     const [image, setImage] = useState(null);
 
     const DIFFICULTIES = [
-        {value: 'easy', label: <Entypo size={24} color={difficulty === 'easy' ? 'white' : '#3daad3'} name="progress-empty"/>},
-        {value: 'medium', label: <Entypo size={24} color={difficulty === 'medium' ? 'white' : '#3daad3'} name="progress-one"/>},
-        {value: 'hard', label: <Entypo size={24} color={difficulty === 'hard' ? 'white' : '#3daad3'} name="progress-two"/>},
-        {value: 'expert', label: <Entypo size={24} color={difficulty === 'expert' ? 'white' : '#3daad3'} name="progress-full"/>}
+        {
+            value: 'easy',
+            label: <Entypo size={24} color={difficulty === 'easy' ? 'white' : '#3daad3'} name="progress-empty"/>
+        },
+        {
+            value: 'medium',
+            label: <Entypo size={24} color={difficulty === 'medium' ? 'white' : '#3daad3'} name="progress-one"/>
+        },
+        {
+            value: 'hard',
+            label: <Entypo size={24} color={difficulty === 'hard' ? 'white' : '#3daad3'} name="progress-two"/>
+        },
+        {
+            value: 'expert',
+            label: <Entypo size={24} color={difficulty === 'expert' ? 'white' : '#3daad3'} name="progress-full"/>
+        }
     ]
 
     function handleSubmit() {
@@ -268,74 +272,74 @@ function CreateSource() {
                 }
                 <ScrollView contentContainerClassName="bg-white">
                     <View className="p-4">
-                    <TopTabs tabs={SOURCE_TYPES} state={[type, setType]}/>
+                        <TopTabs tabs={SOURCE_TYPES} state={[type, setType]}/>
 
-                    <TextInput
-                        className="text-sm border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
-                        placeholder="Titel"
-                        onChangeText={setTitle}
-                        value={title}
-                    />
+                        <TextInput
+                            className="text-sm border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
+                            placeholder="Titel"
+                            onChangeText={setTitle}
+                            value={title}
+                        />
 
-                    <TextInput
-                        className="text-sm border-b border-gray-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
-                        placeholder="Vak"
-                        onChangeText={setSchoolSubject}
-                        value={schoolSubject}
-                    />
+                        <TextInput
+                            className="text-sm border-b border-gray-200 border-r-neutral-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
+                            placeholder="Vak"
+                            onChangeText={setSchoolSubject}
+                            value={schoolSubject}
+                        />
 
-                    <TextInput
-                        className="text-sm border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
-                        placeholder="Onderwerp"
-                        onChangeText={setSubject}
-                        value={subject}
-                    />
+                        <TextInput
+                            className="text-sm border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
+                            placeholder="Onderwerp"
+                            onChangeText={setSubject}
+                            value={subject}
+                        />
 
-                    <MultilineTextInput
-                        className="text-sm h-32 border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
-                        placeholder="Beschrijving"
-                        onChangeText={setDescription}
-                        value={description}
-                    />
+                        <MultilineTextInput
+                            className="text-sm h-32 border-b border-gray-200 px-4 py-3 placeholder:text-neutral-500 outline-none"
+                            placeholder="Beschrijving"
+                            onChangeText={setDescription}
+                            value={description}
+                        />
 
-                    <Text className="mt-4 text-gray-600">Moeilijkheid</Text>
-                    <View className="flex-row mb-4">
-                        <TopTabs tabs={DIFFICULTIES} state={[difficulty, setDifficulty]}/>
-                    </View>
+                        <Text className="mt-4 text-gray-600">Moeilijkheid</Text>
+                        <View className="flex-row mb-4">
+                            <TopTabs tabs={DIFFICULTIES} state={[difficulty, setDifficulty]}/>
+                        </View>
 
-                    {/* URL */}
-                    {
-                        type !== 'book' && (
-                            <TextInput
-                                className="text-sm border-b border-gray-200 px-4 py-3 mb-4 placeholder:text-neutral-500 outline-none"
-                                placeholder={type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...'}
-                                onChangeText={setUrl}
-                                value={url}
-                            />
-                        )
-                    }
+                        {/* URL */}
+                        {
+                            type !== 'book' && (
+                                <TextInput
+                                    className="text-sm border-b border-gray-200 px-4 py-3 mb-4 placeholder:text-neutral-500 outline-none"
+                                    placeholder={type === 'video' ? 'https://www.youtube.com/...' : 'https://www.voorbeeld.com/...'}
+                                    onChangeText={setUrl}
+                                    value={url}
+                                />
+                            )
+                        }
 
-                    {/* ISBN */}
-                    {
-                        type === 'book' && (
-                            <TextInput
-                                className="text-sm border-b border-gray-200 px-4 py-3 mb-4 placeholder:text-neutral-500 outline-none"
-                                placeholder="ISBN"
-                                onChangeText={setIsbn}
-                                value={isbn}
-                            />
-                        )
-                    }
+                        {/* ISBN */}
+                        {
+                            type === 'book' && (
+                                <TextInput
+                                    className="text-sm border-b border-gray-200 px-4 py-3 mb-4 placeholder:text-neutral-500 outline-none"
+                                    placeholder="ISBN"
+                                    onChangeText={setIsbn}
+                                    value={isbn}
+                                />
+                            )
+                        }
 
-                    {
-                        type === 'book' &&
+                        {
+                            type === 'book' &&
                             <View className="h-56">
                                 <ImagePicker
                                     className="border-2 border-dashed border-gray-300 rounded-lg"
                                     state={[image, setImage]}
                                 />
                             </View>
-                    }
+                        }
                     </View>
                     <View className="h-96 bg-gray-100 w-full"/>
                 </ScrollView>

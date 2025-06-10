@@ -1,12 +1,11 @@
-import {Text, Image, View} from 'react-native';
+import {Image, Text, View} from 'react-native';
 import {BASE_URL} from "@/utils/url";
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {useMemo} from "react";
 import FocusableImage from "@/components/FocusableImage";
 import {Link} from "expo-router";
-import {Entypo} from "@expo/vector-icons";
 
-function SourceContent({sourceId, difficulty, title, image, type, url, description}) {
+function SourceContent({sourceId, title, image, type, url, description}) {
 
     const videoId = useMemo(() => {
         if (!url) return null;
@@ -83,24 +82,6 @@ function SourceContent({sourceId, difficulty, title, image, type, url, descripti
             <Link href={`/sources/${sourceId}`} className="mt-2">
                 <View className="flex-row justify-between items-start w-full">
                     <Text className="text-gray-500 text-sm flex-row">{ description }</Text>
-                    <View className="block ml-auto">
-                    {
-                        difficulty === 'easy' &&
-                        <Entypo size={24} color="#3daad3" name="progress-empty"/>
-                    }
-                    {
-                        difficulty === 'medium' &&
-                        <Entypo size={24} color="#3daad3" name="progress-one"/>
-                    }
-                    {
-                        difficulty === 'hard' &&
-                        <Entypo size={24} color="#3daad3" name="progress-two"/>
-                    }
-                    {
-                        difficulty === 'expert' &&
-                        <Entypo size={24} color="#3daad3" name="progress-full"/>
-                    }
-                    </View>
                 </View>
             </Link>
         </View>

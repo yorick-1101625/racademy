@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {KeyboardAvoidingView, Pressable, Animated} from "react-native";
-import AntDesign from "@expo/vector-icons/AntDesign";
+import {useEffect, useState} from "react";
+import {KeyboardAvoidingView, Pressable} from "react-native";
 import {Ionicons} from "@expo/vector-icons";
 
 function ScrollToTopButton({onPress, scrollY}) {

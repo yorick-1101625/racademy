@@ -1,22 +1,22 @@
 import {
+    Image,
+    KeyboardAvoidingView,
+    Platform,
     Pressable,
     SafeAreaView,
-    TextInput,
+    ScrollView,
     Text,
-    KeyboardAvoidingView,
-    View,
-    Image, ScrollView, Platform
+    TextInput,
+    View
 } from 'react-native';
 import MultilineTextInput from "@/components/MultilineTextInput";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {showError, showSuccess} from "@/utils/toast";
 import {Ionicons} from "@expo/vector-icons";
 import BottomModal from "@/components/BottomModal";
 import CompactSourceSelector from "@/features/create/post/CompactSourceSelector";
-import CompactSource from "@/features/create/post/CompactSource";
 import fatty from "@/utils/fatty";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import ContentAuthor from "@/features/feed/components/ContentAuthor";
 import useUser from "@/hooks/useUser";
 import {Link, useLocalSearchParams, useRouter} from "expo-router";
 import {BASE_URL} from "@/utils/url";
@@ -25,7 +25,7 @@ import truncate from "@/features/feed/utils/truncate";
 function CreatePost() {
 
     // Editing States
-    const { id } = useLocalSearchParams();
+    const {id} = useLocalSearchParams();
     const [isEditing, setIsEditing] = useState(false);
 
     const [content, setContent] = useState("");
@@ -50,7 +50,7 @@ function CreatePost() {
     }
 
     useEffect(() => {
-         if (id) {
+        if (id) {
             fatty(`/api/post/${id}`)
                 .then(data => {
                     data = data?.data;
@@ -101,7 +101,7 @@ function CreatePost() {
 
         formattedTags = formattedTags
             .filter(tag => tag !== '')
-            .map(tag => (tag.replace("#", "")).toLowerCase());
+            .map(tag => (tag.replace("#", "")));
 
         if (isEditing) {
             fatty(`/api/post/${id}`, 'PATCH', {
@@ -115,7 +115,7 @@ function CreatePost() {
                         clearStates();
 
                         // Push to post page
-                        router.push(`/posts/${id}`);
+                        router.push(`/posts?refresh=1`);
                     } else {
                         console.error(data.message);
                         showError("Er ging iets fout.");
@@ -220,7 +220,9 @@ function CreatePost() {
                                     <Ionicons name="close-circle-outline" size={22} color="#657786"/>
                                 </Pressable>
                             </View>
-                            <Text className="font-medium mt-1 text-neutral-800">{truncate(linkedSource.title, 50)}</Text>
+                            <Text className="font-medium mt-1 text-neutral-800">
+                                {truncate(linkedSource.title, 50)}
+                            </Text>
                             <Text className="text-sm text-neutral-500">@{linkedSource.user.username}</Text>
                         </View>
                     )}
@@ -248,7 +250,11 @@ function CreatePost() {
                             onChangeText={setQuery}
                         />
 
-                        <CompactSourceSelector query={query} setSource={setSelectedSource} selectedSource={selectedSource}/>
+                        <CompactSourceSelector
+                            query={query}
+                            setSource={setSelectedSource}
+                            selectedSource={selectedSource}
+                        />
 
                         <View className="flex-row justify-between space-x-3">
                             <Pressable

@@ -2,11 +2,13 @@ from flask import Blueprint, request
 from flask_cors import cross_origin
 from flask_jwt_extended import get_jwt_identity, current_user
 from werkzeug.exceptions import HTTPException
+
 from backend.services.service_source import SourceService
 
 api_source = Blueprint("api_source", __name__)
 
-@api_source.route("/", methods=["GET"],  strict_slashes=False)
+
+@api_source.route("/", methods=["GET"], strict_slashes=False)
 @cross_origin()
 def get_sources():
     try:
@@ -71,7 +73,7 @@ def create_source():
         }, 500
 
 
-@api_source.route("/<source_id>", methods=["GET"],  strict_slashes=False)
+@api_source.route("/<source_id>", methods=["GET"], strict_slashes=False)
 @cross_origin()
 def get_source(source_id):
     try:

@@ -3,7 +3,6 @@ import Source from './Source.jsx';
 import useFetch from "@/hooks/useFetch";
 import NoResults from "@/features/search/components/NoResults";
 import Error from "@/components/Error";
-import React from "react";
 
 function SourceList({url = `/api/source?sort=recent`}) {
     const {data: sources, isPending, error} = useFetch(url);

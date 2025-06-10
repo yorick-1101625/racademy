@@ -1,11 +1,10 @@
 import {ActivityIndicator, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, View} from 'react-native';
-import {router, useFocusEffect, useLocalSearchParams, useNavigation} from "expo-router";
+import {router, useFocusEffect, useLocalSearchParams} from "expo-router";
 import useFetch from "@/hooks/useFetch";
 import Error from "@/components/Error";
 import Post from "@/features/feed/components/post/Post";
-import React, {useCallback, useLayoutEffect, useState} from "react";
+import React, {useCallback, useState} from "react";
 import CommentCreate from "@/features/feed/components/comment/CommentCreate";
-import CommentList from "@/features/feed/components/comment/CommentList";
 import InfiniteScrollList from "@/components/InfiniteScrollList";
 import Comment from "@/features/feed/components/comment/Comment";
 

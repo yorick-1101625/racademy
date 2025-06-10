@@ -1,8 +1,8 @@
 import {useRouter} from "expo-router";
-import {Modal, Pressable, Text, View, Alert} from "react-native";
+import {Pressable, Text, View} from "react-native";
 import useUser from "@/hooks/useUser";
 import {Ionicons, MaterialIcons} from "@expo/vector-icons";
-import React, {useState} from "react";
+import {useState} from "react";
 import BottomModal from "@/components/BottomModal";
 import fatty from "@/utils/fatty";
 import {showError, showSuccess} from "@/utils/toast";

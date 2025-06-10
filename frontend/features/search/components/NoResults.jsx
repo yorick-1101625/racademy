@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import {Text, View} from "react-native";
 
 function NoResults({ title = "Geen resultaten", message = "Begin met zoeken om resultaten te vinden." }){
     return (

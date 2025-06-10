@@ -1,12 +1,11 @@
 import {Pressable, Text, View} from 'react-native';
-import React, {useState} from "react";
+import {useState} from "react";
 import ContentAuthor from "../ContentAuthor";
 import SourceContent from "./SourceContent";
 import SourceDetails from "./SourceDetails";
 
-import calculateAverageRating from "@/features/feed/utils/calculateAverageRating";
 import fatty from "@/utils/fatty";
-import {Link, router} from "expo-router";
+import {router} from "expo-router";
 import Kebab from "@/components/Kebab";
 import {Feather, Ionicons} from "@expo/vector-icons";
 import useUser from "@/hooks/useUser";
@@ -86,6 +85,8 @@ function Source({source, shorten=true}) {
                 handleBookmark={handleBookmark}
                 isBookmarked={isBookmarked}
                 currentRating={source['current_rating']}
+                difficulty={source.difficulty}
+                showDifficulty={!shorten}
             />
 
             {
