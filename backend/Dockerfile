@@ -1,5 +1,5 @@
 # Use official Python runtime as a parent image
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -12,13 +12,10 @@ WORKDIR /backend
 # Install dependencies
 COPY requirements.txt /backend/
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy backend source code
-COPY . /backend/
-
-# Copy instance directory into container
-COPY instance /backend/instance
+COPY . .
 
 # Expose port 8000 for the Flask app
 EXPOSE 8000

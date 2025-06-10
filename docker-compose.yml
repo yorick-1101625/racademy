@@ -1,12 +1,15 @@
-version: '3.8'
-
 services:
   backend:
-    build:
-      context: ./backend
+    build: ./backend
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/instance:/backend/instance
+      - wp4-db:/backend/instance
+      - wp4-images:/backend/static/user_images
     environment:
       - FLASK_ENV=development
+      - FLASK_DEBUG=0
+
+volumes:
+  wp4-db:
+  wp4-images:

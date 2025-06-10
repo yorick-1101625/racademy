@@ -39,8 +39,8 @@ def generate_files():
     shutil.rmtree(ROOT_PATH / 'static' / 'user_images' / 'sources', ignore_errors=True)
     shutil.rmtree(ROOT_PATH / 'static' / 'user_images' / 'profile_pictures', ignore_errors=True)
 
-    os.makedirs("../static/user_images/profile_pictures", exist_ok=True)
-    os.makedirs("../static/user_images/sources", exist_ok=True)
+    os.makedirs(ROOT_PATH / "static"/"user_images"/"profile_pictures", exist_ok=True)
+    os.makedirs(ROOT_PATH /"static"/"user_images"/"sources", exist_ok=True)
     # Copy dummy images to user_images folder
     shutil.copy(
         ROOT_PATH / 'static' / 'dummy_images' / 'default.png',

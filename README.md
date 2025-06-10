@@ -43,21 +43,36 @@ De applicatie moet gebruik maken van **React Native** voor de frontend en **Dock
 
 ## 🧪 Installatie-instructies
 
-### 🔹 Met Docker
-_Instructies hier met docker_
+### Backend
+#### 🔹 Met Docker  
+
+##### 1. Start Docker Desktop
+Als je Windows gebruikt, start dan Docker Desktop.
+
+##### 2. Bouw de docker image
+```bash
+docker compose up --build
+```  
+
+##### 3. Start de container
+Als de container niet automatisch start, voer dan uit:  
+```bash
+docker compose up
+```
+
 
 ---
 
-### 🔸 Zonder Docker
+#### 🔸 Zonder Docker
 
-#### 1. Maak een virtual environment aan
+##### 1. Maak een virtual environment aan
 Zorg ervoor dat je Python geïnstalleerd hebt. Navigeer naar de `backend` folder en voer uit:
 
 ```bash
 python -m venv venv
 ```
 
-#### 2. Activeer de virtual environment
+##### 2. Activeer de virtual environment
 **Windows:**
 ```bash
 venv\Scripts\activate
@@ -68,26 +83,38 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-#### 3. Installeer de vereiste Python packages
+##### 3. Installeer de vereiste Python packages
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 4. Installeer de vereiste npm packages
+##### 4. Start de backend
+In de `backend` folder:
+
+```bash
+python app.py
+```
+
+> Werkt dit niet? Open `app.py` in je IDE en klik op “Run”.
+
+### Frontend
+
+#### 1. Installeer de vereiste npm packages
 Ga naar de `frontend` folder en voer uit:
 
 ```bash
 npm install
 ```
 
-#### 5. Maak een `.env` bestand
-In de `frontend` folder:
+#### 2. Maak een `.env` bestand
+Maak een bestand genaamd `.env` aan in de `frontend` folder met daarin:
 
 ```env
 EXPO_PUBLIC_BACKEND_URL=http://-ip-address-:8000
 ```
 
-Vervang `-ip-address-` met je IP-adres:
+Vervang `-ip-address-` met je IP-adres.  
+Deze kan je vinden bij het uitvoeren van dit commando:
 
 **Windows:**
 ```bash
@@ -99,14 +126,6 @@ ipconfig
 ifconfig
 ```
 
-#### 6. Start de backend
-In de `backend` folder:
-
-```bash
-python app.py
-```
-
-> Werkt dit niet? Open `app.py` in je IDE en klik op “Run”.
 
 #### 7. Start de frontend
 In de `frontend` folder:
