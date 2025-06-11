@@ -1,11 +1,11 @@
 from flask import request
 from flask_jwt_extended import verify_jwt_in_request
 
-from backend.blueprints.comment import api_comment
-from backend.blueprints.post import api_post
-from backend.blueprints.user import api_user
-from backend.blueprints.source import api_source
-from backend.blueprints.auth import api_auth
+from blueprints.comment import api_comment
+from blueprints.post import api_post
+from blueprints.user import api_user
+from blueprints.source import api_source
+from blueprints.auth import api_auth
 
 PUBLIC_ENDPOINTS = [
     'api_auth.login',

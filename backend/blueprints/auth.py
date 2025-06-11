@@ -5,7 +5,7 @@ from flask_cors import cross_origin
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity
 from werkzeug.exceptions import HTTPException
 
-from backend.services.service_user import UserService
+from services.service_user import UserService
 
 api_auth = Blueprint('api_auth', __name__)
 

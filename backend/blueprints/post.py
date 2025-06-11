@@ -3,7 +3,7 @@ from flask_cors import cross_origin
 from flask_jwt_extended import get_jwt_identity, current_user
 from werkzeug.exceptions import HTTPException
 
-from backend.services.service_post import PostService
+from services.service_post import PostService
 
 api_post = Blueprint("api_post", __name__)
 

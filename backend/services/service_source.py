@@ -6,9 +6,9 @@ from flask import current_app
 from sqlalchemy import or_, and_
 from sqlalchemy.exc import SQLAlchemyError
 
-from backend.database.db import db
-from backend.models.models import Source, User, Rating
-from backend.utils.validators import is_isbn
+from database.db import db
+from models.models import Source, User, Rating
+from utils.validators import is_isbn
 
 
 class SourceService:

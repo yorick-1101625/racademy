@@ -2,8 +2,8 @@ from sqlalchemy import or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import aliased
 
-from backend.database.db import db
-from backend.models.models import Post, User, Tag
+from database.db import db
+from models.models import Post, User, Tag
 
 
 class PostService:

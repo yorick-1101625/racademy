@@ -9,11 +9,15 @@ from uuid import uuid4
 from flask import Flask
 from werkzeug.security import generate_password_hash
 
-from backend.database.db import init_db, db
-from backend.models.models import User, Post, Comment, Tag, Source, Rating
+from database.db import init_db, db
+from models.models import User, Post, Comment, Tag, Source, Rating
 
-instance_path = os.path.join(os.path.dirname(__file__), '..', 'instance')
-app = Flask(__name__, instance_path=instance_path)
+instance_path = Path(__file__).parent.parent.resolve() / 'instance'
+os.makedirs(instance_path, exist_ok=True)
+# Create db if not exists
+file = open(str(instance_path / 'database.db'), "w")
+file.close()
+app = Flask(__name__, instance_path=str(instance_path))
 
 db_path = os.path.join(app.instance_path, 'database.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{db_path}"
@@ -39,8 +43,8 @@ def generate_files():
     shutil.rmtree(ROOT_PATH / 'static' / 'user_images' / 'sources', ignore_errors=True)
     shutil.rmtree(ROOT_PATH / 'static' / 'user_images' / 'profile_pictures', ignore_errors=True)
 
-    os.makedirs("../static/user_images/profile_pictures", exist_ok=True)
-    os.makedirs("../static/user_images/sources", exist_ok=True)
+    os.makedirs(ROOT_PATH / "static"/"user_images"/"profile_pictures", exist_ok=True)
+    os.makedirs(ROOT_PATH /"static"/"user_images"/"sources", exist_ok=True)
     # Copy dummy images to user_images folder
     shutil.copy(
         ROOT_PATH / 'static' / 'dummy_images' / 'default.png',
@@ -112,6 +116,56 @@ def generate_dummy_data():
     db.session.add_all(tags)
     db.session.commit()
 
+    sample_source_titles = [
+        "Goed boek om Javascript te leren!",
+        "Python tutorial van youtube!",
+        "Beste artikel over OOP",
+        "Gratis cursus over Web Dev.",
+        "Uitstekende handleiding voor beginners in Java!",
+        "Compleet video cursus over React!",
+        "Top 10 tips voor effectief leren van C++",
+        "Gratis online cursus over machine learning!",
+        "De beste bronnen voor leren van SQL!",
+        "Interactieve video's over HTML en CSS",
+        "Gratis e-book over Python voor data science",
+        "Uitstekende handleiding voor beginners in Ruby!",
+        "Compleet video cursus over Angular!",
+        "Top 10 tips voor effectief leren van Swift",
+        "Gratis online cursus over blockchain technologie!",
+        "De beste bronnen voor leren van JavaScript frameworks!",
+        "Interactieve video's over Node.js",
+        "Gratis e-book over PHP voor web development",
+        "Uitstekende handleiding voor beginners in Kotlin!"
+    ]
+
+    sources = []
+    for i in range(20):
+        source = Source(
+            type=random.choice(['video', 'article', 'book']),
+            title=random.choice(sample_source_titles),
+            description=f"Beschrijving voor bron {i}",
+            school_subject=random.choice(['Werkplaats', 'Programming Essentials']),
+            subject=random.choice(['Programmeren', 'Python', 'Javascript']),
+            difficulty=random.choice(['easy', 'medium', 'hard', 'expert']),
+            user=random.choice(users)
+        )
+        if source.type == 'video':
+            source.url = generate_random_youtube_url()
+        if source.type == 'book':
+            source.isbn = generate_random_isbn()
+            img_id = uuid4()
+            shutil.copy(
+                ROOT_PATH / 'static' / 'dummy_images' / 'bookcover.jpg',
+                ROOT_PATH / 'static' / 'user_images' / 'sources' / f'{img_id}.jpg'
+            )
+            source.image = f'/static/user_images/sources/{img_id}.jpg'
+        if source.type == 'article':
+            source.url = "https://www.netguru.com/glossary/react-native"
+
+        sources.append(source)
+    db.session.add_all(sources)
+    db.session.commit()
+
     sample_post_texts = [
         "Eerste keer dat ik Flask gebruik, en ik ben verkocht! 🔥 #Python #WebDev",
         "SQL lijkt simpel, maar er zit zoveel kracht achter. 💪",
@@ -170,7 +224,8 @@ De eerste week was chaotisch. Routes werkten niet, ik kreeg rare CORS-fouten, en
             created_at=datetime.now(),
             updated_at=datetime.now(),
             user=random.choice(users),
-            tags=random.sample(tags, k=random.randint(1, 2))
+            tags=random.sample(tags, k=random.randint(1, 2)),
+            source_id=random.choice([1, 2, 3, None, None, None])
         )
         posts.append(post)
     db.session.add_all(posts)
@@ -185,56 +240,6 @@ De eerste week was chaotisch. Routes werkten niet, ik kreeg rare CORS-fouten, en
         )
         comments.append(comment)
     db.session.add_all(comments)
-    db.session.commit()
-
-    sample_source_titles = [
-        "Goed boek om Javascript te leren!",
-        "Python tutorial van youtube!",
-        "Beste artikel over OOP",
-        "Gratis cursus over Web Dev.",
-        "Uitstekende handleiding voor beginners in Java!",
-        "Compleet video cursus over React!",
-        "Top 10 tips voor effectief leren van C++",
-        "Gratis online cursus over machine learning!",
-        "De beste bronnen voor leren van SQL!",
-        "Interactieve video's over HTML en CSS",
-        "Gratis e-book over Python voor data science",
-        "Uitstekende handleiding voor beginners in Ruby!",
-        "Compleet video cursus over Angular!",
-        "Top 10 tips voor effectief leren van Swift",
-        "Gratis online cursus over blockchain technologie!",
-        "De beste bronnen voor leren van JavaScript frameworks!",
-        "Interactieve video's over Node.js",
-        "Gratis e-book over PHP voor web development",
-        "Uitstekende handleiding voor beginners in Kotlin!"
-    ]
-
-    sources = []
-    for i in range(20):
-        source = Source(
-            type=random.choice(['video', 'article', 'book']),
-            title=random.choice(sample_source_titles),
-            description=f"Beschrijving voor bron {i}",
-            school_subject=random.choice(['Werkplaats', 'Programming Essentials']),
-            subject=random.choice(['Programmeren', 'Python', 'Javascript']),
-            difficulty=random.choice(['easy', 'medium', 'hard', 'expert']),
-            user=random.choice(users)
-        )
-        if source.type == 'video':
-            source.url = generate_random_youtube_url()
-        if source.type == 'book':
-            source.isbn = generate_random_isbn()
-            img_id = uuid4()
-            shutil.copy(
-                ROOT_PATH / 'static' / 'dummy_images' / 'bookcover.jpg',
-                ROOT_PATH / 'static' / 'user_images' / 'sources' / f'{img_id}.jpg'
-            )
-            source.image = f'/static/user_images/sources/{img_id}.jpg'
-        if source.type == 'article':
-            source.url = "https://www.netguru.com/glossary/react-native"
-
-        sources.append(source)
-    db.session.add_all(sources)
     db.session.commit()
 
     ratings = []

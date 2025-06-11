@@ -3,9 +3,9 @@ from sqlalchemy import or_, and_
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from backend.database.db import db
-from backend.models.models import User, Post, Source, Rating, UserLikedPost, UserBookmarkedPost, UserBookmarkedSource
-from backend.utils.validators import is_hr_mail
+from database.db import db
+from models.models import User, Post, Source, Rating, UserLikedPost, UserBookmarkedPost, UserBookmarkedSource
+from utils.validators import is_hr_mail
 
 
 class UserService:
@@ -206,7 +206,6 @@ class UserService:
                 user.password = generate_password_hash(new_password)
 
             if data.get('is_admin') is not None:
-                print(data.get('is_admin'))
                 user.is_admin = data.get('is_admin')
 
             if data.get('is_blocked') is not None:
@@ -230,16 +229,6 @@ class UserService:
         if not user:
             return False
         try:
-            for post in user.created_posts:
-                db.session.delete(post)
-            for source in user.created_sources:
-                for rating in source.ratings:
-                    db.session.delete(rating)
-                db.session.delete(source)
-            for comment in user.comments:
-                db.session.delete(comment)
-            for rating in user.created_ratings:
-                db.session.delete(rating)
             db.session.delete(user)
             db.session.commit()
             return True
