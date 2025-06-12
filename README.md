@@ -132,19 +132,26 @@ In de `frontend` folder:
 
 ```bash
 npx expo start  
+```
 of  
+```bash
 npm run start
 ```
 
+#### Problemen?
 Als je de app wilt starten met Expo Go en het bovenstaande werkt niet:
 
 ```bash
-npx expo start --tunnel  
-of  
+npx expo start --tunnel
+```
+of 
+```bash
 npm run start --tunnel
 ```
 
 Mocht dat ook niet werken, zet dan je internetverbinding op particulier, zet je firewall uit en probeer het opnieuw
+
+Als de Expo Go app niet registreert wanneer je het scherm aanraakt, typ dan `m` in de terminal waar je de app hebt draaien.
 
 ---
 
