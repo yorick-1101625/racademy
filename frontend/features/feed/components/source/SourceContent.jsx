@@ -1,4 +1,4 @@
-import {Image, Text, View} from 'react-native';
+import {Image, Platform, Text, View} from 'react-native';
 import {BASE_URL} from "@/utils/url";
 import YoutubePlayer from 'react-native-youtube-iframe';
 import {useMemo} from "react";
@@ -13,10 +13,9 @@ function SourceContent({sourceId, title, image, type, url, description}) {
         return match ? match[1] : null;
     }, [url]);
 
-
     return (
         <View>
-            <View className="max-w-2xl">
+            <View className={`${Platform.OS === 'web' && 'max-w-2xl'}`}>
             {
                 type === "video" &&
                     <>
@@ -41,7 +40,7 @@ function SourceContent({sourceId, title, image, type, url, description}) {
                 type === "article" && (
                     <Link
                         href={url}
-                        className="max-w-2xl border border-gray-200 rounded-md overflow-hidden"
+                        className="border border-gray-200 rounded-md overflow-hidden"
                     >
                         <View className="p-3 w-full">
                             <Text className="text-black font-medium" numberOfLines={2}>
@@ -66,11 +65,13 @@ function SourceContent({sourceId, title, image, type, url, description}) {
             {
                 type === "book" && (
                     <>
-                        <FocusableImage
-                            className="mt-2 aspect-square max-h-96 w-full max-w-2xl"
-                            source={{ uri: `${BASE_URL}${image}`}}
-                            resizeMode="contain"
-                        />
+                        <View className="w-full items-center">
+                            <FocusableImage
+                                className="mt-2 aspect-square max-h-96 w-full"
+                                source={{ uri: `${BASE_URL}${image}`}}
+                                resizeMode="contain"
+                            />
+                        </View>
                         <Link href={`/sources/${sourceId}`} className="mt-2">
                             <Text className="text-black font-medium">{title}</Text>
                         </Link>
