@@ -8,6 +8,15 @@
 
 ---
 
+## Afbeeldingen
+
+<img height="700" src="docs%2Fimages%2Fscreenshot-posts.png">
+<img height="700" src="docs%2Fimages%2Fscreenshot-sources.png">
+<img height="700" src="docs%2Fimages%2Fscreenshot-profile.png">
+<img height="700" src="docs%2Fimages%2Fscreenshot-create.png">
+
+---
+
 ## 📌 Projectbeschrijving
 De opdracht was het ontwikkelen van een platform waarop studenten van de Rotterdam Academy studiematerialen zoals boeken, video’s en online cursussen kunnen delen, beoordelen, zoeken en opslaan als favoriet.  
 
@@ -160,11 +169,6 @@ Als de Expo Go app niet registreert wanneer je het scherm aanraakt, typ dan `m` 
 **Admin**  
 Gebruikersnaam: `test@hr.nl`  
 Wachtwoord: `1234`
-
----
-
-## 📑 API Documentatie
-_in te voegen indien beschikbaar._
 
 ---
 
